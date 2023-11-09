@@ -1,5 +1,7 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import styled from 'styled-components';
+import { useLanguage } from '../contexts/LanguageContext';
+import axiosClient from '../axiosClient';
 
 const Background = styled.div`
 	display: flex;
@@ -19,7 +21,7 @@ const Background = styled.div`
 
 const Container = styled.div`
 	margin: 20px auto;
-	width: 280px;
+	width: 300px;
 	background-color: #fff;
 	border-radius: 8px;
 	align-items: center;
@@ -31,12 +33,14 @@ const Container = styled.div`
 `;
 
 const InnerContainer = styled.div`
-	padding: 30px 0;
-	width: 100%;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	gap: 20px;
+	form {
+		padding: 30px 0;
+		width: 100%;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 20px;
+	}
 	input {
 		border: 1px solid rgba(10, 107, 222, 0.4);
 		height: 40px;
@@ -64,11 +68,60 @@ const InnerContainer = styled.div`
 	}
 `;
 
-const Overlay = ({ closeOverlay }) => {
+const Overlay = ({ closeOverlay, setMessage, setStatus, setLoading, addNewList, fetchLists }) => {
 	const listRef = useRef();
+	const { translate } = useLanguage();
+	const [notIsValid, setNotIsValid] = useState(true);
+	const [isEmpty, setIsEmpty] = useState(true);
 
 	const close = () => {
 		closeOverlay();
+	};
+
+	const validateInput = () => {
+		const inputText = listRef.current.value;
+		const trimmedInput = inputText.trim();
+
+		setIsEmpty(trimmedInput === '');
+		if (trimmedInput.length < 3) {
+			setNotIsValid(true);
+		} else {
+			setNotIsValid(false);
+		}
+	};
+
+	const handleCreateList = (e) => {
+		e.preventDefault();
+		setLoading(true);
+
+		const payload = {
+			listName: listRef.current.value,
+		};
+
+		axiosClient
+			.post('/create-list', payload)
+			.then(() => {
+				setMessage(translate('response-200-created'));
+				addNewList(response.data);
+			})
+			.catch((err) => {
+				if (err.response.status == 422) {
+					setMessage(translate('response-422'));
+					setStatus(400);
+				} else {
+					setStatus(400);
+					setMessage(translate('response-400-error'));
+				}
+			})
+			.finally(() => {
+				setLoading(false);
+				closeOverlay(true);
+				fetchLists();
+				return setTimeout(() => {
+					setStatus(200);
+					setMessage(null);
+				}, 1600);
+			});
 	};
 
 	useEffect(() => {
@@ -82,16 +135,28 @@ const Overlay = ({ closeOverlay }) => {
 		<Background>
 			<Container>
 				<InnerContainer>
-					<h3 className="heading">Create a new list</h3>
-					<input placeholder="New List" type="text" ref={listRef} />
-					<div className="group">
-						<button className="btn" onClick={close}>
-							Cancel
-						</button>
-						<button className="btn btn-main" onClick={() => alert('Created A New List')}>
-							Create
-						</button>
-					</div>
+					<form>
+						<h3 className="heading">{translate('createListHeading')}</h3>
+						<input
+							placeholder={translate('createListPlaceholder')}
+							type="text"
+							style={{ border: notIsValid ? '1px solid red' : '' }}
+							onChange={validateInput}
+							ref={listRef}
+						/>
+						<div className="group">
+							<button className="btn" onClick={close}>
+								{translate('cancel-btn')}
+							</button>
+							<button
+								className={notIsValid ? 'btn btn-main lightest' : 'btn btn-main'}
+								disabled={notIsValid}
+								onClick={handleCreateList}
+							>
+								{translate('create-btn')}
+							</button>
+						</div>
+					</form>
 				</InnerContainer>
 			</Container>
 		</Background>

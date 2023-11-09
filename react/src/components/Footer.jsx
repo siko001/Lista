@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { useLanguage } from '../contexts/LanguageContext';
 
 const Container = styled.div`
 	padding: 50px 0;
@@ -23,11 +24,12 @@ const Container = styled.div`
 `;
 
 const Footer = () => {
+	const { translate } = useLanguage();
 	return (
 		<Container>
 			<div>
-				<h3>Let's Plan Your Shopping List! </h3>
-				<h4 className="lighter">Use the button to Start A new List</h4>
+				<h3>{translate('footerHeaderTop')} </h3>
+				<h4 className="lighter">{translate('footerHeaderBottom')}</h4>
 			</div>
 		</Container>
 	);

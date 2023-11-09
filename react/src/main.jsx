@@ -4,11 +4,14 @@ import { RouterProvider } from 'react-router-dom';
 import router from './Router.jsx';
 import './index.css';
 import { DarkModeProvider } from './contexts/DarkModeContext.jsx';
+import { LanguageProvider } from './contexts/LanguageContext.jsx';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
 	<React.StrictMode>
-		<DarkModeProvider>
-			<RouterProvider router={router} />
-		</DarkModeProvider>
+		<LanguageProvider>
+			<DarkModeProvider>
+				<RouterProvider router={router} />
+			</DarkModeProvider>
+		</LanguageProvider>
 	</React.StrictMode>
 );
