@@ -50,6 +50,7 @@ const ListSetting = ({
 	title,
 	setStatus,
 	fetchLists,
+	setCopyLoader,
 }) => {
 	const [isVisible, setIsVisible] = useState(true);
 	const ref = useRef();
@@ -83,6 +84,7 @@ const ListSetting = ({
 	//Handle the copy of a list
 	const handleCopy = (ID) => {
 		setSettingPageOpen(false);
+		setCopyLoader(true);
 		axiosClient
 			.post(`list/copy/${ID}`, ID)
 			.then(() => {
@@ -94,6 +96,7 @@ const ListSetting = ({
 				setMessage(translate('notification-copied-fail'));
 			})
 			.finally(() => {
+				setCopyLoader(false);
 				setTimeout(() => {
 					setStatus(null);
 					setMessage(null);

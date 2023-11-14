@@ -16,7 +16,17 @@ const Container = styled.div`
 	}
 `;
 
-const ListContainer = ({ darkMode, setDeleteOverlay, setMessage, lists, setDeleteID, setDeleteTitle, setStatus, fetchLists }) => {
+const ListContainer = ({
+	darkMode,
+	setDeleteOverlay,
+	setMessage,
+	lists,
+	setDeleteID,
+	setDeleteTitle,
+	setStatus,
+	fetchLists,
+	setCopyLoader,
+}) => {
 	const handleDeleteOverlay = (deleteOverlayState) => {
 		setDeleteOverlay(deleteOverlayState);
 	};
@@ -37,6 +47,7 @@ const ListContainer = ({ darkMode, setDeleteOverlay, setMessage, lists, setDelet
 					setDeleteTitle={setDeleteTitle}
 					setStatus={setStatus}
 					fetchLists={fetchLists}
+					setCopyLoader={setCopyLoader}
 				/>
 			))}
 		</Container>

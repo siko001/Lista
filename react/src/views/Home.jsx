@@ -14,6 +14,7 @@ import Navbar from '../components/Navbar';
 import axiosClient from '../axiosClient';
 import GetListLoader from '../components/GetListLoader';
 import DeleteListLoader from '../components/DeleteListLoader';
+import CopyListLoader from '../components/CopyListLoader';
 
 const Container = styled.div`
 	min-height: 100vh;
@@ -71,11 +72,11 @@ const ImageContainer = styled.div`
 		max-height: 300px;
 	}
 `;
-
+const images = [Broccoli, Veg2];
 const Home = () => {
 	// Settings/Gerneral state/Context
-	const images = [Broccoli, Veg2];
-	const [currentImage, setCurrentImage] = useState(images[0]);
+
+	const [currentImage, setCurrentImage] = useState(0);
 	const { darkMode, setDarkMode } = useDarkMode();
 	const { translate } = useLanguage();
 	//Lists state
@@ -96,6 +97,7 @@ const Home = () => {
 	const [loading, setLoading] = useState(null);
 	const [loadingLists, setLoadingLists] = useState(false);
 	const [deleteLoader, setDeleteLoader] = useState(false);
+	const [copyLoader, setCopyLoader] = useState(false);
 
 	//Create New List Overlay
 	const handleOpenOverlay = () => {
@@ -124,7 +126,13 @@ const Home = () => {
 
 	useEffect(() => {
 		fetchLists();
-	}, []);
+		const interval = setInterval(() => {
+			const newIndex = Math.floor(Math.random() * images.length);
+			setCurrentImage(newIndex);
+		}, 3000);
+
+		return () => clearInterval(interval);
+	}, [images]);
 
 	const addNewList = (newList) => {
 		setShoppingList((prevList) => [...prevList, newList]);
@@ -180,7 +188,7 @@ const Home = () => {
 			<Main>
 				{shoppingList.length === 0 ? (
 					<ImageContainer>
-						<img src={currentImage} alt="Random Vegetable" />
+						<img src={images[currentImage]} alt="Random Vegetable" />
 					</ImageContainer>
 				) : (
 					<>
@@ -193,6 +201,7 @@ const Home = () => {
 							setDeleteTitle={setDeleteTitle}
 							setStatus={setStatus}
 							fetchLists={fetchLists}
+							setCopyLoader={setCopyLoader}
 						/>
 					</>
 				)}
@@ -200,6 +209,7 @@ const Home = () => {
 				{/* Notifications and List Loader */}
 				<Notification message={message} status={status} />
 				{loadingLists && <GetListLoader />}
+				{copyLoader && <CopyListLoader />}
 			</Main>
 
 			{/* Footer / Sponsers | Components */}

@@ -19,6 +19,7 @@
 	"delete-btn": "Hassar!",
 	"deleteOverlay": "Ha thassar il-lista ",
 	"list-copied": "Lista ikkupjata",
+	"copy-list": "Lista qed tigi ikkupjata",
 	"notification-shared": "il-lista 'ntbaghatet!",
 	"notification-copied": "lista 'kkupjata!",
 	"notification-copied-fail": "Kien hemm problem, erga pprova",
@@ -28,5 +29,11 @@
 	"response-400-error": "Żball tan-netwerk, jekk jogħġbok erġa' pprova aktar tard",
 	"response-422": "jekk jogħġbok daħħal id-dettalji",
 	"response-200-created": "Lista giet maħluqa",
-	"loader-create_list": "Qed noħolqu l-lista.."
+	"loader-create_list": "Qed noħolqu l-lista..",
+	"deleteProductOverlay": "Ha tneħħi ",
+	"deleteProductOverlayPt2": " mil-lista  ",
+	"remove-btn": "neħħi",
+	"product-add-btn": "Zied Prodott",
+	"please-add-product": "Jekk jogħġbok zied prodott fil-lista",
+	"product-close-btn": "Aghlaq il-lista tal-prodotti"
 }

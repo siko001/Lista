@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Product;
 use App\Models\ShoppingList;
 use Illuminate\Http\Request;
 
@@ -32,17 +33,25 @@ class ListController extends Controller {
         $list->save();
     }
     public function deleteList($id) {
-        info($id);
         $listToDelete = ShoppingList::find($id);
-        info("List to delete: " . $listToDelete);
 
         if ($listToDelete) {
+            $productsToDelete = Product::where("list_id", $id)->get();
+
+            // Delete associated products
+            foreach ($productsToDelete as $product) {
+                $product->delete();
+            }
+
+            // Delete the list
             $listToDelete->delete();
-            return response()->json(['message' => 'List deleted successfully'], 200);
+
+            return response()->json(['message' => 'List and associated products deleted successfully'], 200);
         } else {
             return response()->json(['error' => 'List not found'], 404);
         }
     }
+
 
     public function copyList($id) {
         $listToCopy = ShoppingList::find($id);
@@ -52,5 +61,12 @@ class ListController extends Controller {
         } else {
             return response(["message" => "List doesnt exist"], 404);
         }
+    }
+
+    public function viewTheList($listName, $id) {
+        $listdetails = ShoppingList::find($id)->get();
+        $Products = Product::where("list_id", $id)->get();
+
+        return response([$listdetails, $Products]);
     }
 }

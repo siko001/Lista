@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGears } from '@fortawesome/free-solid-svg-icons';
 import { useLanguage } from '../contexts/LanguageContext';
 import axiosClient from '../axiosClient';
+import { useNavigate } from 'react-router-dom';
 
 const Container = styled.div`
 	border: 1px solid rgba(114, 109, 109, 0.548);
@@ -18,6 +19,20 @@ const Container = styled.div`
 	@media screen and (max-width: 950px) {
 		max-width: 400px;
 	}
+	.leftSpace {
+		width: 50%;
+		height: 100%;
+	}
+
+	.rightSpace {
+		width: 50%;
+		height: 100%;
+	}
+	.aboveSpace {
+		margin-top: -15px;
+		width: 100%;
+		min-height: 10px;
+	}
 `;
 
 const Content = styled.div`
@@ -25,7 +40,15 @@ const Content = styled.div`
 	flex-direction: column;
 	gap: 5px;
 	height: 60%;
-	width: 90%;
+	min-width: 90%;
+	max-width: 90%;
+
+	.underbottom {
+		margin-top: -15px;
+
+		width: 100%;
+		min-height: 23px;
+	}
 `;
 const Top = styled.div`
 	position: relative;
@@ -70,32 +93,59 @@ const Top = styled.div`
 			background-color: #80808044;
 		}
 	}
+	.center {
+		flex: 1;
+		min-width: 20px;
+		margin: -12px 0 0 10px;
+		height: 42px;
+	}
 `;
 const Bottom = styled.div`
 	width: 100%;
-	height: 8px;
+	min-height: 8px;
 	border-radius: 5px;
 	background-color: #a2a2a238;
 `;
 
-const List = ({ darkMode, setDeleteOverlay, setMessage, name, listID, setDeleteID, setDeleteTitle, setStatus, fetchLists }) => {
+const List = ({
+	darkMode,
+	setDeleteOverlay,
+	setMessage,
+	name,
+	listID,
+	setDeleteID,
+	setDeleteTitle,
+	setStatus,
+	fetchLists,
+	setCopyLoader,
+}) => {
 	const [title, setTitle] = useState(name);
 	const [isEditingTitle, setIsEditingTitle] = useState(false);
 	const [settingPageOpen, setSettingPageOpen] = useState(false);
 	const inputRef = useRef(null);
 	const { translate } = useLanguage();
+	const navigate = useNavigate();
+
+	const titleReplacment = 'list' + ' ' + listID;
 
 	const editTitle = () => {
 		setIsEditingTitle(true);
 	};
 
+	const handleKeyPress = (e) => {
+		if (e.key === 'Enter') {
+			saveTitle(e);
+		}
+	};
+
 	const saveTitle = (e) => {
-		const newTitle = e.target.value;
+		const newTitle = e.target.value.slice(0, 25);
 		const id = listID;
+
 		axiosClient
 			.put(`/update-list-title/${id}`, { title: newTitle })
 			.then((res) => {
-				setTitle(e.target.value);
+				setTitle(newTitle); // Use newTitle here
 				setIsEditingTitle(false);
 				setMessage(translate('notification-rename'));
 				setTimeout(() => {
@@ -113,21 +163,44 @@ const List = ({ darkMode, setDeleteOverlay, setMessage, name, listID, setDeleteI
 	};
 
 	useEffect(() => {
-		if (isEditingTitle) {
-			inputRef.current.focus();
+		const inputElement = inputRef.current;
+
+		if (isEditingTitle && inputElement) {
+			inputElement.focus();
+			inputElement.addEventListener('keypress', handleKeyPress);
+
+			return () => {
+				inputElement.removeEventListener('keypress', handleKeyPress);
+			};
 		}
 	}, [isEditingTitle]);
+
+	const handleOpenList = () => {
+		const id = listID;
+		const listName = title == null ? titleReplacment : title;
+		const listUrl = `/${listName}/${id}`;
+		navigate(listUrl);
+	};
 	return (
 		<Container style={{ backgroundColor: darkMode ? '#161616' : '#fff' }}>
+			<div onClick={handleOpenList} className="leftSpace"></div>
 			<Content>
+				<div onClick={handleOpenList} className="aboveSpace"></div>
 				<Top>
 					<div className="left">
 						{!isEditingTitle ? (
-							<p onClick={editTitle}>{title || 'list' + ' ' + listID} </p>
+							<p onClick={editTitle}>{title || titleReplacment} </p>
 						) : (
-							<input style={{ color: darkMode ? '#fff' : '#000' }} onBlur={saveTitle} defaultValue={title} ref={inputRef} />
+							<input
+								style={{ color: darkMode ? '#fff' : '#000' }}
+								maxLength={20}
+								onBlur={saveTitle}
+								defaultValue={title}
+								ref={inputRef}
+							/>
 						)}
 					</div>
+					<div onClick={handleOpenList} className="center"></div>
 					<div className="right">
 						<div className="quantity">0/0</div>
 						<div className="settings">
@@ -145,13 +218,16 @@ const List = ({ darkMode, setDeleteOverlay, setMessage, name, listID, setDeleteI
 									title={title}
 									setStatus={setStatus}
 									fetchLists={fetchLists}
+									setCopyLoader={setCopyLoader}
 								/>
 							)}
 						</div>
 					</div>
 				</Top>
 				<Bottom></Bottom>
+				<div onClick={handleOpenList} className="underbottom"></div>
 			</Content>
+			<div onClick={handleOpenList} className="rightSpace"></div>
 		</Container>
 	);
 };

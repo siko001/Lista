@@ -19,6 +19,7 @@
 	"delete-btn": "delete",
 	"deleteOverlay": "You're about to delete ",
 	"list-copied": "List copied successfully",
+	"copy-list": "List is being copied",
 	"notification-shared": "List Shared successfully",
 	"notification-copied": "List copied",
 	"notification-copied-fail": "Copy Failed, please try again",
@@ -28,5 +29,11 @@
 	"response-400-error": "Network error, please try again later",
 	"response-422": "Please fill in the details",
 	"response-200-created": "List created successfully",
-	"loader-create_list": "Creating list.."
+	"loader-create_list": "Creating list..",
+	"deleteProductOverlay": "Your about to remove ",
+	"deleteProductOverlayPt2": " from shopping list",
+	"remove-btn": "remove",
+	"product-add-btn": "Add a product",
+	"please-add-product": "Please add a product to the list",
+	"product-close-btn": "Close product list"
 }

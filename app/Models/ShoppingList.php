@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Product;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class ShoppingList extends Model {
     use HasFactory;
@@ -11,4 +12,8 @@ class ShoppingList extends Model {
     protected $fillable = [
         'name'
     ];
+
+    public function products() {
+        return $this->hasMany(Product::class);
+    }
 }
