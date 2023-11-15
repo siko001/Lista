@@ -73,6 +73,7 @@ const Overlay = ({ closeOverlay, setMessage, setStatus, setLoading, addNewList, 
 	const { translate } = useLanguage();
 	const [notIsValid, setNotIsValid] = useState(true);
 	const [isEmpty, setIsEmpty] = useState(true);
+	const [inputValue, setInputValue] = useState('');
 
 	const close = () => {
 		closeOverlay();
@@ -135,6 +136,17 @@ const Overlay = ({ closeOverlay, setMessage, setStatus, setLoading, addNewList, 
 		};
 	}, []);
 
+	const handleKeyDown = (e) => {
+		if (e.key === 'Enter') {
+			console.log('enter');
+			{
+				handleCreateList(e);
+			}
+		} else {
+			return;
+		}
+	};
+
 	return (
 		<Background>
 			<Container>
@@ -146,6 +158,7 @@ const Overlay = ({ closeOverlay, setMessage, setStatus, setLoading, addNewList, 
 							type="text"
 							style={{ border: notIsValid ? '1px solid red' : '' }}
 							onChange={validateInput}
+							onKeyDown={handleKeyDown}
 							ref={listRef}
 						/>
 						<div className="group">

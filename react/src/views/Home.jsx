@@ -107,7 +107,6 @@ const Home = () => {
 		setDeleteOverlay((prev) => !prev);
 	};
 
-	// Function to fetch and update the list
 	const fetchLists = () => {
 		// Check local storage first
 		const storedLists = JSON.parse(localStorage.getItem('shoppingLists'));
@@ -116,6 +115,10 @@ const Home = () => {
 			setLists(storedLists);
 			setShoppingList(storedLists);
 		}
+
+		// Show loader only when there are no lists in local storage
+		const shouldShowLoader = !storedLists || (Array.isArray(storedLists) && storedLists.length === 0);
+		setLoadingLists(shouldShowLoader);
 
 		axiosClient
 			.get('/get-lists')
