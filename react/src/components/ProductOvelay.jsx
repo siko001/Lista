@@ -143,9 +143,6 @@ const ProductOverlay = ({ darkMode, setProduct, id }) => {
 	};
 
 	const handleSelect = (product) => {
-		console.log(id);
-
-		console.log(product.name);
 		axiosClient
 			.post(`/add-product/${product.name}`, [id, product])
 			.then((res) => {

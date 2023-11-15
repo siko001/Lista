@@ -109,12 +109,26 @@ const Home = () => {
 
 	// Function to fetch and update the list
 	const fetchLists = () => {
+		// Check local storage first
+		const storedLists = JSON.parse(localStorage.getItem('shoppingLists'));
+
+		if (storedLists && Array.isArray(storedLists) && storedLists.length > 0) {
+			setLists(storedLists);
+			setShoppingList(storedLists);
+		}
+
 		axiosClient
 			.get('/get-lists')
 			.then((res) => {
-				setLists(res.data);
-				setShoppingList(res.data);
-				setLoadingLists(true);
+				const apiLists = res.data;
+
+				// Update local storage only if the API response differs from storedLists
+				if (!arraysEqual(storedLists, apiLists)) {
+					localStorage.setItem('shoppingLists', JSON.stringify(apiLists));
+				}
+
+				setLists(apiLists);
+				setShoppingList(apiLists);
 			})
 			.catch((err) => {
 				console.log(err);
@@ -123,6 +137,19 @@ const Home = () => {
 				setLoadingLists(false);
 			});
 	};
+
+	// Helper function to compare arrays
+	function arraysEqual(arr1, arr2) {
+		if (arr1 === arr2) return true;
+		if (arr1 == null || arr2 == null) return false;
+		if (arr1.length !== arr2.length) return false;
+
+		for (let i = 0; i < arr1.length; i++) {
+			if (arr1[i] !== arr2[i]) return false;
+		}
+
+		return true;
+	}
 
 	useEffect(() => {
 		fetchLists();

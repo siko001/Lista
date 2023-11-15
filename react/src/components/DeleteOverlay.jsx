@@ -72,6 +72,18 @@ const DeleteOverlay = ({ closeOverlay, setMessage, deleteID, setDeleteLoader, se
 			.delete(`list/delete/${deleteID}`, deleteID)
 			.then(() => {
 				setMessage(deleteTitle + ' ' + translate('notification-delete-success'));
+
+				// Update the local storage data after deleting from the database
+				let allLists = localStorage.getItem('shoppingLists');
+
+				// Assuming allLists is a string representation of JSON data, parse it into an array
+				allLists = JSON.parse(allLists) || [];
+
+				// Remove the deleted list from the local storage data
+				const updatedLists = allLists.filter((list) => list.id !== deleteID);
+		
+				// Save the updated data back to local storage
+				localStorage.setItem('shoppingLists', JSON.stringify(updatedLists));
 				updateList();
 			})
 			.catch(() => {

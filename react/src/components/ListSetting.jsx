@@ -87,7 +87,18 @@ const ListSetting = ({
 		setCopyLoader(true);
 		axiosClient
 			.post(`list/copy/${ID}`, ID)
-			.then(() => {
+			.then((response) => {
+				// Fetch the existing lists from local storage
+				let allLists = localStorage.getItem('shoppingLists');
+				allLists = JSON.parse(allLists) || [];
+				// Append the copied list to the existing lists
+				allLists.push(response.data);
+
+				// Update the local storage with the new list
+				localStorage.setItem('shoppingLists', JSON.stringify(allLists));
+
+				// Fetch the lists again (if needed)
+				fetchLists();
 				fetchLists();
 				setMessage(translate('notification-copied'));
 			})

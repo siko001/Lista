@@ -145,7 +145,22 @@ const List = ({
 		axiosClient
 			.put(`/update-list-title/${id}`, { title: newTitle })
 			.then((res) => {
-				setTitle(newTitle); // Use newTitle here
+				setTitle(newTitle);
+
+				// Update the title in local storage
+				let allLists = localStorage.getItem('shoppingLists');
+				// Assuming allLists is a string representation of JSON data, parse it into an array
+				allLists = JSON.parse(allLists) || [];
+				const updatedLists = allLists.map((list) => {
+					if (list.id === id) {
+						// Update the title for the matching list
+						return { ...list, name: newTitle };
+					}
+					return list;
+				});
+				// Save the updated data back to local storage
+				localStorage.setItem('shoppingLists', JSON.stringify(updatedLists));
+
 				setIsEditingTitle(false);
 				setMessage(translate('notification-rename'));
 				setTimeout(() => {

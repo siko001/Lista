@@ -100,9 +100,13 @@ const Overlay = ({ closeOverlay, setMessage, setStatus, setLoading, addNewList, 
 
 		axiosClient
 			.post('/create-list', payload)
-			.then(() => {
+			.then((response) => {
 				setMessage(translate('response-200-created'));
 				addNewList(response.data);
+				// Save the created list to local storage
+				const allLists = JSON.parse(localStorage.getItem('shoppingLists')) || [];
+				allLists.push(response.data);
+				localStorage.setItem('shoppingLists', JSON.stringify(allLists));
 			})
 			.catch((err) => {
 				if (err.response.status == 422) {

@@ -8,13 +8,15 @@ use App\Models\ShoppingList;
 use Illuminate\Http\Request;
 
 class ListController extends Controller {
+
+    //Creates a List from the Name User Inputted and Saves it to db, also saves it in local storage as an object
     public function createList(Request $request) {
         $list = $request->validate([
             "listName" => "required|min:3|max:30"
         ]);
         if ($list) {
-            ShoppingList::create(["name" => $list['listName']]);
-            return response(["message" => "List created Successfully"], 200);
+            $listObject =  ShoppingList::create(["name" => $list['listName']]);
+            return response($listObject, 200);
         }
     }
 
@@ -56,8 +58,8 @@ class ListController extends Controller {
     public function copyList($id) {
         $listToCopy = ShoppingList::find($id);
         if ($listToCopy) {
-            ShoppingList::create(["name" => $listToCopy["name"]]);
-            return response(["message" => "List Copied"], 200);
+            $copiedList = ShoppingList::create(["name" => $listToCopy["name"]]);
+            return response($copiedList, 200);
         } else {
             return response(["message" => "List doesnt exist"], 404);
         }
