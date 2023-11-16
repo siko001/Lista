@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Product extends Model {
     protected $fillable = [
         'name',
+        "unique_key",
         'list_id',
         'category',
         'quantity',

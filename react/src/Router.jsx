@@ -11,6 +11,10 @@ const router = createBrowserRouter([
 		path: `/:listName/:id`,
 		element: <ShoppingList />,
 	},
+	{
+		path: `*`,
+		element: <Home />,
+	},
 ]);
 
 export default router;

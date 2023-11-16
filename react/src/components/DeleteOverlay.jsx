@@ -22,7 +22,9 @@ const Background = styled.div`
 const Container = styled.div`
 	border: 1px solid white;
 	margin: 20px auto;
-	width: 300px;
+	min-width: 300px;
+	max-width: 380px;
+	padding: 0 10px;
 	background-color: #fff;
 	border-radius: 8px;
 	align-items: center;
@@ -81,7 +83,7 @@ const DeleteOverlay = ({ closeOverlay, setMessage, deleteID, setDeleteLoader, se
 
 				// Remove the deleted list from the local storage data
 				const updatedLists = allLists.filter((list) => list.id !== deleteID);
-		
+
 				// Save the updated data back to local storage
 				localStorage.setItem('shoppingLists', JSON.stringify(updatedLists));
 				updateList();

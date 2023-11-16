@@ -1,16 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import PopularProducts from '../popularProducts';
 import axiosClient from '../axiosClient';
 import { useParams } from 'react-router-dom';
 
 const Container = styled.div`
+	z-index: 999;
 	color: #fff;
 	position: absolute;
 	top: 0;
 	min-height: 100vh;
 	width: 100%;
 	max-width: 100vw;
+	position: fixed;
 
 	.grp {
 		display: flex;
@@ -62,7 +64,6 @@ const Main = styled.div`
 	margin: 0 auto;
 	margin-top: 20px;
 	border-radius: 10px;
-	min-height: 85vh;
 
 	@media screen and (max-width: 950px) {
 		width: 80%;
@@ -70,10 +71,52 @@ const Main = styled.div`
 `;
 
 const ProductTable = styled.div`
-	width: 100%;
 	width: 95%;
 	margin: 10px auto;
 	border-radius: 5px;
+	overflow: auto;
+
+	/* Styling the scrollbar */
+	&::-webkit-scrollbar {
+		width: 10px;
+	}
+
+	&::-webkit-scrollbar-thumb {
+		background-color: #888;
+		border-radius: 6px;
+	}
+
+	&::-webkit-scrollbar-track {
+		background-color: #f1f1f1;
+		border-radius: 6px;
+	}
+	@media screen and (max-height: 1100px) {
+		max-height: 890px;
+	}
+	@media screen and (max-height: 1050px) {
+		max-height: 840px;
+	}
+	@media screen and (max-height: 1000px) {
+		max-height: 790px;
+	}
+	@media screen and (max-height: 950px) {
+		max-height: 660px;
+	}
+	@media screen and (max-height: 900px) {
+		max-height: 630px;
+	}
+	@media screen and (max-height: 850px) {
+		max-height: 580px;
+	}
+	@media screen and (max-height: 750px) {
+		max-height: 470px;
+	}
+	@media screen and (max-height: 740px) {
+		max-height: 490px;
+	}
+	@media screen and (max-height: 700px) {
+		max-height: 410px;
+	}
 `;
 
 const ProductRow = styled.div`
@@ -129,9 +172,22 @@ const ProductFilterButton = styled.option`
 	background-color: ${(props) => (props.active ? '#aaa' : 'transparent')};
 `;
 
-const ProductOverlay = ({ darkMode, setProduct, id }) => {
+const ProductOverlay = ({ darkMode, setProduct, id, updateList }) => {
 	const [selected, setSelected] = useState('Popular Products');
 	const [selectedFilter, setSelectedFilter] = useState('random');
+	const [selectedProducts, setSelectedProducts] = useState([]);
+	const listId = id;
+
+	useEffect(() => {
+		// Load the list of selected products from local storage
+		const storedProducts = JSON.parse(localStorage.getItem(`allProductsInList` + id)) || [];
+		setSelectedProducts(storedProducts);
+
+		document.body.style.overflow = 'hidden';
+		return () => {
+			document.body.style.overflow = 'unset';
+		};
+	}, []);
 
 	const handleFilterChange = (event) => {
 		const filter = event.target.value;
@@ -141,10 +197,38 @@ const ProductOverlay = ({ darkMode, setProduct, id }) => {
 	const handleNavItemClick = (itemName) => {
 		setSelected(itemName);
 	};
-
 	const handleSelect = (product) => {
+		const productId = product.uniqueKey;
+
+		// Check if the product is already selected
+		if (selectedProducts.some((selectedProduct) => selectedProduct.uniqueKey === productId)) {
+			return;
+		}
+
+		// Update the list of selected products
+		const updatedSelectedProducts = [...selectedProducts, product];
+		setSelectedProducts(updatedSelectedProducts);
+
+		// Update local storage
+		const allLists = JSON.parse(localStorage.getItem(`shoppingLists`)) || [];
+
+		const updatedLists = allLists.map((list) => {
+			if (list.id == listId) {
+				// Find the list by ID and add the product to its products array
+				const allProducts = JSON.parse(localStorage.getItem(`allProductsInList` + listId)) || [];
+
+				const updatedProducts = [...allProducts, product]; // Add the new product to the existing products
+
+				localStorage.setItem(`allProductsInList` + listId, JSON.stringify(updatedProducts));
+			}
+			return list;
+		});
+
+		// Save the updated data back to local storage
+		localStorage.setItem(`shoppingLists`, JSON.stringify(updatedLists));
+
 		axiosClient
-			.post(`/add-product/${product.name}`, [id, product])
+			.post(`/add-product/${product.name}`, [listId, product])
 			.then((res) => {
 				console.log(res);
 			})
@@ -152,7 +236,26 @@ const ProductOverlay = ({ darkMode, setProduct, id }) => {
 				console.log(err);
 			})
 			.finally(() => {});
+
 		setProduct((prevProducts) => [...prevProducts, product]);
+	};
+
+	const handleUnselectProduct = (productId, listId) => {
+		const selectedProducts = JSON.parse(localStorage.getItem(`allProductsInList${listId}`)) || [];
+		const updatedSelectedProducts = selectedProducts.filter((product) => product.uniqueKey !== productId);
+		localStorage.setItem(`allProductsInList${listId}`, JSON.stringify(updatedSelectedProducts));
+		setSelectedProducts(updatedSelectedProducts);
+
+		axiosClient
+			.delete(`remove-product/${productId}/${listId}`)
+			.then((res) => {
+				console.log(res);
+				updateList();
+			})
+			.catch((err) => {
+				console.log(err);
+			})
+			.finally(() => {});
 	};
 
 	const RecentProducts = [
@@ -214,10 +317,23 @@ const ProductOverlay = ({ darkMode, setProduct, id }) => {
 							<ProductRow key={index}>
 								<ProductCell key={index}>
 									<div className="grp-check">
-										<input className="radio" onChange={() => handleSelect(product)} type="checkbox" />
+										<input
+											className="radio"
+											onChange={() => handleSelect(product)}
+											type="checkbox"
+											checked={selectedProducts.some(
+												(selectedProduct) => selectedProduct.uniqueKey === product.uniqueKey
+											)}
+										/>
 										{product.name}
 									</div>
-									<p>X</p>
+									<p
+										onClick={() => {
+											handleUnselectProduct(product.uniqueKey, listId);
+										}}
+									>
+										X
+									</p>
 								</ProductCell>
 							</ProductRow>
 						))}
@@ -237,10 +353,22 @@ const ProductOverlay = ({ darkMode, setProduct, id }) => {
 												<ProductRow key={productIndex}>
 													<ProductCell>
 														<div className="grp-check">
-															<input className="radio" type="checkbox" />
+															<input
+																className="radio"
+																type="checkbox"
+																checked={selectedProducts.some(
+																	(selectedProduct) => selectedProduct.uniqueKey === product.uniqueKey
+																)}
+															/>
 															{product.name}
 														</div>
-														<p>X</p>
+														<p
+															onClick={() => {
+																handleUnselectProduct(product.uniqueKey, listId);
+															}}
+														>
+															X
+														</p>
 													</ProductCell>
 												</ProductRow>
 											);

@@ -11,6 +11,7 @@ return new class extends Migration {
     public function up(): void {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
+            $table->integer("unique_key");
             $table->string('name');
             $table->unsignedBigInteger('list_id');
             $table->string("category");
@@ -18,8 +19,6 @@ return new class extends Migration {
             $table->string("unit")->nullable()->default("KG");
             $table->integer("price")->nullable()->default(0);
             $table->timestamps();
-
-
             $table->foreign('list_id')->references('id')->on('shopping_lists')->onDelete('cascade');
         });
     }

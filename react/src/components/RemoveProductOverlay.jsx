@@ -1,5 +1,4 @@
-import React from 'react';
-
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { useLanguage } from '../contexts/LanguageContext';
 import axiosClient from '../axiosClient';
@@ -23,7 +22,8 @@ const Background = styled.div`
 const Container = styled.div`
 	border: 1px solid white;
 	margin: 20px auto;
-	width: 300px;
+	min-width: 300px;
+	max-width: 400px;
 	background-color: #fff;
 	border-radius: 8px;
 	align-items: center;
@@ -31,6 +31,8 @@ const Container = styled.div`
 	@media screen and (max-width: 960px) {
 		top: 20px;
 		width: 90%;
+		min-width: 90%;
+		max-width: 95%;
 	}
 `;
 
@@ -60,14 +62,63 @@ const InnerContainer = styled.div`
 		color: #333;
 	}
 `;
-const RemoveProductOverlay = ({ productToRemove, listTitle, setRemoveProduct, setProduct }) => {
+const RemoveProductOverlay = ({
+	productToRemove,
+	listTitle,
+	setRemoveProduct,
+	setProduct,
+	listId,
+	productIDRemove,
+	setMessage,
+	setStatus,
+	setRemoveProductConfirmation,
+}) => {
 	const { translate } = useLanguage();
+
+	useEffect(() => {
+		document.body.style.overflow = 'hidden';
+		return () => {
+			document.body.style.overflow = 'unset';
+		};
+	}, []);
 
 	const close = () => {
 		setRemoveProduct((prev) => !prev);
 	};
 
-	const handleRemoveProduct = (product) => {};
+	const handleRemoveProduct = () => {
+		setRemoveProductConfirmation(true);
+		const localList = JSON.parse(localStorage.getItem(`allProductsInList${listId}`)) || [];
+		// Filter out the product to be removed
+		const updatedList = localList.filter((p) => p.uniqueKey !== productIDRemove);
+
+		// Update the local storage
+		localStorage.setItem(`allProductsInList${listId}`, JSON.stringify(updatedList));
+		setRemoveProduct((prev) => !prev);
+
+		axiosClient
+			.delete(`remove-product/${productIDRemove}/${listId}`)
+			.then((res) => {
+				console.log(res);
+				setMessage(translate('removed-product'));
+			})
+			.catch((err) => {
+				console.log(err);
+				setMessage(translate('removed-product-fail'));
+				setStatus(400);
+			})
+			.finally(() => {
+				setProduct(updatedList);
+				setRemoveProductConfirmation(false);
+				setTimeout(() => {
+					return setTimeout(() => {
+						setStatus(200);
+						setMessage(null);
+					}, 1600);
+				});
+			});
+	};
+
 	return (
 		<Background>
 			<Container>
@@ -81,7 +132,12 @@ const RemoveProductOverlay = ({ productToRemove, listTitle, setRemoveProduct, se
 						<button className="btn" onClick={close}>
 							{translate('cancel-btn')}
 						</button>
-						<button onClick={handleRemoveProduct} className="btn btn-main red-bg">
+						<button
+							onClick={() => {
+								handleRemoveProduct();
+							}}
+							className="btn btn-main red-bg"
+						>
 							{translate('remove-btn')}
 						</button>
 					</div>

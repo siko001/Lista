@@ -45,7 +45,7 @@ class ListController extends Controller {
                 $product->delete();
             }
 
-            // Delete the list
+            // Delete the List
             $listToDelete->delete();
 
             return response()->json(['message' => 'List and associated products deleted successfully'], 200);

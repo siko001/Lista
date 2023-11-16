@@ -6,12 +6,17 @@ const Container = styled.div`
 	align-items: center;
 	display: flex;
 	width: 100%;
-	height: 50px;
+	min-height: 50px;
+	padding: 10px 20px;
 	@media screen and (max-width: 950px) {
 		width: 90%;
 	}
+	@media screen and (max-width: 650px) {
+		width: 98%;
+	}
 	&:hover {
 		background-color: rgba(0, 0, 0, 0.3);
+		border-radius: 50px;
 	}
 	.left {
 		display: flex;
@@ -20,6 +25,9 @@ const Container = styled.div`
 		justify-content: center;
 		margin-left: 10px;
 		gap: 10px;
+		@media screen and (max-width: 750px) {
+			margin-left: 0px;
+		}
 
 		.product_title {
 			font-size: 1.3rem;
@@ -29,8 +37,7 @@ const Container = styled.div`
 
 			@media screen and (max-width: 750px) {
 				font-size: 0.9rem;
-				width: 140px;
-				max-width: 140px;
+				max-width: 130px;
 			}
 		}
 	}
@@ -52,7 +59,9 @@ const Container = styled.div`
 		gap: 10px;
 		justify-content: space-evenly;
 		margin: 0 20px;
-
+		@media screen and (max-width: 650px) {
+			min-width: 120px;
+		}
 		.group {
 			text-align: center;
 		}
@@ -75,7 +84,6 @@ const Container = styled.div`
 
 	.removeProduct {
 		margin-right: 10px;
-
 		width: 25px;
 		height: 25px;
 		text-align: center;
@@ -93,21 +101,23 @@ const Container = styled.div`
 	}
 `;
 
-const Product = ({ setRemoveProduct, product, setProductToRemove, productName, quantity, unit, price }) => {
-	const handleRemoveProduct = (product) => {
+const Product = ({ setRemoveProduct, setProductToRemove, productName, quantity, unit, price, productKey, setProductIDRemove }) => {
+	const handleRemoveProduct = (product, id) => {
 		setProductToRemove(product);
+		setProductIDRemove(id);
 		setRemoveProduct((prev) => !prev);
 	};
-	const totalProductprice = quantity ? quantity : null * price ? price : null;
+	const totalProductPrice = quantity * price;
+
 	return (
-		<Container>
+		<Container key={productName}>
 			<div className="left">
 				<input className="radio" type="checkbox" />
 				<div className="product_title">{productName}</div>
 			</div>
 
 			<div className="center">
-				{quantity && unit && (
+				{quantity + unit && (
 					<div className="group">
 						<div className="description">Quantity</div>
 						<div className="quantative">
@@ -125,17 +135,17 @@ const Product = ({ setRemoveProduct, product, setProductToRemove, productName, q
 						</div>
 					</div>
 				)}
-				{totalProductprice && (
+				{totalProductPrice && (
 					<div className="group">
 						<div className="description">Total</div>
 						<div className="quantative">
-							{totalProductprice}
+							{totalProductPrice}
 							<span>€</span>
 						</div>
 					</div>
 				)}
 			</div>
-			<div onClick={() => handleRemoveProduct(productName)} className="removeProduct light">
+			<div onClick={() => handleRemoveProduct(productName, productKey)} className="removeProduct light">
 				X
 			</div>
 		</Container>

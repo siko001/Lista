@@ -11,6 +11,7 @@ import Notification from '../components/Notification';
 import Product from '../components/Product';
 import RemoveProductOverlay from '../components/RemoveProductOverlay';
 import ProductOvelay from '../components/ProductOvelay';
+import RemoveProductLoader from '../components/RemoveProductLoader';
 
 const Container = styled.div`
 	width: 100%;
@@ -22,12 +23,30 @@ const Main = styled.div`
 	justify-content: center;
 	flex-direction: column;
 	align-items: center;
+
+	.background {
+		height: 80px;
+		border-radius: 10px 10px 0 0;
+		width: 80%;
+		position: fixed;
+		bottom: 0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
 `;
 
 const ListHeader = styled.div`
+	position: sticky;
+	top: -1px;
+	overflow: hidden;
 	margin: 0 auto;
 	width: 45%;
 	height: 100px;
+	z-index: 1;
+	padding: 0 15px;
+	border-radius: 0px 0px 30px 30px;
+	margin-bottom: 20px;
 	padding-bottom: 20px;
 	display: flex;
 	flex-direction: column;
@@ -51,6 +70,14 @@ const ListHeader = styled.div`
 			display: flex;
 			align-items: center;
 			height: 20px;
+
+			.title {
+				max-width: 350px;
+				overflow: hidden;
+				@media screen and (max-width: 750px) {
+					max-width: 298px;
+				}
+			}
 		}
 		.left:hover {
 			border-radius: 5px;
@@ -122,12 +149,13 @@ const ProductsContainer = styled.div`
 	@media screen and (max-width: 950px) {
 		min-width: 100%;
 		max-width: 100vw;
+		margin-bottom: 100px;
+		overflow: auto;
+		
 	}
 `;
 
 const Addbutton = styled.button`
-	position: fixed;
-	bottom: 40px;
 	padding: 1rem 1.5rem;
 	background: #0a6bdb;
 	font-size: 1rem;
@@ -141,6 +169,7 @@ const Addbutton = styled.button`
 
 const Closebutton = styled.button`
 	position: fixed;
+	z-index: 999;
 	bottom: 20px;
 	padding: 1rem 1.5rem;
 	background: #db0a1f;
@@ -179,6 +208,7 @@ const ShoppingList = () => {
 	const [productToRemove, setProductToRemove] = useState(null);
 	const [productIDRemove, setProductIDRemove] = useState(null);
 	const [removeProduct, setRemoveProduct] = useState(null);
+	const [removeProductConfirmation, setRemoveProductConfirmation] = useState(null);
 
 	const [productOverlay, setProductOverylay] = useState(false);
 	const [product, setProduct] = useState([]);
@@ -188,7 +218,6 @@ const ShoppingList = () => {
 			saveTitle(e);
 		}
 	};
-
 	useEffect(() => {
 		const inputElement = inputRef.current;
 		if (isEditingTitle && inputElement) {
@@ -198,18 +227,43 @@ const ShoppingList = () => {
 				inputElement.removeEventListener('keypress', handleKeyPress);
 			};
 		}
+		updateList();
+	}, [id, isEditingTitle]);
 
-		axiosClient
-			.get(`/list/${id}`, id)
-			.then((res) => {
-				setList(res.data[0]);
-				setProduct(res.data[1]);
-			})
-			.catch((err) => {
-				console.log(err);
-			})
-			.finally(() => {});
-	}, [id, isEditingTitle, product]);
+	const areListsEqual = (listA, listB) => {
+		if (!listA || !listB) {
+			return false;
+		}
+
+		// Compare individual properties
+		return listA.id === listB.id;
+	};
+
+	const updateList = () => {
+		const localList = JSON.parse(localStorage.getItem(`allProductsInList${id}`));
+
+		if (localList && areListsEqual(localList, list)) {
+			console.log('happening');
+			setProduct(localList);
+			// Local list exists and is equal to the current list
+			setList(localList);
+		} else {
+			console.log('niot Happening');
+			// Local list doesn't exist or is different, fetch from the API
+			axiosClient
+				.get(`/list/${id}`)
+				.then((res) => {
+					const [newList, newProducts] = res.data;
+
+					setList(newList);
+					setProduct(newProducts);
+				})
+				.catch((err) => {
+					console.log(err);
+				})
+				.finally(() => {});
+		}
+	};
 
 	const editTitle = () => {
 		setIsEditingTitle(true);
@@ -232,7 +286,6 @@ const ShoppingList = () => {
 				// Assuming allLists is a string representation of JSON data, parse it into an array
 				allLists = JSON.parse(allLists) || [];
 				const updatedLists = allLists.map((list) => {
-					console.log(id);
 					if (list.id == id) {
 						// Update the title for the matching list
 						return { ...list, name: newTitle };
@@ -280,11 +333,13 @@ const ShoppingList = () => {
 		<Container className={darkMode ? 'darkMode' : 'lightMode'}>
 			<Navbar />
 			<Main>
-				<ListHeader>
+				<ListHeader style={{ backgroundColor: darkMode ? 'black' : 'white' }}>
 					<div className="top">
 						<div onClick={editTitle} className="left">
 							{!isEditingTitle ? (
-								<p onClick={editTitle}>{title} </p>
+								<p className="title" onClick={editTitle}>
+									{title}{' '}
+								</p>
 							) : (
 								<input
 									style={{ color: darkMode ? '#fff' : '#000' }}
@@ -314,47 +369,52 @@ const ShoppingList = () => {
 					</div>
 					<div className="bottom"></div>
 				</ListHeader>
-
 				<ProductsContainer>
 					{product.length === 0
 						? translate('please-add-product')
 						: product.map((product) => (
 								<Product
-									key={product.id}
+									key={product.name}
 									darkMode={darkMode}
+									productKey={product.uniqueKey}
 									setRemoveProduct={setRemoveProduct}
 									setProductToRemove={setProductToRemove}
 									productName={product.name}
 									price={product.price}
 									quantity={product.quantity}
 									unit={product.unit}
+									setProductIDRemove={setProductIDRemove}
 								/>
 						  ))}
 				</ProductsContainer>
-
 				{/* Notifications, Overlays, loaders, Floating Butttons */}
 				<Notification message={message} status={status} />
-				{productOverlay && <ProductOvelay darkMode={darkMode} setProduct={setProduct} id={id} />}
-
+				{productOverlay && <ProductOvelay darkMode={darkMode} setProduct={setProduct} id={id} updateList={updateList} />}
+				{removeProductConfirmation && <RemoveProductLoader />}
 				{removeProduct && (
 					<RemoveProductOverlay
 						productToRemove={productToRemove}
 						listTitle={title}
 						setRemoveProduct={setRemoveProduct}
 						setProduct={setProduct}
+						listId={id}
+						productIDRemove={productIDRemove}
+						setMessage={setMessage}
+						setStatus={setStatus}
+						setRemoveProductConfirmation={setRemoveProductConfirmation}
 					/>
 				)}
-
 				{!productOverlay && (
-					<Addbutton
-						onClick={handleAddProduct}
-						className="btn"
-						style={{ color: darkMode ? 'white' : 'black', borderColor: darkMode ? 'white' : 'black' }}
-					>
-						{translate('product-add-btn')}
-					</Addbutton>
+					<div className="background" style={{ backgroundColor: darkMode ? '#1C1C1D' : 'white' }}>
+						<Addbutton
+							onClick={handleAddProduct}
+							className="btn"
+							style={{ color: darkMode ? 'white' : 'black', borderColor: darkMode ? 'white' : 'black' }}
+						>
+							{translate('product-add-btn')}
+						</Addbutton>
+					</div>
 				)}
-
 				{productOverlay && (
 					<Closebutton
 						onClick={handleCloseProductOverlay}

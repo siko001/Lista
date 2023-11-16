@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
 import styled from 'styled-components';
 import Overlay from '../components/Overlay';
@@ -98,6 +98,19 @@ const Home = () => {
 	const [loadingLists, setLoadingLists] = useState(false);
 	const [deleteLoader, setDeleteLoader] = useState(false);
 	const [copyLoader, setCopyLoader] = useState(false);
+	const intervalIdRef = useRef(null);
+
+		useEffect(() => {
+			fetchLists(); // Fetch your initial data
+			startImageInterval(); // Start the interval
+
+			return () => {
+				// Clear the interval when the component is unmounted
+				if (intervalIdRef.current) {
+					clearInterval(intervalIdRef.current);
+				}
+			};
+		}, []);
 
 	//Create New List Overlay
 	const handleOpenOverlay = () => {
@@ -154,15 +167,14 @@ const Home = () => {
 		return true;
 	}
 
-	useEffect(() => {
-		fetchLists();
-		const interval = setInterval(() => {
+	const startImageInterval = () => {
+		const newIntervalId = setInterval(() => {
 			const newIndex = Math.floor(Math.random() * images.length);
 			setCurrentImage(newIndex);
 		}, 3000);
+		intervalIdRef.current = newIntervalId;
+	};
 
-		return () => clearInterval(interval);
-	}, [images]);
 
 	const addNewList = (newList) => {
 		setShoppingList((prevList) => [...prevList, newList]);
