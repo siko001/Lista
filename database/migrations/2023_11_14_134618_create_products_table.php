@@ -17,7 +17,10 @@ return new class extends Migration {
             $table->string("category");
             $table->integer("quantity")->nullable();
             $table->string("unit")->nullable()->default("KG");
-            $table->integer("price")->nullable()->default(0);
+            $table->integer("price")->nullable()->default();
+            $table->integer("user_id")->nullable();
+            $table->integer("guest_id")->nullable();
+            $table->enum("status", ["to buy", "ready"])->default("to buy");
             $table->timestamps();
             $table->foreign('list_id')->references('id')->on('shopping_lists')->onDelete('cascade');
         });

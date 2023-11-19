@@ -6,6 +6,7 @@ const PopularProducts = [
 		price: '1',
 		unit: 'kg',
 		quantity: '1',
+		status: 'to buy',
 	},
 	{
 		uniqueKey: '2',
@@ -14,6 +15,8 @@ const PopularProducts = [
 		price: '',
 		unit: '',
 		quantity: '',
+		status: 'to buy',
+		status: 'to buy',
 	},
 	{
 		uniqueKey: '3',
@@ -22,6 +25,7 @@ const PopularProducts = [
 		price: '',
 		unit: '',
 		quantity: '',
+		status: 'to buy',
 	},
 	{
 		uniqueKey: '4',
@@ -30,6 +34,7 @@ const PopularProducts = [
 		price: '',
 		unit: '',
 		quantity: '',
+		status: 'to buy',
 	},
 	{
 		uniqueKey: '5',
@@ -38,6 +43,7 @@ const PopularProducts = [
 		price: '',
 		unit: '',
 		quantity: '',
+		status: 'to buy',
 	},
 	{
 		uniqueKey: '6',
@@ -46,6 +52,7 @@ const PopularProducts = [
 		price: '',
 		unit: '',
 		quantity: '',
+		status: 'to buy',
 	},
 	{
 		uniqueKey: '11',
@@ -54,6 +61,7 @@ const PopularProducts = [
 		price: '',
 		unit: '',
 		quantity: '',
+		status: 'to buy',
 	},
 	{
 		uniqueKey: '21',
@@ -62,6 +70,7 @@ const PopularProducts = [
 		price: '',
 		unit: '',
 		quantity: '',
+		status: 'to buy',
 	},
 	{
 		uniqueKey: '31',
@@ -70,6 +79,7 @@ const PopularProducts = [
 		price: '',
 		unit: '',
 		quantity: '',
+		status: 'to buy',
 	},
 	{
 		uniqueKey: '41',
@@ -78,6 +88,7 @@ const PopularProducts = [
 		price: '',
 		unit: '',
 		quantity: '',
+		status: 'to buy',
 	},
 	{
 		uniqueKey: '51',
@@ -86,6 +97,7 @@ const PopularProducts = [
 		price: '',
 		unit: '',
 		quantity: '',
+		status: 'to buy',
 	},
 	{
 		uniqueKey: '61',
@@ -94,6 +106,7 @@ const PopularProducts = [
 		price: '',
 		unit: '',
 		quantity: '',
+		status: 'to buy',
 	},
 	{
 		uniqueKey: '112',
@@ -102,6 +115,7 @@ const PopularProducts = [
 		price: '',
 		unit: '',
 		quantity: '',
+		status: 'to buy',
 	},
 	{
 		uniqueKey: '212',
@@ -110,6 +124,7 @@ const PopularProducts = [
 		price: '',
 		unit: '',
 		quantity: '',
+		status: 'to buy',
 	},
 	{
 		uniqueKey: '312',
@@ -118,6 +133,7 @@ const PopularProducts = [
 		price: '',
 		unit: '',
 		quantity: '',
+		status: 'to buy',
 	},
 	{
 		uniqueKey: '412',
@@ -126,6 +142,7 @@ const PopularProducts = [
 		price: '',
 		unit: '',
 		quantity: '',
+		status: 'to buy',
 	},
 	{
 		uniqueKey: '512',
@@ -134,6 +151,7 @@ const PopularProducts = [
 		price: '',
 		unit: '',
 		quantity: '',
+		status: 'to buy',
 	},
 	{
 		uniqueKey: '612',
@@ -142,6 +160,7 @@ const PopularProducts = [
 		price: '',
 		unit: '',
 		quantity: '',
+		status: 'to buy',
 	},
 ];
 

@@ -12,6 +12,9 @@ import Product from '../components/Product';
 import RemoveProductOverlay from '../components/RemoveProductOverlay';
 import ProductOvelay from '../components/ProductOvelay';
 import RemoveProductLoader from '../components/RemoveProductLoader';
+import MainSettings from '../components/MainSettings';
+import EmptyListOverlay from '../components/EmptyListOverlay';
+import ReadyProduct from '../components/ReadyProduct';
 
 const Container = styled.div`
 	width: 100%;
@@ -27,7 +30,7 @@ const Main = styled.div`
 	.background {
 		height: 80px;
 		border-radius: 10px 10px 0 0;
-		width: 80%;
+		width: 100%;
 		position: fixed;
 		bottom: 0;
 		display: flex;
@@ -51,7 +54,7 @@ const ListHeader = styled.div`
 	display: flex;
 	flex-direction: column;
 	@media screen and (max-width: 950px) {
-		width: 90%;
+		width: 95%;
 	}
 
 	.top {
@@ -146,12 +149,17 @@ const ProductsContainer = styled.div`
 	width: 45%;
 	display: flex;
 	flex-direction: column;
+	margin-bottom: 100px;
 	@media screen and (max-width: 950px) {
 		min-width: 100%;
 		max-width: 100vw;
-		margin-bottom: 100px;
 		overflow: auto;
-		
+	}
+	.header {
+		margin-bottom: 10px;
+		&:nth-child(2n) {
+			margin-top: 40px;
+		}
 	}
 `;
 
@@ -212,6 +220,12 @@ const ShoppingList = () => {
 
 	const [productOverlay, setProductOverylay] = useState(false);
 	const [product, setProduct] = useState([]);
+	const [readyProducts, setReadyProducts] = useState([]);
+
+	const [openSettings, setOpenSettings] = useState(null);
+
+	const [emptyList, setEmptyList] = useState(null);
+	const [openEmptyListOverLay, setOpenEmptyListOverLay] = useState(null);
 
 	const handleKeyPress = (e) => {
 		if (e.key === 'Enter') {
@@ -241,25 +255,35 @@ const ShoppingList = () => {
 
 	const updateList = () => {
 		const localList = JSON.parse(localStorage.getItem(`allProductsInList${id}`));
+		console.log(localList);
+		if (localList && areListsEqual(localList, product)) {
+			const toBuy = localList.filter((product) => product.status == 'to buy');
+			const ready = localList.filter((product) => product.status !== 'to buy');
 
-		if (localList && areListsEqual(localList, list)) {
-			console.log('happening');
-			setProduct(localList);
-			// Local list exists and is equal to the current list
-			setList(localList);
+			setProduct(toBuy);
+			setReadyProducts(ready);
+			console.log('local storage and db are the same');
 		} else {
-			console.log('niot Happening');
 			// Local list doesn't exist or is different, fetch from the API
 			axiosClient
 				.get(`/list/${id}`)
 				.then((res) => {
-					const [newList, newProducts] = res.data;
+					const products = res.data[1];
+					const toBuy = products.filter((product) => product.status == 'to buy');
+					const ready = products.filter((product) => product.status !== 'to buy');
 
-					setList(newList);
-					setProduct(newProducts);
+					// Store "to buy" products in local storage
+					localStorage.setItem(`allProductsInList${id}`, JSON.stringify(toBuy));
+
+					// Store "ready" products in local storage
+					localStorage.setItem(`allProductsInList${id}`, JSON.stringify(ready));
+
+					// Use filteredProducts as needed
+					setProduct(toBuy);
+					setReadyProducts(ready);
 				})
-				.catch((err) => {
-					console.log(err);
+				.catch((error) => {
+					console.error('Error fetching list:', error);
 				})
 				.finally(() => {});
 		}
@@ -329,10 +353,22 @@ const ShoppingList = () => {
 		setProductOverylay((prev) => !prev);
 	};
 
+	const handleOpenSettings = () => {
+		setOpenSettings((prev) => !prev);
+	};
+
 	return (
-		<Container className={darkMode ? 'darkMode' : 'lightMode'}>
+		<Container className={darkMode ? 'dar@e' : 'lightMode'}>
 			<Navbar />
 			<Main>
+				{openSettings && (
+					<MainSettings
+						setOpenSettings={setOpenSettings}
+						editTitle={editTitle}
+						setOpenEmptyListOverLay={setOpenEmptyListOverLay}
+						product={product}
+					/>
+				)}
 				<ListHeader style={{ backgroundColor: darkMode ? 'black' : 'white' }}>
 					<div className="top">
 						<div onClick={editTitle} className="left">
@@ -362,35 +398,67 @@ const ShoppingList = () => {
 									<FontAwesomeIcon icon={faMagnifyingGlass} />
 								</div>
 							)}
-							<div className="settings">
+							<div onClick={handleOpenSettings} className="settings">
 								<FontAwesomeIcon icon={faGears} />
 							</div>
 						</div>
 					</div>
+
 					<div className="bottom"></div>
 				</ListHeader>
+
 				<ProductsContainer>
-					{product.length === 0
+					{product.length > 0 ? (
+						product.length == 1 ? (
+							<h2 className="header to-buy">{translate('to-buy')}</h2>
+						) : (
+							<h2 className="header  to-buy">{translate('to-buy-plural')}</h2>
+						)
+					) : (
+						''
+					)}
+					{product.length === 0 && readyProducts.length <= 0
 						? translate('please-add-product')
-						: product.map((product) => (
+						: product.map((p) => (
 								<Product
-									key={product.name}
+									key={p.name}
 									darkMode={darkMode}
-									productKey={product.uniqueKey}
+									productKey={p.uniqueKey}
 									setRemoveProduct={setRemoveProduct}
 									setProductToRemove={setProductToRemove}
-									productName={product.name}
-									price={product.price}
-									quantity={product.quantity}
-									unit={product.unit}
+									productName={p.name}
+									price={p.price}
+									quantity={p.quantity}
+									unit={p.unit}
 									setProductIDRemove={setProductIDRemove}
+									setReadyProducts={setReadyProducts}
+									setProduct={setProduct}
+									item={product}
+									listId={id}
 								/>
 						  ))}
+
+					{/* Ready Products */}
+					{readyProducts != 0 ? (
+						readyProducts.length == 1 ? (
+							<h2 className="header  green">{translate('ready-product')}</h2>
+						) : (
+							<h2 className="header green">{translate('ready-product-plural')}</h2>
+						)
+					) : (
+						''
+					)}
+					{readyProducts && readyProducts.map((p) => <ReadyProduct key={product.uniqueKey} item={p} />)}
 				</ProductsContainer>
+
 				{/* Notifications, Overlays, loaders, Floating Butttons */}
 				<Notification message={message} status={status} />
+
+				{/* All Prodcts OverLay */}
 				{productOverlay && <ProductOvelay darkMode={darkMode} setProduct={setProduct} id={id} updateList={updateList} />}
-				{removeProductConfirmation && <RemoveProductLoader />}
+
+				{/* Remove Product Overlay & loader */}
+				{(removeProductConfirmation || emptyList) && <RemoveProductLoader />}
 				{removeProduct && (
 					<RemoveProductOverlay
 						productToRemove={productToRemove}
@@ -404,8 +472,20 @@ const ShoppingList = () => {
 						setRemoveProductConfirmation={setRemoveProductConfirmation}
 					/>
 				)}
+
+				{openEmptyListOverLay && (
+					<EmptyListOverlay
+						title={title}
+						setOpenEmptyListOverLay={setOpenEmptyListOverLay}
+						setEmptyList={setEmptyList}
+						listId={id}
+						updateList={updateList}
+					/>
+				)}
+
+				{/* When Product OverLay is Open Display The Close Button else Add ProductButton*/}
 				{!productOverlay && (
-					<div className="background" style={{ backgroundColor: darkMode ? '#1C1C1D' : 'white' }}>
+					<div className="background" style={{ backgroundColor: darkMode ? '#1C1C1D' : '#f5f5f5' }}>
 						<Addbutton
 							onClick={handleAddProduct}
 							className="btn"

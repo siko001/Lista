@@ -1,7 +1,7 @@
 import React from 'react';
+
 import styled from 'styled-components';
 import { useLanguage } from '../contexts/LanguageContext';
-import axiosClient from '../axiosClient';
 
 const Container = styled.div`
 	justify-content: space-between;
@@ -103,96 +103,32 @@ const Container = styled.div`
 	}
 `;
 
-const Product = ({
-	setRemoveProduct,
-	setProductToRemove,
-	productName,
-	quantity,
-	unit,
-	price,
-	productKey,
-	setProductIDRemove,
-	setReadyProducts,
-	setProduct,
-	item,
-	listId,
-}) => {
+const ReadyProduct = ({ item }) => {
+	const theReadyProduct = item;
+	const totalProductPrice = theReadyProduct.quantity * theReadyProduct.price;
 	const { translate } = useLanguage();
 
-	const handleRemoveProduct = (product, id) => {
-		setProductToRemove(product);
-		setProductIDRemove(id);
-		setRemoveProduct((prev) => !prev);
-	};
-	const totalProductPrice = quantity * price;
-
-	const handleMoveToReady = (id, productName, product) => {
-		const selectedProduct = product.find((p) => p.uniqueKey === id);
-		selectedProduct.status = 'ready';
-		// Remove the selected product from the product array
-		const updatedProduct = product.filter((p) => p.uniqueKey !== id);
-
-		// Add the selected product to the readyProducts array
-		setTimeout(() => {
-			const allLists = JSON.parse(localStorage.getItem(`shoppingLists`)) || [];
-			const currentList = allLists.filter((list) => list.id == listId);
-
-			const allProducts = JSON.parse(localStorage.getItem('allProductsInList' + currentList[0].id));
-
-			// Find the index of the selected product in the allProducts array
-			const productIndex = allProducts.findIndex((p) => p.uniqueKey === id);
-
-			// Update the status of the selected product to "ready"
-			if (productIndex !== -1) {
-				allProducts[productIndex].status = 'ready';
-
-				// Save the modified allProducts array back to localStorage
-				localStorage.setItem('allProductsInList' + currentList[0].id, JSON.stringify(allProducts));
-			}
-
-			setReadyProducts((prevReadyProducts) => [...prevReadyProducts, selectedProduct]);
-			setProduct(updatedProduct);
-		}, 1000);
-
-		axiosClient
-			.put(`/update/product${id}/${listId}`, [id, listId])
-			.then((res) => {
-				console.log(res);
-			})
-			.catch((err) => {
-				console.log(err);
-			})
-			.finally(() => {});
-	};
-
 	return (
-		<Container key={productName}>
+		<Container key={theReadyProduct.name}>
 			<div className="left">
-				<input
-					onChange={() => {
-						handleMoveToReady(productKey, productName, item);
-					}}
-					className="radio"
-					type="checkbox"
-				/>
-				<div className="product_title">{productName}</div>
+				<div className="product_title">{theReadyProduct.name}</div>
 			</div>
 
 			<div className="center">
-				{quantity + unit && (
+				{theReadyProduct.quantity + theReadyProduct.unit && (
 					<div className="group">
 						<div className="description">{translate('quantity')}</div>
 						<div className="quantative">
-							{quantity}
-							{unit}
+							{theReadyProduct.quantity}
+							{theReadyProduct.unit}
 						</div>
 					</div>
 				)}
-				{price && (
+				{theReadyProduct.price && (
 					<div className="group">
 						<div className="description">{translate('price')}</div>
 						<div className="quantative">
-							{price}
+							{theReadyProduct.price}
 							<span>€</span>
 						</div>
 					</div>
@@ -214,4 +150,4 @@ const Product = ({
 	);
 };
 
-export default Product;
+export default ReadyProduct;

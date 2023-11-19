@@ -38,4 +38,33 @@ class ProductController extends Controller {
             return response()->json(['message' => 'Product not found'], 404);
         }
     }
+    public function removeAllProducts($id) {
+        $allProductsInList = Product::where("list_id", $id)->get();
+
+        if ($allProductsInList->isNotEmpty()) {
+            foreach ($allProductsInList as $product) {
+                $product->delete();
+            }
+
+            return response()->json(["message" => "Products emptied"]);
+        } else {
+            return response()->json(["message" => "No products found in the list"]);
+        }
+    }
+
+
+    public function markProductReady($productID, $listID) {
+        $product = Product::where("unique_key", $productID)->where("list_id", $listID)->first();
+        if ($product) {
+            if ($product->status == "to buy") {
+                $product->status = "ready";
+                $product->update();
+                return response(["message" => "Product Marked as ready"], 200);
+            } else {
+                return response(["message" => "Product already marked as Ready"], 400);
+            }
+        } else {
+            return response(["message" => "no product found"], 404);
+        }
+    }
 }

@@ -20,15 +20,18 @@ const Container = styled.div`
 		max-width: 400px;
 	}
 	.leftSpace {
+		cursor: pointer;
 		width: 50%;
 		height: 100%;
 	}
 
 	.rightSpace {
+		cursor: pointer;
 		width: 50%;
 		height: 100%;
 	}
 	.aboveSpace {
+		cursor: pointer;
 		margin-top: -15px;
 		width: 100%;
 		min-height: 10px;
@@ -45,7 +48,7 @@ const Content = styled.div`
 
 	.underbottom {
 		margin-top: -15px;
-
+		cursor: pointer;
 		width: 100%;
 		min-height: 23px;
 	}
@@ -59,6 +62,9 @@ const Top = styled.div`
 	.left {
 		font-weight: 700;
 		font-size: 1.2rem;
+		&:hover {
+			color: rgba(16, 16, 255, 0.6);
+		}
 	}
 
 	input {
@@ -98,6 +104,7 @@ const Top = styled.div`
 		min-width: 20px;
 		margin: -12px 0 0 10px;
 		height: 42px;
+		cursor: pointer;
 	}
 `;
 const Bottom = styled.div`

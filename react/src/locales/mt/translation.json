@@ -35,5 +35,19 @@
 	"remove-btn": "neħħi",
 	"product-add-btn": "Zied Prodott",
 	"please-add-product": "Jekk jogħġbok zied prodott fil-lista",
-	"product-close-btn": "Aghlaq il-lista tal-prodotti"
+	"product-close-btn": "Aghlaq il-lista tal-prodotti",
+	"empty-list-btn": "Zvojta!",
+	"empty-list-overlay": "Ha tneħħi kollox min",
+	"empty-list": "neħħi il-prodotti kollha",
+	"mark-all-ready": "Immarka kollox lest",
+	"remove-all-ready": "Neħħi il-prodotti imarkati lesti ",
+	"mark-all-unready": "Ireverti il-prodotti lesti",
+	"empty-list-and-delete": "Hassar il-lista u il-kontenuti kollha",
+	"quantity": "Kwantita",
+	"price": "Prezz",
+	"total": "totall",
+	"ready-product": "Prodott Mixtri",
+	"ready-product-plural": "Prodotti Mixtrija",
+	"to-buy": "Prodott Biex Jinxtara",
+	"to-buy-plural": "Prodotti Biex Jinxtraw"
 }

@@ -15,6 +15,9 @@ class Product extends Model {
         'quantity',
         'unit',
         'price',
+        "status",
+        "user_id",
+        "guest_id"
     ];
 
     public function list() {

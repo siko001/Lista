@@ -230,7 +230,7 @@ const ProductOverlay = ({ darkMode, setProduct, id, updateList }) => {
 		axiosClient
 			.post(`/add-product/${product.name}`, [listId, product])
 			.then((res) => {
-				console.log(res);
+				// console.log(res);
 			})
 			.catch((err) => {
 				console.log(err);
@@ -249,7 +249,7 @@ const ProductOverlay = ({ darkMode, setProduct, id, updateList }) => {
 		axiosClient
 			.delete(`remove-product/${productId}/${listId}`)
 			.then((res) => {
-				console.log(res);
+				// console.log(res);
 				updateList();
 			})
 			.catch((err) => {
@@ -355,6 +355,7 @@ const ProductOverlay = ({ darkMode, setProduct, id, updateList }) => {
 														<div className="grp-check">
 															<input
 																className="radio"
+																onChange={() => handleSelect(product)}
 																type="checkbox"
 																checked={selectedProducts.some(
 																	(selectedProduct) => selectedProduct.uniqueKey === product.uniqueKey

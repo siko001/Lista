@@ -101,9 +101,8 @@ const Home = () => {
 	const intervalIdRef = useRef(null);
 
 		useEffect(() => {
-			fetchLists(); // Fetch your initial data
-			startImageInterval(); // Start the interval
-
+			fetchLists(); 
+			startImageInterval(); 
 			return () => {
 				// Clear the interval when the component is unmounted
 				if (intervalIdRef.current) {

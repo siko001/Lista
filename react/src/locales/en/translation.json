@@ -35,5 +35,21 @@
 	"remove-btn": "remove",
 	"product-add-btn": "Add a product",
 	"please-add-product": "Please add a product to the list",
-	"product-close-btn": "Close product list"
+	"product-close-btn": "Close product list",
+	"empty-list-btn": "Empty",
+	"empty-list-overlay": "You're About to empty ",
+	"empty-listP2-overlay": " of all it's products!",
+
+	"empty-list": "Clear all products",
+	"mark-all-ready": "Mark all as ready",
+	"remove-all-ready": "Remove all ready products",
+	"mark-all-unready": "Unmark all ready Products",
+	"empty-list-and-delete": "Empty and delete the list",
+	"quantity": "quantity",
+	"price": "price",
+	"total": "total",
+	"ready-product": "Bought Product",
+	"ready-product-plural": "Bought Products",
+	"to-buy": "Product to be bought",
+	"to-buy-plural": "Products to buy"
 }
