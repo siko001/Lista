@@ -100,16 +100,16 @@ const Home = () => {
 	const [copyLoader, setCopyLoader] = useState(false);
 	const intervalIdRef = useRef(null);
 
-		useEffect(() => {
-			fetchLists(); 
-			startImageInterval(); 
-			return () => {
-				// Clear the interval when the component is unmounted
-				if (intervalIdRef.current) {
-					clearInterval(intervalIdRef.current);
-				}
-			};
-		}, []);
+	useEffect(() => {
+		fetchLists();
+		startImageInterval();
+		return () => {
+			// Clear the interval when the component is unmounted
+			if (intervalIdRef.current) {
+				clearInterval(intervalIdRef.current);
+			}
+		};
+	}, []);
 
 	//Create New List Overlay
 	const handleOpenOverlay = () => {
@@ -173,7 +173,6 @@ const Home = () => {
 		}, 3000);
 		intervalIdRef.current = newIntervalId;
 	};
-
 
 	const addNewList = (newList) => {
 		setShoppingList((prevList) => [...prevList, newList]);

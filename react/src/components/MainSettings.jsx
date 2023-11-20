@@ -5,6 +5,7 @@ import { faPenSquare, faShare, faClipboard, faTrash, faXmark } from '@fortawesom
 import { useLanguage } from '../contexts/LanguageContext';
 import axiosClient from '../axiosClient';
 import { useDarkMode } from '../contexts/DarkModeContext';
+import { useNavigate } from 'react-router-dom';
 
 const Container = styled.div`
 	z-index: 999;
@@ -47,21 +48,91 @@ const Container = styled.div`
 	}
 `;
 
-const MainSettings = ({ setOpenSettings, editTitle, setOpenEmptyListOverLay, product }) => {
+const MainSettings = ({ setOpenSettings, editTitle, setOpenEmptyListOverLay, product, listId, readyProducts, updateList, toBuyProducts }) => {
 	const { darkMode } = useDarkMode();
 	const { translate } = useLanguage();
+	const navigate = useNavigate();
 
 	const handleMouseOff = () => {
 		setOpenSettings((prev) => !prev);
 	};
 
+	// Setting No. 1 (close)
 	const handleCloseSettings = () => {
 		setOpenSettings((prev) => !prev);
 	};
 
+	// Setting No. 1
 	const handleSettingRename = () => {
 		setOpenSettings((prev) => !prev);
 		editTitle();
+	};
+
+	// Setting No. 2
+	const handleMarkAllToBuyAsReady = (id) => {
+		// Fetch all products
+		// const allProducts = JSON.parse(localStorage.getItem('allProductsInList' + id));
+
+		// // Fetch the to buy products list (if any)
+		// const toBuyProductsList = JSON.parse(localStorage.getItem('toBuyProductsInList' + id)) || [];
+
+		// // Fetch the ready products list (if any)
+		// const readyProductsList = JSON.parse(localStorage.getItem('readyProductsInList' + id)) || [];
+
+		// // Filter products that are not ready
+		// const notReadyProducts = allProducts.filter((p) => p.status !== 'ready');
+
+		// // Update the status of not ready products to 'ready' and add them to readyProductsList
+		// const updatedReadyProducts = notReadyProducts.map((p) => ({ ...p, status: 'ready' }));
+		// const newReadyProductsList = [...readyProductsList, ...updatedReadyProducts];
+
+		// // Move products from toBuyProductsList to readyProductsList with status 'ready'
+		// const updatedToBuyProducts = toBuyProductsList.map((p) => ({ ...p, status: 'ready' }));
+		// const newReadyProductsListWithToBuy = [...newReadyProductsList, ...updatedToBuyProducts];
+
+		// // Update the status of all products to 'ready' in the allProductsList
+		// const updatedAllProducts = allProducts.map((p) => ({ ...p, status: 'ready' }));
+
+		// // Save the updated lists to localStorage
+		// localStorage.setItem('allProductsInList' + id, JSON.stringify(updatedAllProducts));
+		// localStorage.setItem('toBuyProductsInList' + id, '[]');
+		// localStorage.setItem('readyProductsInList' + id, JSON.stringify(newReadyProductsListWithToBuy));
+
+		axiosClient
+			.put('update/all-ready/' + id, id)
+			.then((res) => {
+				console.log(res.data.message);
+				updateList();
+			})
+			.catch((err) => {
+				console.log(err);
+			})
+			.finally(() => {});
+	};
+
+	const handleRevertToBackToBuy = (id) => {
+		axiosClient
+			.put('update/all-to_buy/' + id, id)
+			.then((res) => {
+				updateList();
+			})
+			.catch((err) => {
+				console.log(err);
+			})
+			.finally(() => {});
+	};
+
+	//Remove ONLY all Ready products from the List
+	const handleRemoveReadyMarkedProducts = (id) => {
+		axiosClient
+			.delete('remove/ready/' + id, id)
+			.then((res) => {
+				updateList();
+			})
+			.catch((err) => {
+				console.log(err);
+			})
+			.finally(() => {});
 	};
 
 	const handleEmptyList = () => {
@@ -69,11 +140,36 @@ const MainSettings = ({ setOpenSettings, editTitle, setOpenEmptyListOverLay, pro
 		setOpenSettings((prev) => !prev);
 	};
 
+	const handleDeleteListAndProducts = (id) => {
+		axiosClient
+			.delete(`/delete/all-products/and-list${id}`, id)
+			.then((res) => {
+				console.log(res.data);
+				const homeUrl = '/';
+				navigate(homeUrl);
+			})
+			.then((err) => {
+				console.log(err.message);
+			})
+			.finally(() => {});
+	};
+
+	// const handleMarkAllToBuyAsReady = (listId) => {
+	// 	const allProductsList = localStorage.getItem(`allProductsInList${listId}`);
+
+	// 	const toBuyList = localStorage.getItem(`toBuyProductsInList${listId}`);
+
+	// 	const allProductListThatAreToBuy = allProductsList.filter((p) => p.status != 'ready');
+
+	// 	console.log(allProductListThatAreToBuy);
+	// };
+
 	return (
 		<Container
 			onMouseLeave={handleMouseOff}
 			style={{ backgroundColor: darkMode ? '#161616' : '#fff', color: darkMode ? '#fff' : '#000' }}
 		>
+			{/* Rename Settings  1 */}
 			<ul>
 				<li className="setting-header">
 					<div onClick={handleSettingRename} className="setting-header__group">
@@ -86,7 +182,14 @@ const MainSettings = ({ setOpenSettings, editTitle, setOpenEmptyListOverLay, pro
 						<FontAwesomeIcon icon={faXmark} />
 					</p>
 				</li>
-				<li style={{ display: product[0] === undefined ? 'none' : 'block' }}>
+
+				{/* Mark everything as That is set as to Buy, to as Ready 2 */}
+				<li
+					onClick={() => {
+						handleMarkAllToBuyAsReady(listId);
+					}}
+					style={{ display: toBuyProducts[0] === undefined ? 'none' : 'block' }}
+				>
 					<div className="setting-header__group">
 						<p>
 							<FontAwesomeIcon icon={faClipboard} />
@@ -95,7 +198,13 @@ const MainSettings = ({ setOpenSettings, editTitle, setOpenEmptyListOverLay, pro
 					</div>
 				</li>
 
-				<li style={{ display: product[0] === undefined ? 'none' : 'block' }}>
+				{/* Revert 	all ready products Back to To buy 3*/}
+				<li
+					onClick={() => {
+						handleRevertToBackToBuy(listId);
+					}}
+					style={{ display: readyProducts.length <= 0 ? 'none' : 'block' }}
+				>
 					<div className="setting-header__group long">
 						<p>
 							<FontAwesomeIcon icon={faClipboard} />
@@ -103,7 +212,14 @@ const MainSettings = ({ setOpenSettings, editTitle, setOpenEmptyListOverLay, pro
 						<p>{translate('mark-all-unready')}</p>
 					</div>
 				</li>
-				<li style={{ display: product[0] === undefined ? 'none' : 'block' }}>
+
+				{/* Empty the List From The Ready products Only */}
+				<li
+					onClick={() => {
+						handleRemoveReadyMarkedProducts(listId);
+					}}
+					style={{ display: readyProducts.length <= 0 ? 'none' : 'block' }}
+				>
 					<div className="setting-header__group">
 						<p>
 							<FontAwesomeIcon icon={faShare} />
@@ -112,10 +228,10 @@ const MainSettings = ({ setOpenSettings, editTitle, setOpenEmptyListOverLay, pro
 					</div>
 				</li>
 
-				{/* empty the list frpm products */}
+				{/* empty the list from all products Ready or Not*/}
 				<li
-					style={{ display: product[0] === undefined ? 'none' : 'block' }}
-					onClick={product[0] === undefined ? null : handleEmptyList}
+					style={{ display: product[0] == undefined && readyProducts.length == '0' ? 'none' : 'block' }}
+					onClick={product[0] == undefined && readyProducts.length == '0' ? null : handleEmptyList}
 				>
 					<div className={`setting-header__group ${product[0] === undefined ? 'red' : 'red'}`}>
 						<p>
@@ -137,7 +253,13 @@ const MainSettings = ({ setOpenSettings, editTitle, setOpenEmptyListOverLay, pro
 
 				{/* Delete the List and it's content */}
 				<li>
-					<div className={`setting-header__group `} style={{ color: 'red ' }}>
+					<div
+						onClick={() => {
+							handleDeleteListAndProducts(listId);
+						}}
+						className={`setting-header__group `}
+						style={{ color: 'red ' }}
+					>
 						<p>
 							<FontAwesomeIcon icon={faTrash} />
 						</p>

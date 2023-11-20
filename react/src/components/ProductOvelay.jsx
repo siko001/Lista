@@ -172,16 +172,30 @@ const ProductFilterButton = styled.option`
 	background-color: ${(props) => (props.active ? '#aaa' : 'transparent')};
 `;
 
-const ProductOverlay = ({ darkMode, setProduct, id, updateList }) => {
+const ProductOverlay = ({
+	darkMode,
+	setProduct,
+	id,
+	updateList,
+	selectedProducts,
+	setSelectedProducts,
+	toBuyProducts,
+	setToBuyProducts,
+	readyProducts,
+	setReadyProducts,
+}) => {
 	const [selected, setSelected] = useState('Popular Products');
 	const [selectedFilter, setSelectedFilter] = useState('random');
-	const [selectedProducts, setSelectedProducts] = useState([]);
+
 	const listId = id;
 
 	useEffect(() => {
 		// Load the list of selected products from local storage
-		const storedProducts = JSON.parse(localStorage.getItem(`allProductsInList` + id)) || [];
-		setSelectedProducts(storedProducts);
+
+		// console.log(toBuyProducts);
+		console.log(selectedProducts);
+		// const storedProducts = JSON.parse(localStorage.getItem(`allProductsInList` + id)) || [];
+		setSelectedProducts(selectedProducts);
 
 		document.body.style.overflow = 'hidden';
 		return () => {
@@ -197,6 +211,7 @@ const ProductOverlay = ({ darkMode, setProduct, id, updateList }) => {
 	const handleNavItemClick = (itemName) => {
 		setSelected(itemName);
 	};
+
 	const handleSelect = (product) => {
 		const productId = product.uniqueKey;
 
@@ -209,28 +224,32 @@ const ProductOverlay = ({ darkMode, setProduct, id, updateList }) => {
 		const updatedSelectedProducts = [...selectedProducts, product];
 		setSelectedProducts(updatedSelectedProducts);
 
-		// Update local storage
-		const allLists = JSON.parse(localStorage.getItem(`shoppingLists`)) || [];
+		// // Update local storage
+		// const allLists = JSON.parse(localStorage.getItem(`shoppingLists`)) || [];
 
-		const updatedLists = allLists.map((list) => {
-			if (list.id == listId) {
-				// Find the list by ID and add the product to its products array
-				const allProducts = JSON.parse(localStorage.getItem(`allProductsInList` + listId)) || [];
+		// const updatedLists = allLists.map((list) => {
+		// 	if (list.id == listId) {
+		// 		// Find the list by ID and add the product to its products array
+		// 		const allProducts = JSON.parse(localStorage.getItem(`allProductsInList` + listId)) || [];
 
-				const updatedProducts = [...allProducts, product]; // Add the new product to the existing products
+		// 		const toBuyProducts = JSON.parse(localStorage.getItem(`toBuyProductsInList` + listId)) || [];
 
-				localStorage.setItem(`allProductsInList` + listId, JSON.stringify(updatedProducts));
-			}
-			return list;
-		});
+		// 		const updatedProducts = [...allProducts, product];
+		// 		const updatedToBuyProducts = [...toBuyProducts, product]; // Add the new product to the existing products
 
-		// Save the updated data back to local storage
-		localStorage.setItem(`shoppingLists`, JSON.stringify(updatedLists));
+		// 		localStorage.setItem(`allProductsInList` + listId, JSON.stringify(updatedProducts));
+		// 		localStorage.setItem(`toBuyProductsInList` + listId, JSON.stringify(updatedToBuyProducts));
+		// 	}
+		// 	return list;
+		// });
+
+		// // Save the updated data back to local storage
+		// localStorage.setItem(`shoppingLists`, JSON.stringify(updatedLists));
 
 		axiosClient
 			.post(`/add-product/${product.name}`, [listId, product])
 			.then((res) => {
-				// console.log(res);
+				console.log(res);
 			})
 			.catch((err) => {
 				console.log(err);
@@ -238,18 +257,30 @@ const ProductOverlay = ({ darkMode, setProduct, id, updateList }) => {
 			.finally(() => {});
 
 		setProduct((prevProducts) => [...prevProducts, product]);
+		updateList();
 	};
 
 	const handleUnselectProduct = (productId, listId) => {
+		//unselecet from the all products
 		const selectedProducts = JSON.parse(localStorage.getItem(`allProductsInList${listId}`)) || [];
 		const updatedSelectedProducts = selectedProducts.filter((product) => product.uniqueKey !== productId);
 		localStorage.setItem(`allProductsInList${listId}`, JSON.stringify(updatedSelectedProducts));
+
+		//unselect from the to buy
+		const selectedToBuyProducts = JSON.parse(localStorage.getItem(`toBuyProductsInList${listId}`)) || [];
+		const updatedSelectedToBuyProducts = selectedToBuyProducts.filter((product) => product.uniqueKey !== productId);
+		localStorage.setItem(`toBuyProductsInList${listId}`, JSON.stringify(updatedSelectedToBuyProducts));
+
+		//unselect from the ready localstorage
+		const selectedReadyProducts = JSON.parse(localStorage.getItem(`readyProductsInList${listId}`)) || [];
+		const updatedSelectedReadyProducts = selectedReadyProducts.filter((product) => product.uniqueKey !== productId);
+		localStorage.setItem(`readyProductsInList${listId}`, JSON.stringify(updatedSelectedReadyProducts));
 		setSelectedProducts(updatedSelectedProducts);
 
 		axiosClient
 			.delete(`remove-product/${productId}/${listId}`)
 			.then((res) => {
-				// console.log(res);
+				console.log(res);
 				updateList();
 			})
 			.catch((err) => {
@@ -322,7 +353,7 @@ const ProductOverlay = ({ darkMode, setProduct, id, updateList }) => {
 											onChange={() => handleSelect(product)}
 											type="checkbox"
 											checked={selectedProducts.some(
-												(selectedProduct) => selectedProduct.uniqueKey === product.uniqueKey
+												(selectedProduct) => selectedProduct.uniqueKey == product.uniqueKey
 											)}
 										/>
 										{product.name}

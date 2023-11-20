@@ -7,11 +7,9 @@ import { DarkModeProvider } from './contexts/DarkModeContext.jsx';
 import { LanguageProvider } from './contexts/LanguageContext.jsx';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-	<React.StrictMode>
-		<LanguageProvider>
-			<DarkModeProvider>
-				<RouterProvider router={router} />
-			</DarkModeProvider>
-		</LanguageProvider>
-	</React.StrictMode>
+	<LanguageProvider>
+		<DarkModeProvider>
+			<RouterProvider router={router} />
+		</DarkModeProvider>
+	</LanguageProvider>
 );

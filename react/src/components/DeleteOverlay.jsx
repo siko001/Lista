@@ -69,7 +69,6 @@ const DeleteOverlay = ({ closeOverlay, setMessage, deleteID, setDeleteLoader, se
 	const handleDeleteConfirmation = () => {
 		setDeleteLoader(true);
 		closeOverlay((prev) => !prev);
-		console.log(deleteID);
 		axiosClient
 			.delete(`list/delete/${deleteID}`, deleteID)
 			.then(() => {

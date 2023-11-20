@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { useLanguage } from '../contexts/LanguageContext';
 import axiosClient from '../axiosClient';
+import ReadyProduct from './ReadyProduct';
 
 const Container = styled.div`
 	justify-content: space-between;
@@ -116,6 +117,8 @@ const Product = ({
 	setProduct,
 	item,
 	listId,
+	setToBuyProducts,
+	handleRemoveFromToBuy,
 }) => {
 	const { translate } = useLanguage();
 
@@ -126,43 +129,50 @@ const Product = ({
 	};
 	const totalProductPrice = quantity * price;
 
-	const handleMoveToReady = (id, productName, product) => {
-		const selectedProduct = product.find((p) => p.uniqueKey === id);
-		selectedProduct.status = 'ready';
-		// Remove the selected product from the product array
-		const updatedProduct = product.filter((p) => p.uniqueKey !== id);
-
-		// Add the selected product to the readyProducts array
+	const handleMoveToReady = (id, prod) => {
+		const product = prod.filter((prod) => prod.uniqueKey == id);
 		setTimeout(() => {
-			const allLists = JSON.parse(localStorage.getItem(`shoppingLists`)) || [];
-			const currentList = allLists.filter((list) => list.id == listId);
-
-			const allProducts = JSON.parse(localStorage.getItem('allProductsInList' + currentList[0].id));
-
-			// Find the index of the selected product in the allProducts array
-			const productIndex = allProducts.findIndex((p) => p.uniqueKey === id);
-
-			// Update the status of the selected product to "ready"
-			if (productIndex !== -1) {
-				allProducts[productIndex].status = 'ready';
-
-				// Save the modified allProducts array back to localStorage
-				localStorage.setItem('allProductsInList' + currentList[0].id, JSON.stringify(allProducts));
-			}
-
-			setReadyProducts((prevReadyProducts) => [...prevReadyProducts, selectedProduct]);
-			setProduct(updatedProduct);
+			setReadyProducts((preProduct) => [...preProduct, product[0]]);
+			handleRemoveFromToBuy(id);
 		}, 1000);
 
 		axiosClient
 			.put(`/update/product${id}/${listId}`, [id, listId])
 			.then((res) => {
-				console.log(res);
+				// console.log(res);
 			})
 			.catch((err) => {
 				console.log(err);
 			})
 			.finally(() => {});
+
+		// const allProducts = JSON.parse(localStorage.getItem(`allProductsInList${listId}`));
+		// const allProductsInToBuy = JSON.parse(localStorage.getItem(`toBuyProductsInList${listId}`));
+
+		// // Find the index of the selected product in the allProducts array
+		// const productIndex = allProducts.filter((p) => p.uniqueKey === id);
+		// const productIndexInToBuy = allProductsInToBuy.findIndex((p) => p.uniqueKey === id);
+
+		// console.log(allProducts);
+		// console.log(productIndexInToBuy);
+		// setTimeout(() => {
+
+		// 	// Check if the selected product is in the toBuy list and remove it
+		// 	if (productIndexInToBuy !== -1) {
+		// 		allProductsInToBuy.splice(productIndexInToBuy, 1);
+		// 		localStorage.setItem('toBuyProductsInList' + currentList.id, JSON.stringify(allProductsInToBuy));
+		// 	}
+
+		// 	// Update the status of the selected product to "ready"
+		// 	if (productIndex !== -1) {
+		// 		allProducts[productIndex].status = 'ready';
+
+		// 		// Save the modified allProducts array back to localStorage
+		// 		localStorage.setItem('allProductsInList' + currentList.id, JSON.stringify(allProducts));
+
+		// 		// Save the updated readyProducts array to localStorage
+		// 		localStorage.setItem('readyProductsInList' + currentList.id, JSON.stringify(allProducts.filter((p) => p.status === 'ready')));
+		// 	}
 	};
 
 	return (
@@ -170,7 +180,7 @@ const Product = ({
 			<div className="left">
 				<input
 					onChange={() => {
-						handleMoveToReady(productKey, productName, item);
+						handleMoveToReady(productKey, item);
 					}}
 					className="radio"
 					type="checkbox"

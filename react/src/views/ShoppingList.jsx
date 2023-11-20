@@ -157,6 +157,7 @@ const ProductsContainer = styled.div`
 	}
 	.header {
 		margin-bottom: 10px;
+		font-weight: 600;
 		&:nth-child(2n) {
 			margin-top: 40px;
 		}
@@ -208,6 +209,7 @@ const ShoppingList = () => {
 	//Notification Stats
 	const [message, setMessage] = useState('');
 	const [status, setStatus] = useState(200);
+	const [selectedProducts, setSelectedProducts] = useState([]);
 
 	//search State
 	const [searching, setSearching] = useState(null);
@@ -217,10 +219,15 @@ const ShoppingList = () => {
 	const [productIDRemove, setProductIDRemove] = useState(null);
 	const [removeProduct, setRemoveProduct] = useState(null);
 	const [removeProductConfirmation, setRemoveProductConfirmation] = useState(null);
-
 	const [productOverlay, setProductOverylay] = useState(false);
+
+	//state for the 3 types of products array
+	//products to see what products have been marked
 	const [product, setProduct] = useState([]);
+	//state for the marked as ready products from the above state
 	const [readyProducts, setReadyProducts] = useState([]);
+	//state for the marked as To Buy products from the above state
+	const [toBuyProducts, setToBuyProducts] = useState([]);
 
 	const [openSettings, setOpenSettings] = useState(null);
 
@@ -232,17 +239,6 @@ const ShoppingList = () => {
 			saveTitle(e);
 		}
 	};
-	useEffect(() => {
-		const inputElement = inputRef.current;
-		if (isEditingTitle && inputElement) {
-			inputElement.focus();
-			inputElement.addEventListener('keypress', handleKeyPress);
-			return () => {
-				inputElement.removeEventListener('keypress', handleKeyPress);
-			};
-		}
-		updateList();
-	}, [id, isEditingTitle]);
 
 	const areListsEqual = (listA, listB) => {
 		if (!listA || !listB) {
@@ -252,42 +248,58 @@ const ShoppingList = () => {
 		// Compare individual properties
 		return listA.id === listB.id;
 	};
-
 	const updateList = () => {
-		const localList = JSON.parse(localStorage.getItem(`allProductsInList${id}`));
-		console.log(localList);
-		if (localList && areListsEqual(localList, product)) {
-			const toBuy = localList.filter((product) => product.status == 'to buy');
-			const ready = localList.filter((product) => product.status !== 'to buy');
+		// const localList = JSON.parse(localStorage.getItem(`allProductsInList${id}`));
+		// const localReadyList = JSON.parse(localStorage.getItem(`readyProductsInList${id}`));
+		// const localToBuyList = JSON.parse(localStorage.getItem(`toBuyProductsInList${id}`));
 
-			setProduct(toBuy);
-			setReadyProducts(ready);
-			console.log('local storage and db are the same');
-		} else {
-			// Local list doesn't exist or is different, fetch from the API
-			axiosClient
-				.get(`/list/${id}`)
-				.then((res) => {
-					const products = res.data[1];
-					const toBuy = products.filter((product) => product.status == 'to buy');
-					const ready = products.filter((product) => product.status !== 'to buy');
-
-					// Store "to buy" products in local storage
-					localStorage.setItem(`allProductsInList${id}`, JSON.stringify(toBuy));
-
-					// Store "ready" products in local storage
-					localStorage.setItem(`allProductsInList${id}`, JSON.stringify(ready));
-
-					// Use filteredProducts as needed
-					setProduct(toBuy);
-					setReadyProducts(ready);
-				})
-				.catch((error) => {
-					console.error('Error fetching list:', error);
-				})
-				.finally(() => {});
-		}
+		// if (localList && localReadyList && localToBuyList && areListsEqual(localList, product)) {
+		// 	fetchListData();
+		// 	console.log('local storage and db are the same');
+		// } else {
+		// Local list doesn't exist or is different, fetch from the API
+		// console.log('db and local are not the same');
+		fetchListData();
 	};
+
+	const fetchListData = () => {
+		axiosClient
+			.get(`/list/${id}`)
+			.then((res) => {
+				const products = res.data[1];
+				const toBuy = products.filter((product) => product.status === 'to buy');
+				const ready = products.filter((product) => product.status !== 'to buy');
+
+				// localStorage.setItem(`allProductsInList${id}`, JSON.stringify(products));
+				// localStorage.setItem(`toBuyProductsInList${id}`, JSON.stringify(toBuy));
+				// localStorage.setItem(`readyProductsInList${id}`, JSON.stringify(ready));
+				//set the all Products Array
+				setProduct(products);
+				// Set The all Ready Array (if any)
+				setReadyProducts(ready);
+				//set The To buy Array(if any)
+				setToBuyProducts(toBuy);
+				//set The selected products from the all products array for the products overlay
+				setSelectedProducts(products);
+			})
+			.catch((error) => {
+				console.error('Error fetching list:', error);
+			})
+			.finally(() => {});
+	};
+
+	useEffect(() => {
+		const inputElement = inputRef.current;
+		if (isEditingTitle && inputElement) {
+			inputElement.focus();
+			inputElement.addEventListener('keypress', handleKeyPress);
+			return () => {
+				inputElement.removeEventListener('keypress', handleKeyPress);
+			};
+		}
+		// Call updateList only when needed (e.g., when component mounts)
+		updateList();
+	}, [isEditingTitle]);
 
 	const editTitle = () => {
 		setIsEditingTitle(true);
@@ -306,18 +318,18 @@ const ShoppingList = () => {
 			.then((res) => {
 				setTitle(newTitle);
 				// Update the title in local storage
-				let allLists = localStorage.getItem('shoppingLists');
-				// Assuming allLists is a string representation of JSON data, parse it into an array
-				allLists = JSON.parse(allLists) || [];
-				const updatedLists = allLists.map((list) => {
-					if (list.id == id) {
-						// Update the title for the matching list
-						return { ...list, name: newTitle };
-					}
-					return list;
-				});
-				// Save the updated data back to local storage
-				localStorage.setItem('shoppingLists', JSON.stringify(updatedLists));
+				// let allLists = localStorage.getItem('shoppingLists');
+				// // Assuming allLists is a string representation of JSON data, parse it into an array
+				// allLists = JSON.parse(allLists) || [];
+				// const updatedLists = allLists.map((list) => {
+				// 	if (list.id == id) {
+				// 		// Update the title for the matching list
+				// 		return { ...list, name: newTitle };
+				// 	}
+				// 	return list;
+				// });
+				// // Save the updated data back to local storage
+				// localStorage.setItem('shoppingLists', JSON.stringify(updatedLists));
 
 				setIsEditingTitle(false);
 				setMessage(translate('notification-rename'));
@@ -357,8 +369,13 @@ const ShoppingList = () => {
 		setOpenSettings((prev) => !prev);
 	};
 
+	const handleRemoveFromToBuy = (id) => {
+		// Remove the product from toBuyProducts
+		setToBuyProducts((prevToBuyProducts) => prevToBuyProducts.filter((toBuyProducts) => toBuyProducts.uniqueKey !== id));
+	};
+
 	return (
-		<Container className={darkMode ? 'dar@e' : 'lightMode'}>
+		<Container className={darkMode ? 'darkMode' : 'lightMode'}>
 			<Navbar />
 			<Main>
 				{openSettings && (
@@ -367,6 +384,12 @@ const ShoppingList = () => {
 						editTitle={editTitle}
 						setOpenEmptyListOverLay={setOpenEmptyListOverLay}
 						product={product}
+						readyProducts={readyProducts}
+						listId={id}
+						updateList={updateList}
+						toBuyProducts={toBuyProducts}
+						setToBuyProducts={setToBuyProducts}
+						setReadyProducts={setReadyProducts}
 					/>
 				)}
 				<ListHeader style={{ backgroundColor: darkMode ? 'black' : 'white' }}>
@@ -408,18 +431,18 @@ const ShoppingList = () => {
 				</ListHeader>
 
 				<ProductsContainer>
-					{product.length > 0 ? (
-						product.length == 1 ? (
-							<h2 className="header to-buy">{translate('to-buy')}</h2>
+					{toBuyProducts.length > 0 ? (
+						toBuyProducts.length == 1 ? (
+							<h2 className="header blue">{translate('to-buy')}</h2>
 						) : (
-							<h2 className="header  to-buy">{translate('to-buy-plural')}</h2>
+							<h2 className="header blue">{translate('to-buy-plural')}</h2>
 						)
 					) : (
 						''
 					)}
-					{product.length === 0 && readyProducts.length <= 0
+					{toBuyProducts.length === 0 && readyProducts.length <= 0
 						? translate('please-add-product')
-						: product.map((p) => (
+						: toBuyProducts.map((p) => (
 								<Product
 									key={p.name}
 									darkMode={darkMode}
@@ -435,6 +458,7 @@ const ShoppingList = () => {
 									setProduct={setProduct}
 									item={product}
 									listId={id}
+									handleRemoveFromToBuy={handleRemoveFromToBuy}
 								/>
 						  ))}
 
@@ -448,14 +472,28 @@ const ShoppingList = () => {
 					) : (
 						''
 					)}
-					{readyProducts && readyProducts.map((p) => <ReadyProduct key={product.uniqueKey} item={p} />)}
+
+					{Array.isArray(readyProducts) && readyProducts.map((p) => <ReadyProduct key={product.uniqueKey} item={p} />)}
 				</ProductsContainer>
 
 				{/* Notifications, Overlays, loaders, Floating Butttons */}
 				<Notification message={message} status={status} />
 
 				{/* All Prodcts OverLay */}
-				{productOverlay && <ProductOvelay darkMode={darkMode} setProduct={setProduct} id={id} updateList={updateList} />}
+				{productOverlay && (
+					<ProductOvelay
+						darkMode={darkMode}
+						setProduct={setProduct}
+						id={id}
+						updateList={updateList}
+						selectedProducts={selectedProducts}
+						setSelectedProducts={setSelectedProducts}
+						toBuyProducts={toBuyProducts}
+						setToBuyProducts={setToBuyProducts}
+						readyProducts={readyProducts}
+						setReadyProducts={setReadyProducts}
+					/>
+				)}
 
 				{/* Remove Product Overlay & loader */}
 				{(removeProductConfirmation || emptyList) && <RemoveProductLoader />}

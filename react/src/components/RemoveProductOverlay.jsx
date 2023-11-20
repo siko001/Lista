@@ -88,12 +88,18 @@ const RemoveProductOverlay = ({
 
 	const handleRemoveProduct = () => {
 		setRemoveProductConfirmation(true);
+		const localNOTReadyList = JSON.parse(localStorage.getItem(`toBuyProductsInList${listId}`)) || [];
+		const localReadyList = JSON.parse(localStorage.getItem(`readyProductsInList${listId}`)) || [];
 		const localList = JSON.parse(localStorage.getItem(`allProductsInList${listId}`)) || [];
 		// Filter out the product to be removed
+		const updatedReadyList = localReadyList.filter((p) => p.uniqueKey !== productIDRemove);
+		const updatedNOTReadyList = localNOTReadyList.filter((p) => p.uniqueKey !== productIDRemove);
 		const updatedList = localList.filter((p) => p.uniqueKey !== productIDRemove);
 
 		// Update the local storage
+		localStorage.setItem(`toBuyProductsInList${listId}`, JSON.stringify(updatedNOTReadyList));
 		localStorage.setItem(`allProductsInList${listId}`, JSON.stringify(updatedList));
+		localStorage.setItem(`readyProductsInList${listId}`, JSON.stringify(updatedReadyList));
 		setRemoveProduct((prev) => !prev);
 
 		axiosClient

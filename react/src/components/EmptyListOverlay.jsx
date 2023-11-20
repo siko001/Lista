@@ -71,6 +71,8 @@ const EmptyListOverlay = ({ title, setOpenEmptyListOverLay, setEmptyList, listId
 		setOpenEmptyListOverLay((prev) => !prev);
 		// Update the local storage to empty
 		localStorage.setItem(`allProductsInList${listId}`, JSON.stringify(''));
+		localStorage.setItem(`readyProductsInList${listId}`, JSON.stringify(''));
+		localStorage.setItem(`toBuyProductsInList${listId}`, JSON.stringify(''));
 
 		//Empty the Db
 		axiosClient

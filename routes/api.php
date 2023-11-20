@@ -28,3 +28,8 @@ Route::post("/add-product/{name}", [ProductController::class, "addProduct"]);
 Route::delete("remove-product/{productId}/{listId} ", [ProductController::class, "removeProduct"]);
 Route::delete("empty-list/{id}", [ProductController::class, "removeAllProducts"]);
 Route::put("/update/product{id}/{listId}", [ProductController::class, "markProductReady"]);
+
+Route::put("/update/all-ready/{listId}", [ProductController::class, "markAllAsReady"]);
+Route::put('update/all-to_buy/{listId}', [ProductController::class, "markAllToBuy"]);
+Route::delete("remove/ready/{listId}", [ProductController::class, "removeAllReady"]);
+Route::delete("/delete/all-products/and-list{id}", [ProductController::class, "removeListAndCorrispodingProducts"]);

@@ -19,7 +19,7 @@ class ProductController extends Controller {
 
 
         $product = Product::create([
-            "unique_key" => $product["uniqueKey"],
+            "uniqueKey" => $product["uniqueKey"],
             'name' => $product["name"],
             'category' => $product["category"],
             'list_id' => $product["list_id"],
@@ -30,7 +30,7 @@ class ProductController extends Controller {
     }
 
     public function removeProduct($productId, $listId) {
-        $product = Product::where("unique_key", $productId)->where("list_id", $listId)->first();
+        $product = Product::where("uniqueKey", $productId)->where("list_id", $listId)->first();
         if ($product) {
             $product->delete();
             return response()->json(['message' => 'Product removed successfully']);
@@ -54,7 +54,7 @@ class ProductController extends Controller {
 
 
     public function markProductReady($productID, $listID) {
-        $product = Product::where("unique_key", $productID)->where("list_id", $listID)->first();
+        $product = Product::where("uniqueKey", $productID)->where("list_id", $listID)->first();
         if ($product) {
             if ($product->status == "to buy") {
                 $product->status = "ready";
@@ -65,6 +65,68 @@ class ProductController extends Controller {
             }
         } else {
             return response(["message" => "no product found"], 404);
+        }
+    }
+
+    //function to move all NOT ready products to the Readu products array
+
+    public function markAllAsReady($id) {
+        $products = Product::where("list_id", $id)->where("status", "to buy")->get();
+        if ($products) {
+            foreach ($products as $product) {
+                $product->status = "ready";
+                $product->update();
+            }
+
+            return response(["message" => "Prodcuts Have Been Updated"], 200);
+        } else
+            return response(["message" => "No Products In the List"], 404);
+    }
+
+
+    //Funtion To Move all ready products To NOT Ready
+    public function markAllToBuy($id) {
+        $products = Product::where("list_id", $id)->where("status", "ready")->get();
+        if ($products) {
+            foreach ($products as $product) {
+                $product->status = "to buy";
+                $product->update();
+            }
+            return response(["message" => "Prodcuts Have Been Updated"], 200);
+        } else
+            return response(["message" => "No Products In the List"], 404);
+    }
+
+
+    public function removeAllReady($id) {
+        $products = Product::where("list_id", $id)->where("status", "ready")->get();
+        if ($products) {
+            foreach ($products as $product) {
+                $product->delete();
+            }
+            return response(["message" => "Prodcuts Removed"], 200);
+        } else
+            return response(["message" => "No Products In the List"], 404);
+    }
+
+    public function removeListAndCorrispodingProducts($id) {
+        $products = Product::where("list_id", $id)->get();
+
+        $list = ShoppingList::where("id", $id)->first();
+
+        if ($list) {
+            if ($products) {
+                foreach ($products as $product) {
+                    $product->delete();
+                }
+                $list->delete();
+                return response(["message" => "Products and List were deleted Successfully"], 200);
+            } else {
+                $list->delete();
+                return response(["message" => "List was deleted Successfully but no products found inside the list" . $id], 200);
+            }
+        } else {
+            return response(["message" => "List Not Found"], 400);
         }
     }
 }
