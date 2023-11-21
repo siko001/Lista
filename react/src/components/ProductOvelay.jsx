@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import PopularProducts from '../popularProducts';
+import PopularProducts from '../PopularProducts';
 import axiosClient from '../axiosClient';
-import { useParams } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faXmark } from '@fortawesome/free-solid-svg-icons';
+import { useLanguage } from '../contexts/LanguageContext';
 
 const Container = styled.div`
 	z-index: 999;
@@ -14,6 +16,15 @@ const Container = styled.div`
 	max-width: 100vw;
 	position: fixed;
 
+	.name {
+		width: 150px;
+		overflow: hidden;
+	}
+
+	.category {
+		font-size: 0.8rem;
+	}
+
 	.grp {
 		display: flex;
 		align-items: center;
@@ -24,8 +35,15 @@ const Container = styled.div`
 	nav {
 		width: 100%;
 		display: flex;
-		gap: 20px;
+		gap: 10px;
 		font-weight: 600;
+		@media screen and (max-width: 500px) {
+			gap: 5px;
+			font-size: 0.8rem;
+			font-weight: 600;
+			text-align: center;
+		}
+
 		.nav-item {
 			margin: 8px 0;
 			padding-bottom: 10px;
@@ -75,6 +93,9 @@ const ProductTable = styled.div`
 	margin: 10px auto;
 	border-radius: 5px;
 	overflow: auto;
+	gap: 4px;
+	display: flex;
+	flex-direction: column;
 
 	/* Styling the scrollbar */
 	&::-webkit-scrollbar {
@@ -121,13 +142,19 @@ const ProductTable = styled.div`
 
 const ProductRow = styled.div`
 	min-width: 100%;
+	border-radius: 10px;
+	.categoryRow {
+		background-color: rgba(0, 0, 0, 0.3);
+		border-radius: 18px;
+	}
 `;
 
 const ProductCell = styled.div`
 	display: flex;
 	justify-content: space-between;
 	width: 95%;
-	padding: 10px;
+	padding: 10px 30px;
+
 	&:hover {
 		background-color: rgba(0, 0, 0, 0.3);
 		border-radius: 8px;
@@ -186,14 +213,16 @@ const ProductOverlay = ({
 }) => {
 	const [selected, setSelected] = useState('Popular Products');
 	const [selectedFilter, setSelectedFilter] = useState('random');
+	const [searchTerm, setSearchTerm] = useState('');
+	const { translate } = useLanguage();
 
 	const listId = id;
 
+	console.log(listId);
 	useEffect(() => {
 		// Load the list of selected products from local storage
 
 		// console.log(toBuyProducts);
-		console.log(selectedProducts);
 		// const storedProducts = JSON.parse(localStorage.getItem(`allProductsInList` + id)) || [];
 		setSelectedProducts(selectedProducts);
 
@@ -214,7 +243,7 @@ const ProductOverlay = ({
 
 	const handleSelect = (product) => {
 		const productId = product.uniqueKey;
-
+		console.log(productId);
 		// Check if the product is already selected
 		if (selectedProducts.some((selectedProduct) => selectedProduct.uniqueKey === productId)) {
 			return;
@@ -308,6 +337,8 @@ const ProductOverlay = ({
 					color: darkMode ? 'rgba(255,255,255,1)' : 'rgba(0,0,0,1)',
 					border: darkMode ? 'rgba(255,255,255,1)' : 'rgba(0,0,0,1)',
 				}}
+				value={searchTerm}
+				onChange={(e) => setSearchTerm(e.target.value)}
 			></SearchInput>
 
 			<Main
@@ -329,77 +360,103 @@ const ProductOverlay = ({
 							{/* Add more filter buttons for future filters */}
 						</ProductFilter>
 					</div>
+
+					{/* Navigation Between PreSet Items and User Items */}
+					{/* Preassigned */}
 					<div
 						className={`nav-item ${selected === 'Popular Products' ? 'selected' : ''}`}
 						onClick={() => handleNavItemClick('Popular Products')}
 					>
-						Popular Products
+						{translate('popular-products')}
 					</div>
+
+					{/* User Inputted Items */}
 					<div
 						className={`nav-item ${selected === 'My Products' ? 'selected' : ''}`}
 						onClick={() => handleNavItemClick('My Products')}
 					>
-						My Products
+						{translate('user-products')}
 					</div>
 				</nav>
+
+				{/* Category Is Set At Random */}
 				<ProductTable>
 					{selectedFilter === 'random' &&
-						PopularProducts.map((product, index) => (
-							<ProductRow key={index}>
-								<ProductCell key={index}>
-									<div className="grp-check">
-										<input
-											className="radio"
-											onChange={() => handleSelect(product)}
-											type="checkbox"
-											checked={selectedProducts.some(
-												(selectedProduct) => selectedProduct.uniqueKey == product.uniqueKey
-											)}
-										/>
-										{product.name}
-									</div>
-									<p
-										onClick={() => {
-											handleUnselectProduct(product.uniqueKey, listId);
-										}}
-									>
-										X
-									</p>
-								</ProductCell>
-							</ProductRow>
-						))}
+						PopularProducts.filter((product) => product.name.toLowerCase().includes(searchTerm.toLowerCase())).map(
+							(product, index) => (
+								<ProductRow key={index}>
+									<ProductCell key={index}>
+										<div className="grp-check boldest">
+											<input
+												className="radio"
+												onChange={() => handleSelect(product)}
+												type="checkbox"
+												checked={selectedProducts.some(
+													(selectedProduct) => selectedProduct.uniqueKey == product.uniqueKey
+												)}
+											/>
+											<p className="name large">{product.name}</p>
+										</div>
+										<p className="category lighter">{product.category}</p>
+										<p
+											onClick={() => {
+												const sameProduct = toBuyProducts.some((p) => p.uniqueKey == product.uniqueKey);
+
+												if (sameProduct) {
+													handleUnselectProduct(product.uniqueKey, listId);
+												} else {
+													return;
+												}
+											}}
+										>
+											<FontAwesomeIcon icon={faXmark} />
+										</p>
+									</ProductCell>
+								</ProductRow>
+							)
+						)}
+
+					{/* If Selected is by Category */}
 
 					{selectedFilter === 'category' &&
 						Array.from(new Set([...PopularProducts, ...RecentProducts].map((product) => product.category))).map(
 							(category, index) => (
 								<React.Fragment key={index}>
-									<ProductRow>
-										<ProductCell style={{ fontWeight: 'bold', color: '#00a26f', backgroundColor: '#00000033' }}>
+									<ProductRow className="categoryRow">
+										<ProductCell style={{ fontWeight: 'bold', color: '#057753', backgroundColor: '#00000033' }}>
 											{category}
 										</ProductCell>
 									</ProductRow>
 									{PopularProducts.concat(RecentProducts).map((product, productIndex) => {
-										if (product.category === category) {
+										if (product.category === category && product.name.toLowerCase().includes(searchTerm.toLowerCase())) {
 											return (
 												<ProductRow key={productIndex}>
 													<ProductCell>
-														<div className="grp-check">
+														<div className="grp-check boldest">
 															<input
 																className="radio"
 																onChange={() => handleSelect(product)}
 																type="checkbox"
 																checked={selectedProducts.some(
-																	(selectedProduct) => selectedProduct.uniqueKey === product.uniqueKey
+																	(selectedProduct) => selectedProduct.uniqueKey == product.uniqueKey
 																)}
 															/>
 															{product.name}
 														</div>
 														<p
 															onClick={() => {
-																handleUnselectProduct(product.uniqueKey, listId);
+																const sameProduct = toBuyProducts.some(
+																	(p) => p.uniqueKey == product.uniqueKey
+																);
+
+																if (sameProduct) {
+																	handleUnselectProduct(product.uniqueKey, listId);
+																} else {
+																	return;
+																}
 															}}
 														>
-															X
+															<FontAwesomeIcon icon={faXmark} />
 														</p>
 													</ProductCell>
 												</ProductRow>

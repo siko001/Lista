@@ -71,7 +71,7 @@ const InnerContainer = styled.div`
 const Overlay = ({ closeOverlay, setMessage, setStatus, setLoading, addNewList, fetchLists }) => {
 	const listRef = useRef();
 	const { translate } = useLanguage();
-	const [notIsValid, setNotIsValid] = useState(true);
+	const [notIsValid, setNotIsValid] = useState(null);
 	const [isEmpty, setIsEmpty] = useState(true);
 	const [inputValue, setInputValue] = useState('');
 
@@ -152,7 +152,9 @@ const Overlay = ({ closeOverlay, setMessage, setStatus, setLoading, addNewList, 
 			<Container>
 				<InnerContainer>
 					<form>
-						<h3 className="heading">{translate('createListHeading')}</h3>
+						<h3 style={{ color: notIsValid == true ? ' red' : '' }} className="heading">
+							{translate('createListHeading')}
+						</h3>
 						<input
 							placeholder={translate('createListPlaceholder')}
 							type="text"

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class ShoppingList extends Model {
-    use HasFactory;
+    use HasFactory; 
 
     protected $fillable = [
         'name'

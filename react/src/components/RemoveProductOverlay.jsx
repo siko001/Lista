@@ -72,6 +72,7 @@ const RemoveProductOverlay = ({
 	setMessage,
 	setStatus,
 	setRemoveProductConfirmation,
+	updateList,
 }) => {
 	const { translate } = useLanguage();
 
@@ -120,6 +121,7 @@ const RemoveProductOverlay = ({
 					return setTimeout(() => {
 						setStatus(200);
 						setMessage(null);
+						updateList();
 					}, 1600);
 				});
 			});

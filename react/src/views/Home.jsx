@@ -35,8 +35,41 @@ const Header = styled.div`
 		padding: 0.75rem 1.5rem;
 		border-radius: 3px;
 		background-color: rgba(10, 107, 222, 0.9);
-		color: white;
 		font-size: 1.1rem;
+		position: relative;
+		overflow: hidden;
+		border: none;
+
+		&.type1::after,
+		&.type1::before {
+			content: '';
+			display: block;
+			position: absolute;
+			width: 20%;
+			height: 20%;
+			border: 3px solid;
+			transition: all 0.6s ease;
+			border-radius: 2px;
+		}
+		&.type1::after {
+			bottom: 0;
+			right: 0;
+			border-top-color: transparent;
+			border-left-color: transparent;
+		}
+		&.type1::before {
+			top: 0;
+			left: 0;
+			border-bottom-color: transparent;
+			border-right-color: transparent;
+		}
+
+		&.type1:hover:after,
+		&.type1:hover:before {
+			width: 100%;
+			height: 100%;
+		}
+
 		&:hover {
 			cursor: pointer;
 		}
@@ -183,7 +216,7 @@ const Home = () => {
 	};
 
 	return (
-		<Container className={darkMode ? 'darkMode' : 'lightMode'}>
+		<Container className={`${darkMode ? 'darkMode' : 'lightMode'} `}>
 			{/* NavBar Component */}
 			<Navbar />
 
@@ -215,13 +248,15 @@ const Home = () => {
 			{loading && <CreateListLoader />}
 
 			{/* Header | Dynamically change the heading dynamically according to number of lists*/}
-			<Header style={{ justifyContent: shoppingList.length == 0 ? 'center' : '' }}>
+			<Header className="goDownSlow" style={{ justifyContent: shoppingList.length == 0 ? 'center' : '' }}>
 				{shoppingList.length != 0 ? (
 					<h3>{shoppingList.length == 0 ? '' : shoppingList.length == 1 ? translate('ifList') : translate('ifListmore1')}</h3>
 				) : (
 					''
 				)}
-				<button onClick={handleOpenOverlay}>{translate('addBtn')}</button>
+				<button className="type1 " style={{ color: darkMode ? 'white' : 'black' }} onClick={handleOpenOverlay}>
+					{translate('addBtn')}
+				</button>
 			</Header>
 
 			{/* Main Content For Lists */}

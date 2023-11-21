@@ -5,7 +5,7 @@ import axiosClient from '../axiosClient';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useDarkMode } from '../contexts/DarkModeContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faGears, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
+import { faGears, faMagnifyingGlass, faXmark } from '@fortawesome/free-solid-svg-icons';
 import Navbar from '../components/Navbar';
 import Notification from '../components/Notification';
 import Product from '../components/Product';
@@ -158,9 +158,9 @@ const ProductsContainer = styled.div`
 	.header {
 		margin-bottom: 10px;
 		font-weight: 600;
-		&:nth-child(2n) {
-			margin-top: 40px;
-		}
+	}
+	.header2 {
+		margin-top: 50px;
 	}
 `;
 
@@ -205,6 +205,7 @@ const ShoppingList = () => {
 	//refs
 	const inputRef = useRef(null);
 	const searchRef = useRef(null);
+	const [searchTerm, setSearchTerm] = useState('');
 
 	//Notification Stats
 	const [message, setMessage] = useState('');
@@ -263,6 +264,7 @@ const ShoppingList = () => {
 	};
 
 	const fetchListData = () => {
+		console.log('detch');
 		axiosClient
 			.get(`/list/${id}`)
 			.then((res) => {
@@ -347,6 +349,7 @@ const ShoppingList = () => {
 	const handleOpenSearch = () => {
 		const searchInput = searchRef.current;
 		setSearching((prev) => !prev);
+		setSearchTerm('');
 		setTimeout(() => {
 			searchInput.focus();
 		}, 200);
@@ -358,11 +361,13 @@ const ShoppingList = () => {
 	};
 
 	const closeSearch = () => {
+		setSearchTerm('');
 		setSearching((prev) => !prev);
 	};
 
 	const handleCloseProductOverlay = () => {
 		setProductOverylay((prev) => !prev);
+		setSearchTerm('');
 	};
 
 	const handleOpenSettings = () => {
@@ -411,17 +416,24 @@ const ShoppingList = () => {
 						</div>
 						<input
 							ref={searchRef}
-							onBlur={closeSearch}
 							style={{ color: darkMode ? '#fff' : '#000', display: searching ? 'block' : 'none' }}
 							className="search-input"
+							placeholder="Search products..."
+							value={searchTerm}
+							onChange={(e) => setSearchTerm(e.target.value)}
 						/>
 						<div className="right">
 							{!searching && (
-								<div onClick={handleOpenSearch} className="search">
+								<div onClick={handleOpenSearch} className="search large">
 									<FontAwesomeIcon icon={faMagnifyingGlass} />
 								</div>
 							)}
-							<div onClick={handleOpenSettings} className="settings">
+							{searching && (
+								<div onClick={closeSearch} className="search largest">
+									<FontAwesomeIcon icon={faXmark} />
+								</div>
+							)}
+							<div onClick={handleOpenSettings} className="settings larger">
 								<FontAwesomeIcon icon={faGears} />
 							</div>
 						</div>
@@ -442,38 +454,53 @@ const ShoppingList = () => {
 					)}
 					{toBuyProducts.length === 0 && readyProducts.length <= 0
 						? translate('please-add-product')
-						: toBuyProducts.map((p) => (
-								<Product
-									key={p.name}
-									darkMode={darkMode}
-									productKey={p.uniqueKey}
-									setRemoveProduct={setRemoveProduct}
-									setProductToRemove={setProductToRemove}
-									productName={p.name}
-									price={p.price}
-									quantity={p.quantity}
-									unit={p.unit}
-									setProductIDRemove={setProductIDRemove}
-									setReadyProducts={setReadyProducts}
-									setProduct={setProduct}
-									item={product}
-									listId={id}
-									handleRemoveFromToBuy={handleRemoveFromToBuy}
-								/>
-						  ))}
+						: toBuyProducts
+								.filter((p) => p.name.toLowerCase().includes(searchTerm.toLowerCase()))
+								.map((p) => (
+									<Product
+										key={product.uniqueKey}
+										darkMode={darkMode}
+										productKey={p.uniqueKey}
+										setRemoveProduct={setRemoveProduct}
+										setProductToRemove={setProductToRemove}
+										productName={p.name}
+										price={p.price}
+										quantity={p.quantity}
+										unit={p.unit}
+										setProductIDRemove={setProductIDRemove}
+										setReadyProducts={setReadyProducts}
+										setProduct={setProduct}
+										item={product}
+										listId={id}
+										handleRemoveFromToBuy={handleRemoveFromToBuy}
+									/>
+								))}
 
 					{/* Ready Products */}
 					{readyProducts != 0 ? (
 						readyProducts.length == 1 ? (
-							<h2 className="header  green">{translate('ready-product')}</h2>
+							<h2 className="header2 header  green">{translate('ready-product')}</h2>
 						) : (
-							<h2 className="header green">{translate('ready-product-plural')}</h2>
+							<h2 className=" header header2 green">{translate('ready-product-plural')}</h2>
 						)
 					) : (
 						''
 					)}
 
-					{Array.isArray(readyProducts) && readyProducts.map((p) => <ReadyProduct key={product.uniqueKey} item={p} />)}
+					{readyProducts.length > 0
+						? readyProducts
+								.filter((p) => p.name.toLowerCase().includes(searchTerm.toLowerCase()))
+								.map((p) => (
+									<ReadyProduct
+										key={p.uniqueKey}
+										item={p}
+										setRemoveProduct={setRemoveProduct}
+										setProductToRemove={setProductToRemove}
+										setProductIDRemove={setProductIDRemove}
+										updateList={updateList}
+									/>
+								))
+						: searchTerm.trim() !== '' && <p>No ready products found.</p>}
 				</ProductsContainer>
 
 				{/* Notifications, Overlays, loaders, Floating Butttons */}
@@ -508,6 +535,7 @@ const ShoppingList = () => {
 						setMessage={setMessage}
 						setStatus={setStatus}
 						setRemoveProductConfirmation={setRemoveProductConfirmation}
+						updateList={updateList}
 					/>
 				)}
 

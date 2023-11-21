@@ -12,8 +12,6 @@ class ProductController extends Controller {
 
         $id = $request[0];
         $product = $request[1];
-
-
         $list = ShoppingList::where("id", $id)->first();
         $product["list_id"] = $list["id"];
 

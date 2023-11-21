@@ -46,6 +46,15 @@ h4 {
 	background-color: rgba(10, 107, 222, 0.9);
 	color: #fff;
 }
+.bold {
+	font-weight: 500;
+}
+.bolder {
+	font-weight: 600;
+}
+.boldest {
+	font-weight: 700;
+}
 
 .heading {
 	font-weight: 600;
@@ -81,6 +90,12 @@ h4 {
 .blue {
 	color: blue;
 }
+.yellow {
+	color: yellow;
+}
+.orange {
+	color: orange;
+}
 .green-bg {
 	background-color: green;
 }
@@ -89,4 +104,40 @@ h4 {
 }
 .red-bg {
 	background-color: red;
+}
+
+.large {
+	font-size: 18px;
+}
+.larger {
+	font-size: 20px;
+}
+.largest {
+	font-size: 22px;
+}
+.goSlowDown {
+	position: relative;
+	animation: mela 0.3s ease-in-out;
+}
+
+.goSlowUp {
+	position: relative;
+	animation: mela2 0.25s ease-in-out;
+}
+@keyframes mela {
+	from {
+		top: -150px;
+	}
+	to {
+		top: 0;
+	}
+}
+
+@keyframes mela2 {
+	from {
+		top: 0;
+	}
+	to {
+		top: -150px;
+	}
 }

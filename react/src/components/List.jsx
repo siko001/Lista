@@ -16,6 +16,14 @@ const Container = styled.div`
 	display: flex;
 	align-items: center;
 	justify-content: center;
+	&:hover {
+		transition: 0.3s ease-in;
+		transform: scale(1.05);
+	}
+	&:not(:hover) {
+		transition: transform 0.3s ease-out;
+		transform: scale(1);
+	}
 	@media screen and (max-width: 950px) {
 		max-width: 400px;
 	}

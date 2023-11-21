@@ -1,7 +1,8 @@
-import React from 'react';
-
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { useLanguage } from '../contexts/LanguageContext';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faXmark } from '@fortawesome/free-solid-svg-icons';
 
 const Container = styled.div`
 	justify-content: space-between;
@@ -103,10 +104,17 @@ const Container = styled.div`
 	}
 `;
 
-const ReadyProduct = ({ item }) => {
+const ReadyProduct = ({ item, setRemoveProduct, setProductToRemove, setProductIDRemove,  }) => {
 	const theReadyProduct = item;
 	const totalProductPrice = theReadyProduct.quantity * theReadyProduct.price;
 	const { translate } = useLanguage();
+
+	const handleRemoveProduct = (item, id) => {
+		setProductToRemove(item.name);
+		setProductIDRemove(id);
+		setRemoveProduct((prev) => !prev);
+
+	};
 
 	return (
 		<Container key={theReadyProduct.name}>
@@ -143,8 +151,8 @@ const ReadyProduct = ({ item }) => {
 					</div>
 				)}
 			</div>
-			<div onClick={() => handleRemoveProduct(productName, productKey)} className="removeProduct light">
-				X
+			<div onClick={() => handleRemoveProduct(item, item.uniqueKey)} className="removeProduct light largest">
+				<FontAwesomeIcon icon={faXmark} />
 			</div>
 		</Container>
 	);

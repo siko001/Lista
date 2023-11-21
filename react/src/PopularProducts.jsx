@@ -16,7 +16,6 @@ const PopularProducts = [
 		unit: '',
 		quantity: '',
 		status: 'to buy',
-		status: 'to buy',
 	},
 	{
 		uniqueKey: '3',

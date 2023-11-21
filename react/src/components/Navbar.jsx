@@ -13,6 +13,13 @@ const Nav = styled.div`
 	align-items: center;
 	padding: 0 20px;
 	border-bottom: 1px solid white;
+
+	a {
+		color: inhert;
+	}
+	a:visited {
+		color: inherit;
+	}
 `;
 
 const Lista = styled.div`
@@ -24,10 +31,13 @@ const Menu = styled.div`
 
 const Navbar = () => {
 	const [navbar, setNavbar] = useState(false);
-	const location = useLocation(); // Get the current location
+	const [click, setClick] = useState(false);
 
 	const handleOpenNav = () => {
-		setNavbar((pre) => !pre);
+		setClick((pre) => !pre);
+		setTimeout(() => {
+			setNavbar((pre) => !pre);
+		}, 200);
 	};
 
 	return (
@@ -35,14 +45,14 @@ const Navbar = () => {
 			<Nav>
 				<Lista>
 					<Link to="/">
-						<h2>Lista</h2>
+						<h2 className="boldest">Lista</h2>
 					</Link>
 				</Lista>
-				<Menu>
+				<Menu className="largest">
 					<FontAwesomeIcon icon={faBars} onClick={handleOpenNav} />
 				</Menu>
 			</Nav>
-			{navbar && <NavMenu />}
+			{navbar && <NavMenu click={click} />}
 		</>
 	);
 };

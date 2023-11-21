@@ -3,6 +3,8 @@ import styled from 'styled-components';
 import { useLanguage } from '../contexts/LanguageContext';
 import axiosClient from '../axiosClient';
 import ReadyProduct from './ReadyProduct';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faXmark } from '@fortawesome/free-solid-svg-icons';
 
 const Container = styled.div`
 	justify-content: space-between;
@@ -95,7 +97,7 @@ const Container = styled.div`
 		justify-content: center;
 
 		&:hover {
-			border: 1px solid;
+			border: 3px solid;
 			border-radius: 50%;
 			border-color: ${(props) => (props.darkMode ? 'rgba(255, 0, 0, 0.7)' : 'rgba(255, 0, 0, 0.7)')};
 			cursor: pointer;
@@ -107,12 +109,13 @@ const Container = styled.div`
 const Product = ({
 	setRemoveProduct,
 	setProductToRemove,
+	setProductIDRemove,
 	productName,
 	quantity,
 	unit,
 	price,
 	productKey,
-	setProductIDRemove,
+
 	setReadyProducts,
 	setProduct,
 	item,
@@ -185,7 +188,7 @@ const Product = ({
 					className="radio"
 					type="checkbox"
 				/>
-				<div className="product_title">{productName}</div>
+				<div className="product_title bolder">{productName}</div>
 			</div>
 
 			<div className="center">
@@ -194,7 +197,7 @@ const Product = ({
 						<div className="description">{translate('quantity')}</div>
 						<div className="quantative">
 							{quantity}
-							{unit}
+							<span>{unit}</span>
 						</div>
 					</div>
 				)}
@@ -217,8 +220,8 @@ const Product = ({
 					</div>
 				)}
 			</div>
-			<div onClick={() => handleRemoveProduct(productName, productKey)} className="removeProduct light">
-				X
+			<div onClick={() => handleRemoveProduct(productName, productKey)} className="removeProduct light largest">
+				<FontAwesomeIcon icon={faXmark} />
 			</div>
 		</Container>
 	);
