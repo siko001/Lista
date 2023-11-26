@@ -2,6 +2,7 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import enTranslations from '../locales/en/translation.json';
 import mtTranslations from '../locales/mt/translation.json';
+import PopularProducts from '../PopularProducts';
 
 const translations = {
 	en: enTranslations,
@@ -23,11 +24,29 @@ export const LanguageProvider = ({ children }) => {
 		setLanguage(lang);
 	};
 
+	const translateProductNames = () => {
+		return PopularProducts.map((product) => {
+			const translatedNames = {};
+			Object.keys(translations).forEach((lang) => {
+				translatedNames[lang] = translations[lang][product.name] || product.name;
+				translatedCategories[lang] = translations[lang][product.category] || product.category;
+			});
+
+			return {
+				...product,
+				name: translatedNames,
+				category: translatedCategories,
+			};
+		});
+	};
+
 	useEffect(() => {
 		localStorage.setItem('selectedLanguage', language);
 	}, [language]);
 
-	return <LanguageContext.Provider value={{ language, translate, changeLanguage }}>{children}</LanguageContext.Provider>;
+	return (
+		<LanguageContext.Provider value={{ language, translate, changeLanguage, translateProductNames }}>{children}</LanguageContext.Provider>
+	);
 };
 
 export const useLanguage = () => {

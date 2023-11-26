@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useContext } from 'react';
 import styled from 'styled-components';
 import ListSetting from './ListSetting';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -6,6 +6,7 @@ import { faGears } from '@fortawesome/free-solid-svg-icons';
 import { useLanguage } from '../contexts/LanguageContext';
 import axiosClient from '../axiosClient';
 import { useNavigate } from 'react-router-dom';
+import { useProductCount } from '../contexts/ProductCountContext';
 
 const Container = styled.div`
 	border: 1px solid rgba(114, 109, 109, 0.548);
@@ -62,7 +63,6 @@ const Content = styled.div`
 	}
 `;
 const Top = styled.div`
-	position: relative;
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
@@ -115,11 +115,23 @@ const Top = styled.div`
 		cursor: pointer;
 	}
 `;
+
 const Bottom = styled.div`
 	width: 100%;
 	min-height: 8px;
 	border-radius: 5px;
 	background-color: #a2a2a238;
+	position: relative;
+
+	.filler {
+		width: ${(props) => (props.percentage === NaN ? '0' : `${props.percentage}%`)};
+		height: 100%;
+		border-radius: 5px;
+		background-color: green;
+		position: absolute;
+		top: 0;
+		left: 0;
+	}
 `;
 
 const List = ({
@@ -133,7 +145,10 @@ const List = ({
 	setStatus,
 	fetchLists,
 	setCopyLoader,
+	totalReadyProduct,
+	totalProducts,
 }) => {
+	const percentage = (totalReadyProduct / totalProducts) * 100;
 	const [title, setTitle] = useState(name);
 	const [isEditingTitle, setIsEditingTitle] = useState(false);
 	const [settingPageOpen, setSettingPageOpen] = useState(false);
@@ -232,7 +247,9 @@ const List = ({
 					</div>
 					<div onClick={handleOpenList} className="center"></div>
 					<div className="right">
-						<div className="quantity">0/0</div>
+						<div className="quantity">
+							{totalReadyProduct}/{totalProducts}
+						</div>
 						<div className="settings">
 							<FontAwesomeIcon icon={faGears} onClick={handelOpenSettingPage} />
 							{settingPageOpen && (
@@ -254,7 +271,9 @@ const List = ({
 						</div>
 					</div>
 				</Top>
-				<Bottom></Bottom>
+				<Bottom percentage={percentage}>
+					<div className="filler"></div>
+				</Bottom>
 				<div onClick={handleOpenList} className="underbottom"></div>
 			</Content>
 			<div onClick={handleOpenList} className="rightSpace"></div>

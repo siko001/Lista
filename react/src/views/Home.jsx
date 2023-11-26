@@ -15,6 +15,8 @@ import axiosClient from '../axiosClient';
 import GetListLoader from '../components/GetListLoader';
 import DeleteListLoader from '../components/DeleteListLoader';
 import CopyListLoader from '../components/CopyListLoader';
+import ShoppingList from './ShoppingList';
+import { ProductCountProvider } from '../contexts/ProductCountContext';
 
 const Container = styled.div`
 	min-height: 100vh;
@@ -112,6 +114,10 @@ const Home = () => {
 	const [currentImage, setCurrentImage] = useState(0);
 	const { darkMode, setDarkMode } = useDarkMode();
 	const { translate } = useLanguage();
+	const [totalProducts, setTotalProducts] = useState(0);
+	const [totalReadyProduct, setTotalReadyProducts] = useState(0);
+
+	const [hiddenComp, setHiddenComp] = useState(null);
 	//Lists state
 	const [shoppingList, setShoppingList] = useState([]);
 	const [lists, setLists] = useState([]);
@@ -155,9 +161,9 @@ const Home = () => {
 	const fetchLists = () => {
 		// Check local storage first
 		const storedLists = JSON.parse(localStorage.getItem('shoppingLists'));
-
 		if (storedLists && Array.isArray(storedLists) && storedLists.length > 0) {
 			setLists(storedLists);
+			const totalProductsArray = storedLists.map((list) => list.totalProductCount);
 			setShoppingList(storedLists);
 		}
 
@@ -174,7 +180,6 @@ const Home = () => {
 				if (!arraysEqual(storedLists, apiLists)) {
 					localStorage.setItem('shoppingLists', JSON.stringify(apiLists));
 				}
-
 				setLists(apiLists);
 				setShoppingList(apiLists);
 			})
@@ -216,80 +221,85 @@ const Home = () => {
 	};
 
 	return (
-		<Container className={`${darkMode ? 'darkMode' : 'lightMode'} `}>
-			{/* NavBar Component */}
-			<Navbar />
+		<ProductCountProvider id={1}>
+			<Container className={`${darkMode ? 'darkMode' : 'lightMode'} `}>
+				{/* NavBar Component */}
+				<Navbar />
 
-			{/* Delete Components */}
-			{deleteOverlay && (
-				<DeleteOverlay
-					setMessage={setMessage}
-					setStatus={setStatus}
-					closeOverlay={handleCancelOverlay}
-					deleteID={deleteID}
-					setDeleteLoader={setDeleteLoader}
-					updateList={updateList}
-					deleteTitle={deleteTitle}
-				/>
-			)}
-			{deleteLoader && <DeleteListLoader />}
-
-			{/* Create List Components */}
-			{overlayOpen && (
-				<Overlay
-					closeOverlay={handleOpenOverlay}
-					setMessage={setMessage}
-					setStatus={setStatus}
-					setLoading={setLoading}
-					addNewList={addNewList}
-					fetchLists={fetchLists}
-				/>
-			)}
-			{loading && <CreateListLoader />}
-
-			{/* Header | Dynamically change the heading dynamically according to number of lists*/}
-			<Header className="goDownSlow" style={{ justifyContent: shoppingList.length == 0 ? 'center' : '' }}>
-				{shoppingList.length != 0 ? (
-					<h3>{shoppingList.length == 0 ? '' : shoppingList.length == 1 ? translate('ifList') : translate('ifListmore1')}</h3>
-				) : (
-					''
+				{/* Delete Components */}
+				{deleteOverlay && (
+					<DeleteOverlay
+						setMessage={setMessage}
+						setStatus={setStatus}
+						closeOverlay={handleCancelOverlay}
+						deleteID={deleteID}
+						setDeleteLoader={setDeleteLoader}
+						updateList={updateList}
+						deleteTitle={deleteTitle}
+					/>
 				)}
-				<button className="type1 " style={{ color: darkMode ? 'white' : 'black' }} onClick={handleOpenOverlay}>
-					{translate('addBtn')}
-				</button>
-			</Header>
+				{deleteLoader && <DeleteListLoader />}
 
-			{/* Main Content For Lists */}
-			<Main>
-				{shoppingList.length === 0 ? (
-					<ImageContainer>
-						<img src={images[currentImage]} alt="Random Vegetable" />
-					</ImageContainer>
-				) : (
-					<>
-						<ListsContainer
-							setDeleteOverlay={setDeleteOverlay}
-							darkMode={darkMode}
-							setMessage={setMessage}
-							lists={lists}
-							setDeleteID={setDeleteID}
-							setDeleteTitle={setDeleteTitle}
-							setStatus={setStatus}
-							fetchLists={fetchLists}
-							setCopyLoader={setCopyLoader}
-						/>
-					</>
+				{/* Create List Components */}
+				{overlayOpen && (
+					<Overlay
+						closeOverlay={handleOpenOverlay}
+						setMessage={setMessage}
+						setStatus={setStatus}
+						setLoading={setLoading}
+						addNewList={addNewList}
+						fetchLists={fetchLists}
+					/>
 				)}
+				{loading && <CreateListLoader />}
 
-				{/* Notifications and List Loader */}
-				<Notification message={message} status={status} />
-				{loadingLists && <GetListLoader />}
-				{copyLoader && <CopyListLoader />}
-			</Main>
+				{/* Header | Dynamically change the heading dynamically according to number of lists*/}
+				<Header className="goDownSlow" style={{ justifyContent: shoppingList.length == 0 ? 'center' : '' }}>
+					{shoppingList.length != 0 ? (
+						<h3>{shoppingList.length == 0 ? '' : shoppingList.length == 1 ? translate('ifList') : translate('ifListmore1')}</h3>
+					) : (
+						''
+					)}
+					<button className="type1 " style={{ color: darkMode ? 'white' : 'black' }} onClick={handleOpenOverlay}>
+						{translate('addBtn')}
+					</button>
+				</Header>
 
-			{/* Footer / Sponsers | Components */}
-			<Footer />
-		</Container>
+				{/* Main Content For Lists */}
+				<Main>
+					{shoppingList.length === 0 ? (
+						<ImageContainer>
+							<img src={images[currentImage]} alt="Random Vegetable" />
+						</ImageContainer>
+					) : (
+						<>
+							<ListsContainer
+								setDeleteOverlay={setDeleteOverlay}
+								darkMode={darkMode}
+								setMessage={setMessage}
+								lists={lists}
+								setDeleteID={setDeleteID}
+								setDeleteTitle={setDeleteTitle}
+								setStatus={setStatus}
+								fetchLists={fetchLists}
+								setCopyLoader={setCopyLoader}
+								totalProducts={totalProducts}
+								totalReadyProduct={totalReadyProduct}
+							/>
+						</>
+					)}
+
+					{/* Notifications and List Loader */}
+					<Notification message={message} status={status} />
+					{loadingLists && <GetListLoader />}
+					{copyLoader && <CopyListLoader />}
+				</Main>
+
+				{/* Footer / Sponsers | Components */}
+				<Footer />
+				{hiddenComp && <ShoppingList />}
+			</Container>
+		</ProductCountProvider>
 	);
 };
 

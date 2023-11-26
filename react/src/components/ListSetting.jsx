@@ -6,7 +6,7 @@ import { useLanguage } from '../contexts/LanguageContext';
 import axiosClient from '../axiosClient';
 
 const Container = styled.div`
-	z-index: 1;
+	z-index: 2;
 	position: absolute;
 	border: 1px solid rgba(114, 109, 109, 0.548);
 	right: -0px;

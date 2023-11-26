@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import styled from 'styled-components';
 import { useLanguage } from '../contexts/LanguageContext';
 import axiosClient from '../axiosClient';
 import ReadyProduct from './ReadyProduct';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
+import { useDarkMode } from '../contexts/DarkModeContext';
 
 const Container = styled.div`
 	justify-content: space-between;
@@ -47,6 +48,10 @@ const Container = styled.div`
 		}
 	}
 
+	.radio:hover {
+		cursor: pointer;
+	}
+
 	.radio[type='checkbox'] {
 		border-radius: 10%;
 		height: 20px;
@@ -59,13 +64,30 @@ const Container = styled.div`
 		border-radius: 50%;
 	}
 	.center {
+		border-radius: 15px;
+		min-height: 33px;
 		display: flex;
-		flex: 0.5;
+		flex: 1;
+		justify-content: center;
 		gap: 10px;
-		justify-content: space-evenly;
 		margin: 0 20px;
+		&:hover {
+			border: 1px solid;
+			cursor: pointer;
+		}
+		.empty {
+			border-radius: 15px;
+			min-height: 33px;
+			display: flex;
+			flex: 1;
+			justify-content: center;
+			gap: 10px;
+			margin: 0 20px;
+		}
 		@media screen and (max-width: 650px) {
 			min-width: 120px;
+			gap: 5px;
+			margin: 0 10px;
 		}
 		.group {
 			text-align: center;
@@ -115,15 +137,16 @@ const Product = ({
 	unit,
 	price,
 	productKey,
-
 	setReadyProducts,
 	setProduct,
 	item,
 	listId,
 	setToBuyProducts,
-	handleRemoveFromToBuy,
+	setOpenEditProduct,
+	setProductToEdit,
 }) => {
 	const { translate } = useLanguage();
+	const { darkMode, setDarkMode } = useDarkMode();
 
 	const handleRemoveProduct = (product, id) => {
 		setProductToRemove(product);
@@ -133,11 +156,51 @@ const Product = ({
 	const totalProductPrice = quantity * price;
 
 	const handleMoveToReady = (id, prod) => {
-		const product = prod.filter((prod) => prod.uniqueKey == id);
-		setTimeout(() => {
-			setReadyProducts((preProduct) => [...preProduct, product[0]]);
-			handleRemoveFromToBuy(id);
-		}, 1000);
+		const product = prod.filter((prod) => prod.uniqueKey === id);
+
+		const allProducts = JSON.parse(localStorage.getItem(`allProductsInList${listId}`));
+
+		const allLists = JSON.parse(localStorage.getItem('shoppingLists'));
+
+		const correctList = allLists.find((list) => list.id == listId);
+		// Update the count
+		correctList.totalReadyProducts++;
+		localStorage.setItem('shoppingLists', JSON.stringify(allLists));
+
+		const allProductsInToBuy = JSON.parse(localStorage.getItem(`toBuyProductsInList${listId}`));
+		const allProductsInReady = JSON.parse(localStorage.getItem(`readyProductsInList${listId}`));
+
+		// FIND AND REMOVE THE ITEM FROM THE TO-BUY LOCALSTORAGE AND MOVE TO READY
+		// Find the index of the selected product in the toBuyProductsInList array
+		const productIndexInToBuy = allProductsInToBuy.findIndex((p) => p.uniqueKey === id);
+		// If the product is found in toBuyProductsInList, remove it
+		if (productIndexInToBuy !== -1) {
+			// Get the removed product and update its status to 'ready'
+			const removedProduct = { ...allProductsInToBuy[productIndexInToBuy], status: 'ready' };
+			// Create a new array excluding the selected product in toBuyProductsInList
+			const updatedToBuyProducts = allProductsInToBuy.filter((_, index) => index !== productIndexInToBuy);
+			// Update the local storage with the new array in toBuyProductsInList
+			localStorage.setItem(`toBuyProductsInList${listId}`, JSON.stringify(updatedToBuyProducts));
+			// Add the removed product to the readyProductsInList
+			const updatedReadyProducts = [...allProductsInReady, removedProduct];
+			// Update the local storage with the new array in readyProductsInList
+			localStorage.setItem(`readyProductsInList${listId}`, JSON.stringify(updatedReadyProducts));
+			setReadyProducts(updatedReadyProducts);
+			setToBuyProducts(updatedToBuyProducts);
+		}
+
+		// CHANGE THE PRODUCT STATUS IN LOCAL STROAGE LIST
+		// Find the index of the selected product in the allProducts array
+		const productIndexInAll = allProducts.findIndex((p) => p.uniqueKey === id);
+		// If the product is found in allProducts, update its status to 'ready'
+		if (productIndexInAll !== -1) {
+			allProducts[productIndexInAll].status = 'ready';
+			// Optionally, you can create a copy of the updated allProducts array
+			const updatedAllProducts = [...allProducts];
+			// Update the local storage with the new array
+			localStorage.setItem(`allProductsInList${listId}`, JSON.stringify(updatedAllProducts));
+			setProduct(updatedAllProducts);
+		}
 
 		axiosClient
 			.put(`/update/product${id}/${listId}`, [id, listId])
@@ -148,34 +211,11 @@ const Product = ({
 				console.log(err);
 			})
 			.finally(() => {});
-
-		// const allProducts = JSON.parse(localStorage.getItem(`allProductsInList${listId}`));
-		// const allProductsInToBuy = JSON.parse(localStorage.getItem(`toBuyProductsInList${listId}`));
-
-		// // Find the index of the selected product in the allProducts array
-		// const productIndex = allProducts.filter((p) => p.uniqueKey === id);
-		// const productIndexInToBuy = allProductsInToBuy.findIndex((p) => p.uniqueKey === id);
-
-		// console.log(allProducts);
-		// console.log(productIndexInToBuy);
-		// setTimeout(() => {
-
-		// 	// Check if the selected product is in the toBuy list and remove it
-		// 	if (productIndexInToBuy !== -1) {
-		// 		allProductsInToBuy.splice(productIndexInToBuy, 1);
-		// 		localStorage.setItem('toBuyProductsInList' + currentList.id, JSON.stringify(allProductsInToBuy));
-		// 	}
-
-		// 	// Update the status of the selected product to "ready"
-		// 	if (productIndex !== -1) {
-		// 		allProducts[productIndex].status = 'ready';
-
-		// 		// Save the modified allProducts array back to localStorage
-		// 		localStorage.setItem('allProductsInList' + currentList.id, JSON.stringify(allProducts));
-
-		// 		// Save the updated readyProducts array to localStorage
-		// 		localStorage.setItem('readyProductsInList' + currentList.id, JSON.stringify(allProducts.filter((p) => p.status === 'ready')));
-		// 	}
+	};
+	const handleProductSelect = (item) => {
+		setOpenEditProduct((prev) => !prev);
+		console.log(item);
+		setProductToEdit(item);
 	};
 
 	return (
@@ -191,8 +231,14 @@ const Product = ({
 				<div className="product_title bolder">{productName}</div>
 			</div>
 
-			<div className="center">
-				{quantity + unit && (
+			<div
+				onClick={() => {
+					handleProductSelect(item);
+				}}
+				className="center"
+				style={{ borderColor: darkMode ? 'rgba(255,255,255,0.2)' : 'rgba(255,255,255,0.4)' }}
+			>
+				{quantity && quantity != 0 && (
 					<div className="group">
 						<div className="description">{translate('quantity')}</div>
 						<div className="quantative">
@@ -201,7 +247,7 @@ const Product = ({
 						</div>
 					</div>
 				)}
-				{price && (
+				{price && price != 0 && (
 					<div className="group">
 						<div className="description">{translate('price')}</div>
 						<div className="quantative">
@@ -210,7 +256,7 @@ const Product = ({
 						</div>
 					</div>
 				)}
-				{totalProductPrice && (
+				{totalProductPrice ? (
 					<div className="group">
 						<div className="description">{translate('total')}</div>
 						<div className="quantative">
@@ -218,6 +264,8 @@ const Product = ({
 							<span>€</span>
 						</div>
 					</div>
+				) : (
+					''
 				)}
 			</div>
 			<div onClick={() => handleRemoveProduct(productName, productKey)} className="removeProduct light largest">

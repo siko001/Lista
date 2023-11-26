@@ -88,7 +88,21 @@ const Container = styled.div`
 	}
 `;
 
-const MainSettings = ({ setOpenSettings, editTitle, setOpenEmptyListOverLay, product, listId, readyProducts, updateList, toBuyProducts }) => {
+const MainSettings = ({
+	setOpenSettings,
+	editTitle,
+	setOpenEmptyListOverLay,
+	product,
+	listId,
+	readyProducts,
+	updateList,
+	toBuyProducts,
+	setToBuyProducts,
+	setReadyProducts,
+	setProduct,
+	setSelectedProducts,
+	setOpenEmptyAndDeleteListOverlay,
+}) => {
 	const { darkMode } = useDarkMode();
 	const { translate } = useLanguage();
 	const navigate = useNavigate();
@@ -108,36 +122,32 @@ const MainSettings = ({ setOpenSettings, editTitle, setOpenEmptyListOverLay, pro
 		editTitle();
 	};
 
-	// Setting No. 2
+	// Setting No. 3 Mark All As Ready
 	const handleMarkAllToBuyAsReady = (id) => {
 		// Fetch all products
-		// const allProducts = JSON.parse(localStorage.getItem('allProductsInList' + id));
+		const allProducts = JSON.parse(localStorage.getItem('allProductsInList' + id));
+		const allLists = JSON.parse(localStorage.getItem('shoppingLists'));
 
-		// // Fetch the to buy products list (if any)
-		// const toBuyProductsList = JSON.parse(localStorage.getItem('toBuyProductsInList' + id)) || [];
-
-		// // Fetch the ready products list (if any)
-		// const readyProductsList = JSON.parse(localStorage.getItem('readyProductsInList' + id)) || [];
-
-		// // Filter products that are not ready
-		// const notReadyProducts = allProducts.filter((p) => p.status !== 'ready');
-
-		// // Update the status of not ready products to 'ready' and add them to readyProductsList
-		// const updatedReadyProducts = notReadyProducts.map((p) => ({ ...p, status: 'ready' }));
-		// const newReadyProductsList = [...readyProductsList, ...updatedReadyProducts];
-
-		// // Move products from toBuyProductsList to readyProductsList with status 'ready'
-		// const updatedToBuyProducts = toBuyProductsList.map((p) => ({ ...p, status: 'ready' }));
-		// const newReadyProductsListWithToBuy = [...newReadyProductsList, ...updatedToBuyProducts];
-
-		// // Update the status of all products to 'ready' in the allProductsList
-		// const updatedAllProducts = allProducts.map((p) => ({ ...p, status: 'ready' }));
-
-		// // Save the updated lists to localStorage
-		// localStorage.setItem('allProductsInList' + id, JSON.stringify(updatedAllProducts));
-		// localStorage.setItem('toBuyProductsInList' + id, '[]');
-		// localStorage.setItem('readyProductsInList' + id, JSON.stringify(newReadyProductsListWithToBuy));
-
+		const correctList = allLists.find((list) => list.id == listId);
+		// Update the count
+		const total = correctList.totalProductCount;
+		correctList.totalReadyProducts = total;
+		localStorage.setItem('shoppingLists', JSON.stringify(allLists));
+		// Fetch the ready products list (if any)
+		const readyProductsList = JSON.parse(localStorage.getItem('readyProductsInList' + id)) || [];
+		// Filter products that are not ready
+		const notReadyProducts = allProducts.filter((p) => p.status !== 'ready');
+		// Update the status of not ready products to 'ready' and add them to readyProductsList
+		const updatedReadyProducts = notReadyProducts.map((p) => ({ ...p, status: 'ready' }));
+		const newReadyProductsList = [...readyProductsList, ...updatedReadyProducts];
+		// Update the status of all products to 'ready' in the allProductsList
+		const updatedAllProducts = allProducts.map((p) => ({ ...p, status: 'ready' }));
+		// Save the updated lists to localStorage
+		localStorage.setItem('allProductsInList' + id, JSON.stringify(updatedAllProducts));
+		localStorage.setItem('toBuyProductsInList' + id, '[]');
+		localStorage.setItem('readyProductsInList' + id, JSON.stringify(newReadyProductsList));
+		setToBuyProducts([]);
+		setReadyProducts(newReadyProductsList);
 		axiosClient
 			.put('update/all-ready/' + id, id)
 			.then((res) => {
@@ -150,20 +160,66 @@ const MainSettings = ({ setOpenSettings, editTitle, setOpenEmptyListOverLay, pro
 			.finally(() => {});
 	};
 
+	// Setting 4 Revert everything back to the to buy list
 	const handleRevertToBackToBuy = (id) => {
+		// Fetch all products
+		const allProducts = JSON.parse(localStorage.getItem('allProductsInList' + id));
+		// Filter products that are  ready
+		const readyProducts = allProducts.filter((p) => p.status == 'ready');
+
+		const allLists = JSON.parse(localStorage.getItem('shoppingLists'));
+		const correctList = allLists.find((list) => list.id == listId);
+		// Update the count
+
+		correctList.totalReadyProducts = 0;
+		localStorage.setItem('shoppingLists', JSON.stringify(allLists));
+
+		// Update the status of  ready products to 'no ready' and add them to readyProductsList
+		const updatedProducts = readyProducts.map((p) => ({ ...p, status: 'to buy' }));
+		const updatedProductsList = [...updatedProducts];
+
+		// Update the status of all products to 'to buy' in the allProductsList
+		const updatedAllProducts = allProducts.map((p) => ({ ...p, status: 'to buy' }));
+		// Save the updated lists to localStorage
+		localStorage.setItem('allProductsInList' + id, JSON.stringify(updatedAllProducts));
+		localStorage.setItem('toBuyProductsInList' + id, JSON.stringify(updatedProductsList));
+		localStorage.setItem('readyProductsInList' + id, '[]');
+		setToBuyProducts(updatedAllProducts);
+		setReadyProducts([]);
 		axiosClient
 			.put('update/all-to_buy/' + id, id)
-			.then((res) => {
-				updateList();
-			})
+			.then((res) => {})
 			.catch((err) => {
 				console.log(err);
 			})
 			.finally(() => {});
 	};
 
-	//Remove ONLY all Ready products from the List
+	//Setting 5 Remove ONLY all Ready products from the List
 	const handleRemoveReadyMarkedProducts = (id) => {
+		// Fetch all products
+		const allProducts = JSON.parse(localStorage.getItem('allProductsInList' + id));
+
+		const allLists = JSON.parse(localStorage.getItem('shoppingLists'));
+		const correctList = allLists.find((list) => list.id == listId);
+		// Update the count
+		const toDeductFromTotalList = correctList.totalReadyProducts;
+		correctList.totalProductCount -= toDeductFromTotalList;
+		correctList.totalReadyProducts = 0;
+		localStorage.setItem('shoppingLists', JSON.stringify(allLists));
+
+		// Fetch the ready products list (if any)
+		const readyProductsList = JSON.parse(localStorage.getItem('readyProductsInList' + id)) || [];
+		// Filter products that are  ready
+		const readyProducts = allProducts.filter((p) => p.status == 'ready');
+		// Remove ready products from allProducts
+		const updatedAllProducts = allProducts.filter((product) => !readyProducts.includes(product));
+		// Update the 'allProductsInList' in local storage with the new filtered array
+		localStorage.setItem('allProductsInList' + id, JSON.stringify(updatedAllProducts));
+		localStorage.setItem('readyProductsInList' + id, '[]');
+		setReadyProducts([]);
+		setSelectedProducts(updatedAllProducts);
+
 		axiosClient
 			.delete('remove/ready/' + id, id)
 			.then((res) => {
@@ -181,28 +237,10 @@ const MainSettings = ({ setOpenSettings, editTitle, setOpenEmptyListOverLay, pro
 	};
 
 	const handleDeleteListAndProducts = (id) => {
-		axiosClient
-			.delete(`/delete/all-products/and-list${id}`, id)
-			.then((res) => {
-				console.log(res.data);
-				const homeUrl = '/';
-				navigate(homeUrl);
-			})
-			.then((err) => {
-				console.log(err.message);
-			})
-			.finally(() => {});
+		//create a state annd overlay
+		setOpenEmptyAndDeleteListOverlay((prev) => !prev);
+		setOpenSettings((prev) => !prev);
 	};
-
-	// const handleMarkAllToBuyAsReady = (listId) => {
-	// 	const allProductsList = localStorage.getItem(`allProductsInList${listId}`);
-
-	// 	const toBuyList = localStorage.getItem(`toBuyProductsInList${listId}`);
-
-	// 	const allProductListThatAreToBuy = allProductsList.filter((p) => p.status != 'ready');
-
-	// 	console.log(allProductListThatAreToBuy);
-	// };
 
 	return (
 		<Container

@@ -51,5 +51,12 @@
 	"to-buy": "Prodott Biex Jinxtara",
 	"to-buy-plural": "Prodotti Biex Jinxtraw",
 	"popular-products": "Prodotti Populari",
-	"user-products":"Prodotti tieghek"
+	"user-products": "Prodotti tieghek",
+	"delete-list-and-products-btn": "Hassar il-lista",
+	"empty-and-delete-text": "Ha Thassar",
+	"empty-and-delete-text-pt2": "u ha tnehhi il-prodotti kolla!",
+	"no-products-found-ready": "ma nstab xejn fil-prodotti mixtrija",
+	"no-products-found-to-buy": "Ma nstab xejn fil-prodotti biex jinxtraw",
+	"random": "bla'ddoċċ",
+	"by-category": "Bil Kategorija"
 }

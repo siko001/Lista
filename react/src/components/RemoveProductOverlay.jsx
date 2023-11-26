@@ -74,7 +74,7 @@ const RemoveProductOverlay = ({
 	setRemoveProductConfirmation,
 	updateList,
 }) => {
-	const { translate } = useLanguage();
+	const { language, translate, translateProductNames } = useLanguage();
 
 	useEffect(() => {
 		document.body.style.overflow = 'hidden';

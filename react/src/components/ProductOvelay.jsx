@@ -17,12 +17,21 @@ const Container = styled.div`
 	position: fixed;
 
 	.name {
-		width: 150px;
+		min-width: 200px;
 		overflow: hidden;
+		@media screen and (max-width: 750px) {
+			border: 1px solid;
+			min-width: 170px;
+
+			wdith: 160px;
+			max-width: 160px;
+			font-size: 0.9rem;
+		}
 	}
 
 	.category {
 		font-size: 0.8rem;
+		min-width: 70px;
 	}
 
 	.grp {
@@ -70,7 +79,7 @@ const SearchInput = styled.input`
 	font-size: 1rem;
 	font-weight: 600;
 	@media screen and (max-width: 950px) {
-		width: 80%;
+		width: 90%;
 	}
 `;
 
@@ -84,7 +93,7 @@ const Main = styled.div`
 	border-radius: 10px;
 
 	@media screen and (max-width: 950px) {
-		width: 80%;
+		width: 90%;
 	}
 `;
 
@@ -152,8 +161,12 @@ const ProductRow = styled.div`
 const ProductCell = styled.div`
 	display: flex;
 	justify-content: space-between;
-	width: 95%;
-	padding: 10px 30px;
+	width: 98%;
+	padding: 10px 20px;
+
+	@media screen and (max-width: 750px) {
+		padding: 10px 2px;
+	}
 
 	&:hover {
 		background-color: rgba(0, 0, 0, 0.3);
@@ -199,29 +212,17 @@ const ProductFilterButton = styled.option`
 	background-color: ${(props) => (props.active ? '#aaa' : 'transparent')};
 `;
 
-const ProductOverlay = ({
-	darkMode,
-	setProduct,
-	id,
-	updateList,
-	selectedProducts,
-	setSelectedProducts,
-	toBuyProducts,
-	setToBuyProducts,
-	readyProducts,
-	setReadyProducts,
-}) => {
+const ProductOverlay = ({ darkMode, setProduct, id, updateList, selectedProducts, setSelectedProducts, toBuyProducts }) => {
 	const [selected, setSelected] = useState('Popular Products');
 	const [selectedFilter, setSelectedFilter] = useState('random');
 	const [searchTerm, setSearchTerm] = useState('');
-	const { translate } = useLanguage();
+
+	const { language, translate, translateProductNames } = useLanguage();
 
 	const listId = id;
 
-	console.log(listId);
 	useEffect(() => {
 		// Load the list of selected products from local storage
-
 		// console.log(toBuyProducts);
 		// const storedProducts = JSON.parse(localStorage.getItem(`allProductsInList` + id)) || [];
 		setSelectedProducts(selectedProducts);
@@ -243,7 +244,6 @@ const ProductOverlay = ({
 
 	const handleSelect = (product) => {
 		const productId = product.uniqueKey;
-		console.log(productId);
 		// Check if the product is already selected
 		if (selectedProducts.some((selectedProduct) => selectedProduct.uniqueKey === productId)) {
 			return;
@@ -254,29 +254,34 @@ const ProductOverlay = ({
 		setSelectedProducts(updatedSelectedProducts);
 
 		// // Update local storage
-		// const allLists = JSON.parse(localStorage.getItem(`shoppingLists`)) || [];
+		const allLists = JSON.parse(localStorage.getItem(`shoppingLists`)) || [];
 
-		// const updatedLists = allLists.map((list) => {
-		// 	if (list.id == listId) {
-		// 		// Find the list by ID and add the product to its products array
-		// 		const allProducts = JSON.parse(localStorage.getItem(`allProductsInList` + listId)) || [];
+		const correctList = allLists.find((list) => list.id == listId);
+		// Update the count
+		correctList.totalProductCount++;
+		localStorage.setItem('shoppingLists', JSON.stringify(allLists));
 
-		// 		const toBuyProducts = JSON.parse(localStorage.getItem(`toBuyProductsInList` + listId)) || [];
+		const updatedLists = allLists.map((list) => {
+			if (list.id == listId) {
+				// Find the list by ID and add the product to its products array
+				const allProducts = JSON.parse(localStorage.getItem(`allProductsInList` + listId)) || [];
 
-		// 		const updatedProducts = [...allProducts, product];
-		// 		const updatedToBuyProducts = [...toBuyProducts, product]; // Add the new product to the existing products
+				const toBuyProducts = JSON.parse(localStorage.getItem(`toBuyProductsInList` + listId)) || [];
 
-		// 		localStorage.setItem(`allProductsInList` + listId, JSON.stringify(updatedProducts));
-		// 		localStorage.setItem(`toBuyProductsInList` + listId, JSON.stringify(updatedToBuyProducts));
-		// 	}
-		// 	return list;
-		// });
+				const updatedProducts = [...allProducts, product];
+				const updatedToBuyProducts = [...toBuyProducts, product]; // Add the new product to the existing products
 
-		// // Save the updated data back to local storage
-		// localStorage.setItem(`shoppingLists`, JSON.stringify(updatedLists));
+				localStorage.setItem(`allProductsInList` + listId, JSON.stringify(updatedProducts));
+				localStorage.setItem(`toBuyProductsInList` + listId, JSON.stringify(updatedToBuyProducts));
+			}
+			return list;
+		});
+
+		// Save the updated data back to local storage
+		localStorage.setItem(`shoppingLists`, JSON.stringify(updatedLists));
 
 		axiosClient
-			.post(`/add-product/${product.name}`, [listId, product])
+			.post(`/add-product/${product.name[language]}`, [listId, product])
 			.then((res) => {
 				console.log(res);
 			})
@@ -290,6 +295,14 @@ const ProductOverlay = ({
 	};
 
 	const handleUnselectProduct = (productId, listId) => {
+		// // Update local storage
+		const allLists = JSON.parse(localStorage.getItem(`shoppingLists`)) || [];
+
+		const correctList = allLists.find((list) => list.id == listId);
+		// Update the count
+		correctList.totalProductCount--;
+		localStorage.setItem('shoppingLists', JSON.stringify(allLists));
+
 		//unselecet from the all products
 		const selectedProducts = JSON.parse(localStorage.getItem(`allProductsInList${listId}`)) || [];
 		const updatedSelectedProducts = selectedProducts.filter((product) => product.uniqueKey !== productId);
@@ -352,10 +365,10 @@ const ProductOverlay = ({
 					<div className="grp">
 						<ProductFilter onChange={handleFilterChange}>
 							<ProductFilterButton value="random" active={selectedFilter.toString(selectedFilter === 'random')}>
-								Random
+								{translate('random')}
 							</ProductFilterButton>
 							<ProductFilterButton value="category" active={selectedFilter.toString(selectedFilter === 'random')}>
-								By Category
+								{translate('by-category')}
 							</ProductFilterButton>
 							{/* Add more filter buttons for future filters */}
 						</ProductFilter>
@@ -382,55 +395,60 @@ const ProductOverlay = ({
 				{/* Category Is Set At Random */}
 				<ProductTable>
 					{selectedFilter === 'random' &&
-						PopularProducts.filter((product) => product.name.toLowerCase().includes(searchTerm.toLowerCase())).map(
-							(product, index) => (
-								<ProductRow key={index}>
-									<ProductCell key={index}>
-										<div className="grp-check boldest">
-											<input
-												className="radio"
-												onChange={() => handleSelect(product)}
-												type="checkbox"
-												checked={selectedProducts.some(
-													(selectedProduct) => selectedProduct.uniqueKey == product.uniqueKey
-												)}
-											/>
-											<p className="name large">{product.name}</p>
-										</div>
-										<p className="category lighter">{product.category}</p>
-										<p
-											onClick={() => {
-												const sameProduct = toBuyProducts.some((p) => p.uniqueKey == product.uniqueKey);
+						PopularProducts.filter((product) => {
+							const translatedName = product.name[language] || product.name.en;
+							return translatedName.toLowerCase().includes(searchTerm.toLowerCase());
+						}).map((product) => (
+							<ProductRow key={product.uniqueKey}>
+								<ProductCell>
+									<div className="grp-check boldest">
+										<input
+											className="radio"
+											onChange={() => handleSelect(product)}
+											type="checkbox"
+											checked={selectedProducts.some(
+												(selectedProduct) => selectedProduct.uniqueKey === product.uniqueKey
+											)}
+										/>
+										<p className="name large">{product.name[language] || product.name.en}</p>
+									</div>
+									<p className="category lighter">{product.category[language] || product.category.en}</p>
+									<p
+										onClick={() => {
+											const sameProduct = toBuyProducts.some((p) => p.uniqueKey === product.uniqueKey);
 
-												if (sameProduct) {
-													handleUnselectProduct(product.uniqueKey, listId);
-												} else {
-													return;
-												}
-											}}
-										>
-											<FontAwesomeIcon icon={faXmark} />
-										</p>
-									</ProductCell>
-								</ProductRow>
-							)
-						)}
+											if (sameProduct) {
+												handleUnselectProduct(product.uniqueKey, listId);
+											} else {
+												return;
+											}
+										}}
+									>
+										<FontAwesomeIcon icon={faXmark} />
+									</p>
+								</ProductCell>
+							</ProductRow>
+						))}
 
 					{/* If Selected is by Category */}
-
 					{selectedFilter === 'category' &&
-						Array.from(new Set([...PopularProducts, ...RecentProducts].map((product) => product.category))).map(
-							(category, index) => (
-								<React.Fragment key={index}>
+						Array.from(new Set([...PopularProducts, ...RecentProducts].map((product) => product.category[language]))).map(
+							(category, categoryIndex) => (
+								<React.Fragment key={categoryIndex}>
 									<ProductRow className="categoryRow">
 										<ProductCell style={{ fontWeight: 'bold', color: '#057753', backgroundColor: '#00000033' }}>
 											{category}
 										</ProductCell>
 									</ProductRow>
 									{PopularProducts.concat(RecentProducts).map((product, productIndex) => {
-										if (product.category === category && product.name.toLowerCase().includes(searchTerm.toLowerCase())) {
+										if (
+											product.category[language] === category &&
+											product.name[language] &&
+											product.name[language] &&
+											product.name[language].toLowerCase().includes(searchTerm.toLowerCase())
+										) {
 											return (
-												<ProductRow key={productIndex}>
+												<ProductRow key={product.uniqueKey}>
 													<ProductCell>
 														<div className="grp-check boldest">
 															<input
@@ -438,15 +456,15 @@ const ProductOverlay = ({
 																onChange={() => handleSelect(product)}
 																type="checkbox"
 																checked={selectedProducts.some(
-																	(selectedProduct) => selectedProduct.uniqueKey == product.uniqueKey
+																	(selectedProduct) => selectedProduct.uniqueKey === product.uniqueKey
 																)}
 															/>
-															{product.name}
+															{product.name[language]}
 														</div>
 														<p
 															onClick={() => {
 																const sameProduct = toBuyProducts.some(
-																	(p) => p.uniqueKey == product.uniqueKey
+																	(p) => p.uniqueKey === product.uniqueKey
 																);
 
 																if (sameProduct) {

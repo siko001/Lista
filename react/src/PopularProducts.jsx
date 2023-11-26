@@ -1,8 +1,14 @@
 const PopularProducts = [
 	{
 		uniqueKey: '1',
-		name: 'Chicken Nuggets',
-		category: 'Poultry',
+		name: {
+			en: 'chicken nuggest',
+			mt: 'Imbarraz tat-tigieg',
+		},
+		category: {
+			en: 'Poultry',
+			mt: 'Tjar',
+		},
 		price: '1',
 		unit: 'kg',
 		quantity: '1',
@@ -10,17 +16,29 @@ const PopularProducts = [
 	},
 	{
 		uniqueKey: '2',
-		name: 'Salmon',
-		category: 'Fish',
-		price: '',
-		unit: '',
-		quantity: '',
+		name: {
+			en: 'Salmon',
+			mt: 'Salamun',
+		},
+		category: {
+			en: 'Fish',
+			mt: 'Hut',
+		},
+		price: '0',
+		unit: 'kg',
+		quantity: '0',
 		status: 'to buy',
 	},
 	{
 		uniqueKey: '3',
-		name: 'Ribeye',
-		category: 'Beef',
+		name: {
+			en: 'Ribeye',
+			mt: 'Kuberoll',
+		},
+		category: {
+			en: 'Beef',
+			mt: 'Lahham',
+		},
 		price: '',
 		unit: '',
 		quantity: '',
@@ -28,8 +46,14 @@ const PopularProducts = [
 	},
 	{
 		uniqueKey: '4',
-		name: 'Tomatoes',
-		category: 'Vegetables',
+		name: {
+			en: 'Tomatoees',
+			mt: 'Tadam',
+		},
+		category: {
+			en: 'Vegitable',
+			mt: 'Haxix',
+		},
 		price: '',
 		unit: '',
 		quantity: '',
@@ -37,8 +61,14 @@ const PopularProducts = [
 	},
 	{
 		uniqueKey: '5',
-		name: 'Fillet',
-		category: 'Beef',
+		name: {
+			en: 'Fillet',
+			mt: 'Filet',
+		},
+		category: {
+			en: 'Beef',
+			mt: 'Lahham',
+		},
 		price: '',
 		unit: '',
 		quantity: '',
@@ -46,8 +76,14 @@ const PopularProducts = [
 	},
 	{
 		uniqueKey: '6',
-		name: 'Meagre',
-		category: 'Fish',
+		name: {
+			en: 'Meagre',
+			mt: 'Gurbell',
+		},
+		category: {
+			en: 'Fish',
+			mt: 'Hut',
+		},
 		price: '',
 		unit: '',
 		quantity: '',
@@ -55,26 +91,44 @@ const PopularProducts = [
 	},
 	{
 		uniqueKey: '11',
-		name: 'Chicken',
-		category: 'Poultry',
-		price: '',
-		unit: '',
-		quantity: '',
+		name: {
+			en: 'chicken nuggest',
+			mt: 'Imbarraz tat-tigieg',
+		},
+		category: {
+			en: 'Poultry',
+			mt: 'Tjar',
+		},
+		price: '1',
+		unit: 'kg',
+		quantity: '1',
 		status: 'to buy',
 	},
 	{
 		uniqueKey: '21',
-		name: 'Salmon',
-		category: 'Fish',
-		price: '',
-		unit: '',
-		quantity: '',
+		name: {
+			en: 'Salmon',
+			mt: 'Salamun',
+		},
+		category: {
+			en: 'Fish',
+			mt: 'Hut',
+		},
+		price: '0',
+		unit: 'kg',
+		quantity: '0',
 		status: 'to buy',
 	},
 	{
 		uniqueKey: '31',
-		name: 'Ribeye',
-		category: 'Beef',
+		name: {
+			en: 'Ribeye',
+			mt: 'Kuberoll',
+		},
+		category: {
+			en: 'Beef',
+			mt: 'Lahham',
+		},
 		price: '',
 		unit: '',
 		quantity: '',
@@ -82,8 +136,14 @@ const PopularProducts = [
 	},
 	{
 		uniqueKey: '41',
-		name: 'Tomatoes',
-		category: 'Vegetables',
+		name: {
+			en: 'Tomatoees',
+			mt: 'Tadam',
+		},
+		category: {
+			en: 'Vegitable',
+			mt: 'Haxix',
+		},
 		price: '',
 		unit: '',
 		quantity: '',
@@ -91,8 +151,14 @@ const PopularProducts = [
 	},
 	{
 		uniqueKey: '51',
-		name: 'Fillet',
-		category: 'Beef',
+		name: {
+			en: 'Fillet',
+			mt: 'Filet',
+		},
+		category: {
+			en: 'Beef',
+			mt: 'Lahham',
+		},
 		price: '',
 		unit: '',
 		quantity: '',
@@ -100,67 +166,110 @@ const PopularProducts = [
 	},
 	{
 		uniqueKey: '61',
-		name: 'Meagre',
-		category: 'Fish',
+		name: {
+			en: 'Meagre',
+			mt: 'Gurbell',
+		},
+		category: {
+			en: 'Fish',
+			mt: 'Hut',
+		},
 		price: '',
 		unit: '',
 		quantity: '',
 		status: 'to buy',
 	},
 	{
-		uniqueKey: '112',
-		name: 'Chicken',
-		category: 'Poultry',
+		uniqueKey: '12',
+		name: {
+			en: 'chicken nuggest',
+			mt: 'Imbarraz tat-tigieg',
+		},
+		category: {
+			en: 'Poultry',
+			mt: 'Tjar',
+		},
+		price: '1',
+		unit: 'kg',
+		quantity: '1',
+		status: 'to buy',
+	},
+	{
+		uniqueKey: '22',
+		name: {
+			en: 'Salmon',
+			mt: 'Salamun',
+		},
+		category: {
+			en: 'Fish',
+			mt: 'Hut',
+		},
+		price: '0',
+		unit: 'kg',
+		quantity: '0',
+		status: 'to buy',
+	},
+	{
+		uniqueKey: '32',
+		name: {
+			en: 'Ribeye',
+			mt: 'Kuberoll',
+		},
+		category: {
+			en: 'Beef',
+			mt: 'Lahham',
+		},
 		price: '',
 		unit: '',
 		quantity: '',
 		status: 'to buy',
 	},
 	{
-		uniqueKey: '212',
-		name: 'Salmon',
-		category: 'Fish',
+		uniqueKey: '42',
+		name: {
+			en: 'Tomatoees',
+			mt: 'Tadam',
+		},
+		category: {
+			en: 'Vegitable',
+			mt: 'Haxix',
+		},
 		price: '',
 		unit: '',
 		quantity: '',
 		status: 'to buy',
 	},
 	{
-		uniqueKey: '312',
-		name: 'Ribeye',
-		category: 'Beef',
+		uniqueKey: '52',
+		name: {
+			en: 'Fillet',
+			mt: 'Filet',
+		},
+		category: {
+			en: 'Beef',
+			mt: 'Lahham',
+		},
 		price: '',
 		unit: '',
 		quantity: '',
 		status: 'to buy',
 	},
 	{
-		uniqueKey: '412',
-		name: 'Tomatoes',
-		category: 'Vegetables',
-		price: '',
-		unit: '',
-		quantity: '',
-		status: 'to buy',
-	},
-	{
-		uniqueKey: '512',
-		name: 'Fillet',
-		category: 'Beef',
-		price: '',
-		unit: '',
-		quantity: '',
-		status: 'to buy',
-	},
-	{
-		uniqueKey: '612',
-		name: 'Meagre',
-		category: 'Fish',
+		uniqueKey: '62',
+		name: {
+			en: 'Meagre',
+			mt: 'Gurbell',
+		},
+		category: {
+			en: 'Fish',
+			mt: 'Hut',
+		},
 		price: '',
 		unit: '',
 		quantity: '',
 		status: 'to buy',
 	},
 ];
+
 
 export default PopularProducts;

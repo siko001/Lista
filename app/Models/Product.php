@@ -20,6 +20,11 @@ class Product extends Model {
         "guest_id"
     ];
 
+    protected $casts = [
+        "name" => "json",
+        "category" => "json"
+    ];
+
     public function list() {
         return $this->belongsTo(ShoppingList::class);
     }

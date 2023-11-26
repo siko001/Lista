@@ -39,7 +39,6 @@
 	"empty-list-btn": "Empty",
 	"empty-list-overlay": "You're About to empty ",
 	"empty-listP2-overlay": " of all it's products!",
-
 	"empty-list": "Clear all products",
 	"mark-all-ready": "Mark all as ready",
 	"remove-all-ready": "Remove all ready products",
@@ -53,5 +52,12 @@
 	"to-buy": "Product to be bought",
 	"to-buy-plural": "Products to buy",
 	"popular-products": "Popular Products",
-	"user-products": "Your Products"
+	"user-products": "Your Products",
+	"delete-list-and-products-btn": "Empty and Delete List",
+	"empty-and-delete-text": "You're about to delete",
+	"empty-and-delete-text-pt2": "and remove all's products",
+	"no-products-found-ready": "Nothing found in the ready section",
+	"no-products-found-to-buy": "Noting found in the To-buy section",
+	"random":"Random",
+	"by-category":"By Category"
 }

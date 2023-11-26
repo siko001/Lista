@@ -12,9 +12,9 @@ return new class extends Migration {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
             $table->integer("uniqueKey");
-            $table->string('name');
+            $table->json('name');
             $table->unsignedBigInteger('list_id');
-            $table->string("category");
+            $table->json("category");
             $table->integer("quantity")->nullable();
             $table->string("unit")->nullable()->default("KG");
             $table->integer("price")->nullable()->default();

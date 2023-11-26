@@ -6,10 +6,13 @@ import './index.css';
 import { DarkModeProvider } from './contexts/DarkModeContext.jsx';
 import { LanguageProvider } from './contexts/LanguageContext.jsx';
 
+
 ReactDOM.createRoot(document.getElementById('root')).render(
 	<LanguageProvider>
 		<DarkModeProvider>
-			<RouterProvider router={router} />
+		
+				<RouterProvider router={router} />
+		
 		</DarkModeProvider>
 	</LanguageProvider>
 );

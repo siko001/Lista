@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import styled from 'styled-components';
 import { useParams, useNavigate } from 'react-router-dom';
 import axiosClient from '../axiosClient';
@@ -15,6 +15,9 @@ import RemoveProductLoader from '../components/RemoveProductLoader';
 import MainSettings from '../components/MainSettings';
 import EmptyListOverlay from '../components/EmptyListOverlay';
 import ReadyProduct from '../components/ReadyProduct';
+import DeleteListAndProductOverlay from '../components/DeleteListAndProductOverlay';
+import EmptyAndDeleteListLoader from '../components/EmptyAndDeleteListLoader';
+import ProductEditOverlay from '../components/ProductEditOverlay';
 
 const Container = styled.div`
 	width: 100%;
@@ -196,7 +199,7 @@ const ShoppingList = () => {
 	const { id, listName } = useParams();
 	//theme
 	const { darkMode } = useDarkMode();
-	const { translate } = useLanguage();
+	const { language, translate, translateProductNames } = useLanguage();
 
 	//dynamic List Title
 	const [isEditingTitle, setIsEditingTitle] = useState(false);
@@ -233,7 +236,13 @@ const ShoppingList = () => {
 	const [openSettings, setOpenSettings] = useState(null);
 
 	const [emptyList, setEmptyList] = useState(null);
+	const [emptyAndDeleteListloader, setEmptyAndDeleteList] = useState(null);
+
 	const [openEmptyListOverLay, setOpenEmptyListOverLay] = useState(null);
+	const [openEmptyAndDeleteListOverLay, setOpenEmptyAndDeleteListOverlay] = useState(null);
+
+	const [openEditProduct, setOpenEditProduct] = useState(false);
+	const [productToEdit, setProductToEdit] = useState({});
 
 	const handleKeyPress = (e) => {
 		if (e.key === 'Enter') {
@@ -250,21 +259,29 @@ const ShoppingList = () => {
 		return listA.id === listB.id;
 	};
 	const updateList = () => {
-		// const localList = JSON.parse(localStorage.getItem(`allProductsInList${id}`));
-		// const localReadyList = JSON.parse(localStorage.getItem(`readyProductsInList${id}`));
-		// const localToBuyList = JSON.parse(localStorage.getItem(`toBuyProductsInList${id}`));
+		const localList = JSON.parse(localStorage.getItem(`allProductsInList${id}`));
+		const localReadyList = JSON.parse(localStorage.getItem(`readyProductsInList${id}`));
+		const localToBuyList = JSON.parse(localStorage.getItem(`toBuyProductsInList${id}`));
 
-		// if (localList && localReadyList && localToBuyList && areListsEqual(localList, product)) {
-		// 	fetchListData();
-		// 	console.log('local storage and db are the same');
-		// } else {
-		// Local list doesn't exist or is different, fetch from the API
-		// console.log('db and local are not the same');
-		fetchListData();
+		if (localList && localReadyList && localToBuyList && areListsEqual(localList, product)) {
+			console.log('local storage and db are the same');
+			setProduct(localList);
+			// Set The all Ready Array (if any)
+			setReadyProducts(localReadyList);
+			//set The To buy Array(if any)
+			setToBuyProducts(localToBuyList);
+			//set The selected products from the all products array for the products overlay
+			setSelectedProducts(localList);
+
+			return;
+		} else {
+			// Local list doesn't exist or is different, fetch from the API
+			console.log('db and local are not the same');
+			fetchListData();
+		}
 	};
 
 	const fetchListData = () => {
-		console.log('detch');
 		axiosClient
 			.get(`/list/${id}`)
 			.then((res) => {
@@ -272,9 +289,9 @@ const ShoppingList = () => {
 				const toBuy = products.filter((product) => product.status === 'to buy');
 				const ready = products.filter((product) => product.status !== 'to buy');
 
-				// localStorage.setItem(`allProductsInList${id}`, JSON.stringify(products));
-				// localStorage.setItem(`toBuyProductsInList${id}`, JSON.stringify(toBuy));
-				// localStorage.setItem(`readyProductsInList${id}`, JSON.stringify(ready));
+				localStorage.setItem(`allProductsInList${id}`, JSON.stringify(products));
+				localStorage.setItem(`toBuyProductsInList${id}`, JSON.stringify(toBuy));
+				localStorage.setItem(`readyProductsInList${id}`, JSON.stringify(ready));
 				//set the all Products Array
 				setProduct(products);
 				// Set The all Ready Array (if any)
@@ -320,18 +337,16 @@ const ShoppingList = () => {
 			.then((res) => {
 				setTitle(newTitle);
 				// Update the title in local storage
-				// let allLists = localStorage.getItem('shoppingLists');
-				// // Assuming allLists is a string representation of JSON data, parse it into an array
-				// allLists = JSON.parse(allLists) || [];
-				// const updatedLists = allLists.map((list) => {
-				// 	if (list.id == id) {
-				// 		// Update the title for the matching list
-				// 		return { ...list, name: newTitle };
-				// 	}
-				// 	return list;
-				// });
-				// // Save the updated data back to local storage
-				// localStorage.setItem('shoppingLists', JSON.stringify(updatedLists));
+				let allLists = localStorage.getItem('shoppingLists');
+				allLists = JSON.parse(allLists) || [];
+				const updatedLists = allLists.map((list) => {
+					if (list.id == id) {
+						return { ...list, name: newTitle };
+					}
+					return list;
+				});
+				// Save the updated data back to local storage
+				localStorage.setItem('shoppingLists', JSON.stringify(updatedLists));
 
 				setIsEditingTitle(false);
 				setMessage(translate('notification-rename'));
@@ -379,6 +394,10 @@ const ShoppingList = () => {
 		setToBuyProducts((prevToBuyProducts) => prevToBuyProducts.filter((toBuyProducts) => toBuyProducts.uniqueKey !== id));
 	};
 
+	const matchingReadyProducts = readyProducts.filter((p) => p.name.mt || p.name.en.toLowerCase().includes(searchTerm.toLowerCase()));
+
+	const matchToBuyProducts = toBuyProducts.filter((p) => p.name.mt || p.name.en.toLowerCase().includes(searchTerm.toLowerCase()));
+
 	return (
 		<Container className={darkMode ? 'darkMode' : 'lightMode'}>
 			<Navbar />
@@ -395,6 +414,9 @@ const ShoppingList = () => {
 						toBuyProducts={toBuyProducts}
 						setToBuyProducts={setToBuyProducts}
 						setReadyProducts={setReadyProducts}
+						setProduct={setProduct}
+						setSelectedProducts={setSelectedProducts}
+						setOpenEmptyAndDeleteListOverlay={setOpenEmptyAndDeleteListOverlay}
 					/>
 				)}
 				<ListHeader style={{ backgroundColor: darkMode ? 'black' : 'white' }}>
@@ -455,7 +477,7 @@ const ShoppingList = () => {
 					{toBuyProducts.length === 0 && readyProducts.length <= 0
 						? translate('please-add-product')
 						: toBuyProducts
-								.filter((p) => p.name.toLowerCase().includes(searchTerm.toLowerCase()))
+								.filter((p) => p.name.mt || p.name.en.toLowerCase().includes(searchTerm.toLowerCase()))
 								.map((p) => (
 									<Product
 										key={product.uniqueKey}
@@ -463,50 +485,55 @@ const ShoppingList = () => {
 										productKey={p.uniqueKey}
 										setRemoveProduct={setRemoveProduct}
 										setProductToRemove={setProductToRemove}
-										productName={p.name}
+										productName={p.name[language]}
 										price={p.price}
 										quantity={p.quantity}
 										unit={p.unit}
 										setProductIDRemove={setProductIDRemove}
-										setReadyProducts={setReadyProducts}
-										setProduct={setProduct}
 										item={product}
 										listId={id}
 										handleRemoveFromToBuy={handleRemoveFromToBuy}
+										setReadyProducts={setReadyProducts}
+										setProduct={setProduct}
+										setToBuyProducts={setToBuyProducts}
+										setSelectedProducts={setSelectedProducts}
+										setOpenEditProduct={setOpenEditProduct}
+										setProductToEdit={setProductToEdit}
 									/>
 								))}
+					{searchTerm.trim() !== '' && toBuyProducts.length > 0 && matchToBuyProducts == 0 && (
+						<p>{translate('no-products-found-to-buy')}</p>
+					)}
 
 					{/* Ready Products */}
-					{readyProducts != 0 ? (
-						readyProducts.length == 1 ? (
-							<h2 className="header2 header  green">{translate('ready-product')}</h2>
+					{readyProducts.length > 0 ? (
+						readyProducts.length === 1 ? (
+							<h2 className="header2 header green">{translate('ready-product')}</h2>
 						) : (
-							<h2 className=" header header2 green">{translate('ready-product-plural')}</h2>
+							<h2 className="header header2 green">{translate('ready-product-plural')}</h2>
 						)
 					) : (
 						''
 					)}
 
-					{readyProducts.length > 0
-						? readyProducts
-								.filter((p) => p.name.toLowerCase().includes(searchTerm.toLowerCase()))
-								.map((p) => (
-									<ReadyProduct
-										key={p.uniqueKey}
-										item={p}
-										setRemoveProduct={setRemoveProduct}
-										setProductToRemove={setProductToRemove}
-										setProductIDRemove={setProductIDRemove}
-										updateList={updateList}
-									/>
-								))
-						: searchTerm.trim() !== '' && <p>No ready products found.</p>}
+					{matchingReadyProducts.length > 0
+						? matchingReadyProducts.map((p) => (
+								<ReadyProduct
+									key={p.uniqueKey}
+									item={p}
+									setRemoveProduct={setRemoveProduct}
+									setProductToRemove={setProductToRemove}
+									setProductIDRemove={setProductIDRemove}
+									updateList={updateList}
+								/>
+						  ))
+						: searchTerm.trim() !== '' && readyProducts.length != 0 && <p>{translate('no-products-found-ready')}</p>}
 				</ProductsContainer>
 
-				{/* Notifications, Overlays, loaders, Floating Butttons */}
+				{/* Notifications, Overlays, loaders, Floating Butttons  translate("no-products-found-ready")*/}
 				<Notification message={message} status={status} />
 
-				{/* All Prodcts OverLay */}
+				{/* All Products OverLay */}
 				{productOverlay && (
 					<ProductOvelay
 						darkMode={darkMode}
@@ -519,8 +546,12 @@ const ShoppingList = () => {
 						setToBuyProducts={setToBuyProducts}
 						readyProducts={readyProducts}
 						setReadyProducts={setReadyProducts}
+						productToEdit={productToEdit}
 					/>
 				)}
+
+				{/* Edit Product Overlay */}
+				{openEditProduct && <ProductEditOverlay setOpenEditProduct={setOpenEditProduct} />}
 
 				{/* Remove Product Overlay & loader */}
 				{(removeProductConfirmation || emptyList) && <RemoveProductLoader />}
@@ -539,6 +570,7 @@ const ShoppingList = () => {
 					/>
 				)}
 
+				{/* Empty The List From Product and Loader */}
 				{openEmptyListOverLay && (
 					<EmptyListOverlay
 						title={title}
@@ -548,6 +580,19 @@ const ShoppingList = () => {
 						updateList={updateList}
 					/>
 				)}
+
+				{/* Empty and delete list overlay and loader */}
+				{openEmptyAndDeleteListOverLay && (
+					<DeleteListAndProductOverlay
+						title={title}
+						setOpenEmptyAndDeleteListOverlay={setOpenEmptyAndDeleteListOverlay}
+						setEmptyList={setEmptyList}
+						listId={id}
+						updateList={updateList}
+						setEmptyAndDeleteList={setEmptyAndDeleteList}
+					/>
+				)}
+				{emptyAndDeleteListloader && <EmptyAndDeleteListLoader />}
 
 				{/* When Product OverLay is Open Display The Close Button else Add ProductButton*/}
 				{!productOverlay && (

@@ -104,26 +104,25 @@ const Container = styled.div`
 	}
 `;
 
-const ReadyProduct = ({ item, setRemoveProduct, setProductToRemove, setProductIDRemove,  }) => {
+const ReadyProduct = ({ item, setRemoveProduct, setProductToRemove, setProductIDRemove }) => {
 	const theReadyProduct = item;
 	const totalProductPrice = theReadyProduct.quantity * theReadyProduct.price;
-	const { translate } = useLanguage();
+	const { language, translate, translateProductNames } = useLanguage();
 
 	const handleRemoveProduct = (item, id) => {
-		setProductToRemove(item.name);
+		setProductToRemove(item.name[language]);
 		setProductIDRemove(id);
 		setRemoveProduct((prev) => !prev);
-
 	};
 
 	return (
 		<Container key={theReadyProduct.name}>
 			<div className="left">
-				<div className="product_title">{theReadyProduct.name}</div>
+				<div className="product_title">{theReadyProduct.name[language]}</div>
 			</div>
 
 			<div className="center">
-				{theReadyProduct.quantity + theReadyProduct.unit && (
+				{theReadyProduct.quantity && theReadyProduct.quantity != 0 && (
 					<div className="group">
 						<div className="description">{translate('quantity')}</div>
 						<div className="quantative">
@@ -132,7 +131,7 @@ const ReadyProduct = ({ item, setRemoveProduct, setProductToRemove, setProductID
 						</div>
 					</div>
 				)}
-				{theReadyProduct.price && (
+				{theReadyProduct.price && theReadyProduct.price != 0 && (
 					<div className="group">
 						<div className="description">{translate('price')}</div>
 						<div className="quantative">
@@ -141,7 +140,7 @@ const ReadyProduct = ({ item, setRemoveProduct, setProductToRemove, setProductID
 						</div>
 					</div>
 				)}
-				{totalProductPrice && (
+				{totalProductPrice ? (
 					<div className="group">
 						<div className="description">{translate('total')}</div>
 						<div className="quantative">
@@ -149,6 +148,8 @@ const ReadyProduct = ({ item, setRemoveProduct, setProductToRemove, setProductID
 							<span>€</span>
 						</div>
 					</div>
+				) : (
+					''
 				)}
 			</div>
 			<div onClick={() => handleRemoveProduct(item, item.uniqueKey)} className="removeProduct light largest">

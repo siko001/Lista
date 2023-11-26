@@ -33,3 +33,6 @@ Route::put("/update/all-ready/{listId}", [ProductController::class, "markAllAsRe
 Route::put('update/all-to_buy/{listId}', [ProductController::class, "markAllToBuy"]);
 Route::delete("remove/ready/{listId}", [ProductController::class, "removeAllReady"]);
 Route::delete("/delete/all-products/and-list{id}", [ProductController::class, "removeListAndCorrispodingProducts"]);
+
+
+Route::get("/products/count/{id}", [ProductController::class, "getAllCounts"]);

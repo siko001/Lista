@@ -6,7 +6,7 @@ const Container = styled.div`
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-
+	position: relative;
 	width: 60%;
 	min-height: 200px;
 	gap: 20px;
@@ -48,6 +48,8 @@ const ListContainer = ({
 					setStatus={setStatus}
 					fetchLists={fetchLists}
 					setCopyLoader={setCopyLoader}
+					totalProducts={list.totalProductCount}
+					totalReadyProduct={list.totalReadyProducts}
 				/>
 			))}
 		</Container>

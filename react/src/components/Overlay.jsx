@@ -136,9 +136,10 @@ const Overlay = ({ closeOverlay, setMessage, setStatus, setLoading, addNewList, 
 		};
 	}, []);
 
+
+	//Function to accept Enter key to create a new List
 	const handleKeyDown = (e) => {
 		if (e.key === 'Enter') {
-			console.log('enter');
 			{
 				handleCreateList(e);
 			}
