@@ -17,6 +17,7 @@ import DeleteListLoader from '../components/DeleteListLoader';
 import CopyListLoader from '../components/CopyListLoader';
 import ShoppingList from './ShoppingList';
 import { ProductCountProvider } from '../contexts/ProductCountContext';
+import { useUser } from '../contexts/UserContext';
 
 const Container = styled.div`
 	min-height: 100vh;
@@ -110,7 +111,7 @@ const ImageContainer = styled.div`
 const images = [Broccoli, Veg2];
 const Home = () => {
 	// Settings/Gerneral state/Context
-
+	const { user, loginUser, logoutUser, registerUser } = useUser();
 	const [currentImage, setCurrentImage] = useState(0);
 	const { darkMode, setDarkMode } = useDarkMode();
 	const { translate } = useLanguage();
@@ -159,6 +160,7 @@ const Home = () => {
 	};
 
 	const fetchLists = () => {
+		const userId = localStorage.getItem('ACCESS_TOKEN');
 		// Check local storage first
 		const storedLists = JSON.parse(localStorage.getItem('shoppingLists'));
 		if (storedLists && Array.isArray(storedLists) && storedLists.length > 0) {
@@ -172,7 +174,7 @@ const Home = () => {
 		setLoadingLists(shouldShowLoader);
 
 		axiosClient
-			.get('/get-lists')
+			.get('/get-lists/' + userId)
 			.then((res) => {
 				const apiLists = res.data;
 

@@ -144,6 +144,7 @@ const Product = ({
 	setToBuyProducts,
 	setOpenEditProduct,
 	setProductToEdit,
+	wholeProduct,
 }) => {
 	const { translate } = useLanguage();
 	const { darkMode, setDarkMode } = useDarkMode();
@@ -212,10 +213,10 @@ const Product = ({
 			})
 			.finally(() => {});
 	};
-	const handleProductSelect = (item) => {
+	const handleProductSelect = (wholeProduct) => {
 		setOpenEditProduct((prev) => !prev);
-		console.log(item);
-		setProductToEdit(item);
+		
+		setProductToEdit(wholeProduct);
 	};
 
 	return (
@@ -233,7 +234,7 @@ const Product = ({
 
 			<div
 				onClick={() => {
-					handleProductSelect(item);
+					handleProductSelect(wholeProduct);
 				}}
 				className="center"
 				style={{ borderColor: darkMode ? 'rgba(255,255,255,0.2)' : 'rgba(255,255,255,0.4)' }}

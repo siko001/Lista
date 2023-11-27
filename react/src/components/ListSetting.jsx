@@ -117,11 +117,28 @@ const ListSetting = ({
 
 	//Handle The Share to A User (for the end)
 	const handleShare = () => {
+		const userID = localStorage.getItem('ACCESS_TOKEN');
 		setSettingPageOpen(false);
-		setMessage(translate('notification-shared'));
-		setTimeout(() => {
-			setMessage(null);
-		}, 1600);
+
+		// Assuming listId and userId are available
+		const data = {
+			listId: listID,
+			userId: userID,
+		};
+		axiosClient
+			.post('/share-list', data)
+			.then((res) => {
+				console.log(res);
+				setMessage(`Share this link: ${res.data.link}`);
+			})
+			.catch((err) => {
+				console.log(err);
+			})
+			.finally(() => {
+				setTimeout(() => {
+					setMessage(null);
+				}, 1600);
+			});
 	};
 
 	//Handle The Delete

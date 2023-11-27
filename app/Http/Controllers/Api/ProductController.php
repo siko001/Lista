@@ -208,8 +208,18 @@ class ProductController extends Controller {
         }
     }
 
+    public function updateProductDetails($id, Request  $request) {
+        $validateProduct = $request->validate([
+            'nameEN' => 'required',
+            'nameMT' => 'required',
+            'categoryEN' => 'required',
+            'categoryMT' => 'required',
+            'quantity' => 'numeric', // Use 'numeric' for numbers
+            'price' => 'numeric',
+        ]);
 
-    public function getAllCounts($id) {
-        info($id);
+        $product = Product::where("list_id", $id)->first();
+
+        $product->update($validateProduct);
     }
 }

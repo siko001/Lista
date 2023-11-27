@@ -58,5 +58,14 @@
 	"no-products-found-ready": "ma nstab xejn fil-prodotti mixtrija",
 	"no-products-found-to-buy": "Ma nstab xejn fil-prodotti biex jinxtraw",
 	"random": "bla'ddoċċ",
-	"by-category": "Bil Kategorija"
+	"by-category": "Bil Kategorija",
+	"save": "Ip-proceddi",
+	"price-grp": "Prezz",
+	"category-grp": "Kategorija",
+	"unit&quantity-grp": "Kwantita",
+	"name-grp": "Isem",
+	"maltese": "Malti",
+	"english": "Inglis",
+	"edit-product-header": "Qed t'editja",
+	"removed-product": "Prodott imnehhi"
 }

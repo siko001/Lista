@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useDarkMode } from '../contexts/DarkModeContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
+import { useLanguage } from '../contexts/LanguageContext';
+import axiosClient from '../axiosClient';
 
 const Container = styled.div`
 	width: 100vw;
@@ -85,7 +87,7 @@ const ContentContainer = styled.div`
 				}
 			}
 			select {
-				min-height: 25px;
+				min-height: 29px;
 				min-width: 50px;
 				background-color: #585858;
 				color: white;
@@ -106,11 +108,93 @@ const ContentContainer = styled.div`
 	}
 `;
 
-const ProductEditOverlay = ({ setOpenEditProduct, productToEdit }) => {
+const ProductEditOverlay = ({ setOpenEditProduct, productToEdit, item, listId, updateList }) => {
+	const product = productToEdit;
+	const [formData, setFormData] = useState({
+		nameEN: product.name['en'],
+		nameMT: product.name['mt'],
+		categoryEN: product.category['en'],
+		categoryMT: product.category['mt'],
+		quantity: product.quantity,
+		unit: product.unit,
+		price: product.price,
+	});
+	const { language, translate } = useLanguage();
 	const { darkMode } = useDarkMode();
-	console.log(productToEdit);
+
 	const handleClose = () => {
 		setOpenEditProduct((prev) => !prev);
+	};
+
+	const handleChange = (e) => {
+		const { name, value } = e.target;
+
+		setFormData((prevData) => ({
+			...prevData,
+			[name]: value,
+		}));
+	};
+
+	const handleSubmit = (e) => {
+		e.preventDefault();
+
+		// Retrieve the existing product from localStorage
+		const allProductsList = JSON.parse(localStorage.getItem('allProductsInList' + listId));
+		const toBuyList = JSON.parse(localStorage.getItem('toBuyProductsInList' + listId));
+
+		const productIndex = allProductsList.findIndex((p) => p.uniqueKey === productToEdit.uniqueKey);
+		const productIndexToBuy = toBuyList.findIndex((p) => p.uniqueKey === productToEdit.uniqueKey);
+
+		if (productIndexToBuy !== -1) {
+			// Clone the existing product to avoid mutating the original array
+			const updatedProduct = { ...toBuyList[productIndexToBuy] };
+
+			// Update specific details with the form data
+			updatedProduct.name['en'] = formData.nameEN || updatedProduct.nameEN;
+			updatedProduct.name['mt'] = formData.nameMT || updatedProduct.nameMT;
+			updatedProduct.category['en'] = formData.categoryEN || updatedProduct.categoryEN;
+			updatedProduct.category['mt'] = formData.categoryMT || updatedProduct.categoryMT;
+			updatedProduct.quantity = formData.quantity || updatedProduct.quantity;
+			updatedProduct.unit = formData.unit || updatedProduct.unit;
+			updatedProduct.price = formData.price || updatedProduct.price;
+
+			// Update the product in the allProductsList array
+			toBuyList[productIndexToBuy] = updatedProduct;
+			console.log(toBuyList);
+			// Save the updated allProductsList back to localStorage
+			localStorage.setItem('toBuyProductsInList' + listId, JSON.stringify(toBuyList));
+		}
+
+		if (productIndex !== -1) {
+			// Clone the existing product to avoid mutating the original array
+			const updatedProduct = { ...allProductsList[productIndex] };
+
+			// Update specific details with the form data
+			// Update specific details with the form data
+			updatedProduct.name['en'] = formData.nameEN || updatedProduct.nameEN;
+			updatedProduct.name['mt'] = formData.nameMT || updatedProduct.nameMT;
+			updatedProduct.category['en'] = formData.categoryEN || updatedProduct.categoryEN;
+			updatedProduct.category['mt'] = formData.categoryMT || updatedProduct.categoryMT;
+			updatedProduct.quantity = formData.quantity || updatedProduct.quantity;
+			updatedProduct.unit = formData.unit || updatedProduct.unit;
+			updatedProduct.price = formData.price || updatedProduct.price;
+
+			// Update the product in the allProductsList array
+			allProductsList[productIndex] = updatedProduct;
+
+			// Save the updated allProductsList back to localStorage
+			localStorage.setItem('allProductsInList52', JSON.stringify(allProductsList));
+
+			console.log('Updated Product:', updatedProduct);
+		}
+		setOpenEditProduct((prev) => !prev);
+		updateList();
+		axiosClient
+			.put(`/update-product/${listId}`, formData)
+			.then((res) => {})
+			.catch((err) => {
+				console.log(err);
+			});
 	};
 
 	return (
@@ -119,57 +203,57 @@ const ProductEditOverlay = ({ setOpenEditProduct, productToEdit }) => {
 				<span onClick={handleClose}>
 					<FontAwesomeIcon icon={faXmark} />
 				</span>
-				<form>
-					<h1>Edit Product</h1>
-					<h1>Name</h1>
-					<h2>Name</h2>
+				<form onSubmit={handleSubmit}>
+					<h1>{translate('edit-product-header')}</h1>
+					<h1>{product.name[language]}</h1>
+					<h2>{translate('name-grp')}</h2>
 					<div className="grp">
 						<div className="input-grp">
-							<label>English</label>
-							<input />
+							<label>{translate('english')}</label>
+							<input name="nameEN" value={formData.nameEN} onChange={handleChange} />
 						</div>
 						<div className="input-grp">
-							<label>Maltese</label>
-							<input />
+							<label>{translate('maltese')}</label>
+							<input name="nameMT" value={formData.nameMT} onChange={handleChange} />
 						</div>
 					</div>
-					<h2>Category</h2>
+					<h2>{translate('category-grp')}</h2>
 					<div className="grp">
 						<div className="input-grp">
-							<label>English</label>
-							<input />
+							<label>{translate('english')}</label>
+							<input name="categoryEN" value={formData.categoryEN} onChange={handleChange} />
 						</div>
 						<div className="input-grp">
-							<label>Maltese</label>
-							<input />
+							<label>{translate('maltese')}</label>
+							<input name="categoryMT" value={formData.categoryMT} onChange={handleChange} />
 						</div>
 					</div>
-					<h2>Quantity & Unit</h2>
+					<h2>{translate('unit&quantity-grp')}</h2>
 					<div className="grp">
 						<div className="input-grp">
-							<input />
+							<input name="quantity" value={formData.quantity} onChange={handleChange} />
 						</div>
 						<div className="input-grp">
-							<select>
-								<option>KG</option>
-								<option>Grams</option>
-								<option>L</option>
-								<option>ML</option>
-								<option>Pcs</option>
+							<select name="unit" value={formData.unit} onChange={handleChange}>
+								<option value="KG">KG</option>
+								<option value="Grams">Grams</option>
+								<option value="L">L</option>
+								<option value="ML">ML</option>
+								<option value="Pcs">Pcs</option>
 							</select>
 						</div>
 					</div>
-					<h2>Price</h2>
+					<h2>{translate('price-grp')}</h2>
 					<div className="grp">
 						<div className="input-grp">
-							<input className="" />
+							<input name="price" value={formData.price} onChange={handleChange} />
 						</div>
 					</div>
 					<div className="grp">
 						<button onClick={handleClose} className="btn cancle">
-							Cancel
+							{translate('cancel-btn')}
 						</button>
-						<button className="btn save">Save</button>
+						<button className="btn save">{translate('save')}</button>
 					</div>
 				</form>
 			</ContentContainer>

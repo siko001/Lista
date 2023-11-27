@@ -5,11 +5,14 @@ const axiosClient = axios.create({
 });
 
 axiosClient.interceptors.request.use((config) => {
-	// Check if the request requires an Authorization header (e.g., authenticated routes)
+	// Check if the request has headers
 	if (config.headers) {
 		const token = localStorage.getItem('ACCESS_TOKEN');
 
-		config.headers.Authorization = `Bearer ${token}`;
+		// // Check if the Authorization header already exists
+		// if (!config.headers.hasOwnProperty('Authorization') && token) {
+		// 	config.headers.Authorization = `Bearer ${token}`;
+		// }
 	}
 
 	return config;

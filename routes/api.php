@@ -3,17 +3,28 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ListController;
+use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\ProductController;
 
 Route::middleware(['auth:sanctum'])->group(function () {
     // Define the routes that require authentication here
+    // User Routes
 
 });
+
+Route::get("/shared-list/{id}", [ListController::class, "AddSharedList"]);
+Route::get("/user/{id}", [UserController::class, "getUser"]);
+
+
+
+Route::post("/share-list", [ListController::class, "generateShareableLink"]);
+
+
 
 
 // CRUD for the lists
 Route::post("/create-list", [ListController::class, "createList"]);
-Route::get("/get-lists", [ListController::class, "getAllLists"]);
+Route::get("/get-lists/{id}", [ListController::class, "getAllLists"]);
 Route::put("/update-list-title/{id}", [ListController::class, "updateListTitle"]);
 Route::delete("list/delete/{id}", [ListController::class, "deleteList"]);
 Route::post("list/copy/{id}", [ListController::class, "copyList"]);
@@ -28,11 +39,9 @@ Route::post("/add-product/{name}", [ProductController::class, "addProduct"]);
 Route::delete("remove-product/{productId}/{listId} ", [ProductController::class, "removeProduct"]);
 Route::delete("empty-list/{id}", [ProductController::class, "removeAllProducts"]);
 Route::put("/update/product{id}/{listId}", [ProductController::class, "markProductReady"]);
-
 Route::put("/update/all-ready/{listId}", [ProductController::class, "markAllAsReady"]);
 Route::put('update/all-to_buy/{listId}', [ProductController::class, "markAllToBuy"]);
 Route::delete("remove/ready/{listId}", [ProductController::class, "removeAllReady"]);
 Route::delete("/delete/all-products/and-list{id}", [ProductController::class, "removeListAndCorrispodingProducts"]);
-
-
 Route::get("/products/count/{id}", [ProductController::class, "getAllCounts"]);
+Route::put("/update-product/{listId}", [ProductController::class, "updateProductDetails"]);

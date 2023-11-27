@@ -2,28 +2,49 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\ShoppingList;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Models\SharedLink;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class ListController extends Controller {
 
-    //Creates a List from the Name User Inputted and Saves it to db, also saves it in local storage as an object
+    //Creates a List from the Name User Inputted and Saves it to db, also saves it in local storage as an object.. the list gets assiged a user Guest or not
     public function createList(Request $request) {
+        $userId = $request["ID"];
+        $user = User::find($userId);
+
         $list = $request->validate([
             "listName" => "required|min:3|max:30"
         ]);
         if ($list) {
-            $listObject =  ShoppingList::create(["name" => $list['listName']]);
+            $listObject =  ShoppingList::create(
+                ["name" => $list['listName']]
+            );
+            $user->shoppingLists()->attach($listObject->id);
             return response($listObject, 200);
         }
     }
 
-    public function getAllLists() {
-        $lists =   ShoppingList::all();
-        return $lists;
+
+
+    public function getAllLists($id) {
+        // Find the user by ID
+        $user = User::find($id);
+
+        if (!$user) {
+            return response(['error' => 'User not found'], 404);
+        }
+
+        // Get all lists associated with the user
+        $lists = $user->shoppingLists;
+        return response($lists, 200);
     }
+
+
 
     public function updateListTitle($id, Request $request) {
         $list = ShoppingList::find($id);
@@ -66,9 +87,80 @@ class ListController extends Controller {
     }
 
     public function viewTheList($listName, $id) {
-        $listdetails = ShoppingList::find($id)->get();
+        $listdetails = ShoppingList::find($id);
+
+        if (!$listdetails) {
+            // Handle the case where the list with the given ID is not found
+            return response(['error' => 'List not found'], 404);
+        }
+
         $Products = Product::where("list_id", $id)->get();
 
         return response([$listdetails, $Products]);
+    }
+
+
+
+    public function shareTheList(Request $request) {
+
+        // Validate request data
+        $request->validate([
+            'listId' => 'required|exists:shopping_lists,id',
+            'userId' => 'required|exists:users,id',
+        ]);
+
+        // Check if the authenticated user owns the list
+        $list = ShoppingList::findOrFail($request->listId);
+        if ($list->user_id !== auth()->id()) {
+            return response(['error' => 'Unauthorized'], 401);
+        }
+
+        // Attach the user to the shopping list
+        $list->users()->attach($request->userId);
+
+        return response(['message' => 'List shared successfully']);
+    }
+
+
+
+    public function generateShareableLink(Request $request) {
+        info($request);
+        // Validate request data
+        $request->validate([
+            'listId' => 'required|exists:shopping_lists,id',
+        ]);
+
+
+        // Check if the authenticated user owns the list
+        $list = ShoppingList::findOrFail($request->listId);
+
+        if (!$list->users()->where("user_id", $request["userId"])) {
+            return response(['error' => 'Unauthorized'], 401);
+        }
+
+        // Generate a unique token for the shared link
+        $token = uniqid();
+
+        // Associate the token with the list and user
+        $list->shared_links()->create([
+            'token' => $token,
+            'user_id' => $request["userId"],
+        ]);
+
+        // Return the generated link
+        $link = url("/api/shared-list/$token");
+        info($link);
+        return response(['link' => $link]);
+    }
+
+
+    public function AddSharedList($id) {
+        $sharedLink = SharedLink::where("token", $id)->first();
+
+        if (!$sharedLink) {
+            return response(['error' => 'List not found'], 404);
+        }
+
+        $listId = $sharedLink["shopping_list_id"];
     }
 }

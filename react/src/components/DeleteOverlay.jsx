@@ -76,11 +76,9 @@ const DeleteOverlay = ({ closeOverlay, setMessage, deleteID, setDeleteLoader, se
 
 				// Update the local storage data after deleting from the database
 				let allLists = localStorage.getItem('shoppingLists');
-				console.log(deleteID);
-			localStorage.removeItem('readyProductsInList' + deleteID);
-			localStorage.removeItem('allProductsInList' + deleteID);
-			localStorage.removeItem('toBuyProductsInList' + deleteID);
-
+				localStorage.removeItem('readyProductsInList' + deleteID);
+				localStorage.removeItem('allProductsInList' + deleteID);
+				localStorage.removeItem('toBuyProductsInList' + deleteID);
 
 				// Assuming allLists is a string representation of JSON data, parse it into an array
 				allLists = JSON.parse(allLists) || [];

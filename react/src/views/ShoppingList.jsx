@@ -265,6 +265,7 @@ const ShoppingList = () => {
 
 		if (localList && localReadyList && localToBuyList && areListsEqual(localList, product)) {
 			console.log('local storage and db are the same');
+
 			setProduct(localList);
 			// Set The all Ready Array (if any)
 			setReadyProducts(localReadyList);
@@ -272,7 +273,6 @@ const ShoppingList = () => {
 			setToBuyProducts(localToBuyList);
 			//set The selected products from the all products array for the products overlay
 			setSelectedProducts(localList);
-
 			return;
 		} else {
 			// Local list doesn't exist or is different, fetch from the API
@@ -288,7 +288,6 @@ const ShoppingList = () => {
 				const products = res.data[1];
 				const toBuy = products.filter((product) => product.status === 'to buy');
 				const ready = products.filter((product) => product.status !== 'to buy');
-
 				localStorage.setItem(`allProductsInList${id}`, JSON.stringify(products));
 				localStorage.setItem(`toBuyProductsInList${id}`, JSON.stringify(toBuy));
 				localStorage.setItem(`readyProductsInList${id}`, JSON.stringify(ready));
@@ -481,6 +480,7 @@ const ShoppingList = () => {
 								.map((p) => (
 									<Product
 										key={product.uniqueKey}
+										wholeProduct={p}
 										darkMode={darkMode}
 										productKey={p.uniqueKey}
 										setRemoveProduct={setRemoveProduct}
@@ -551,7 +551,9 @@ const ShoppingList = () => {
 				)}
 
 				{/* Edit Product Overlay */}
-				{openEditProduct && <ProductEditOverlay setOpenEditProduct={setOpenEditProduct} />}
+				{openEditProduct && (
+					<ProductEditOverlay productToEdit={productToEdit} setOpenEditProduct={setOpenEditProduct} item={product} listId={id} updateList={updateList} />
+				)}
 
 				{/* Remove Product Overlay & loader */}
 				{(removeProductConfirmation || emptyList) && <RemoveProductLoader />}

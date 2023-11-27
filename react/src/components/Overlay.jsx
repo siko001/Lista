@@ -97,6 +97,7 @@ const Overlay = ({ closeOverlay, setMessage, setStatus, setLoading, addNewList, 
 
 		const payload = {
 			listName: listRef.current.value,
+			ID: localStorage.getItem('ACCESS_TOKEN'),
 		};
 
 		axiosClient
@@ -135,7 +136,6 @@ const Overlay = ({ closeOverlay, setMessage, setStatus, setLoading, addNewList, 
 			document.body.style.overflow = 'unset';
 		};
 	}, []);
-
 
 	//Function to accept Enter key to create a new List
 	const handleKeyDown = (e) => {

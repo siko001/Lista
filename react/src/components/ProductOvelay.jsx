@@ -20,7 +20,6 @@ const Container = styled.div`
 		min-width: 200px;
 		overflow: hidden;
 		@media screen and (max-width: 750px) {
-			border: 1px solid;
 			min-width: 170px;
 
 			wdith: 160px;

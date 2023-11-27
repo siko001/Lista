@@ -58,6 +58,15 @@
 	"empty-and-delete-text-pt2": "and remove all's products",
 	"no-products-found-ready": "Nothing found in the ready section",
 	"no-products-found-to-buy": "Noting found in the To-buy section",
-	"random":"Random",
-	"by-category":"By Category"
+	"random": "Random",
+	"by-category": "By Category",
+	"save": "Save",
+	"price-grp": "Price",
+	"category-grp": "Category",
+	"name-grp": "Name",
+	"maltese": "Maltese",
+	"english": "English",
+	"edit-product-header": "You're editing",
+	"unit&quantity-grp": "Quantity & Unit",
+	"removed-product":"Product removed"
 }
