@@ -398,7 +398,7 @@ const ShoppingList = () => {
 	const matchingReadyProducts = readyProducts.filter((p) => p.name.mt || p.name.en.toLowerCase().includes(searchTerm.toLowerCase()));
 
 	const matchToBuyProducts = toBuyProducts.filter((p) => p.name.mt || p.name.en.toLowerCase().includes(searchTerm.toLowerCase()));
-
+	console.log(searchTerm);
 	return (
 		<Container className={darkMode ? 'darkMode' : 'lightMode'}>
 			<Navbar />
@@ -478,10 +478,14 @@ const ShoppingList = () => {
 					{toBuyProducts.length === 0 && readyProducts.length <= 0
 						? translate('please-add-product')
 						: toBuyProducts
-								.filter((p) => p.name.mt || p.name.en.toLowerCase().includes(searchTerm.toLowerCase()))
+								.filter(
+									(p) =>
+										p.name.mt.toLowerCase().includes(searchTerm.toLowerCase()) ||
+										p.name.en.toLowerCase().includes(searchTerm.toLowerCase())
+								)
 								.map((p) => (
 									<Product
-										key={product.uniqueKey}
+										key={p.uniqueKey}
 										wholeProduct={p}
 										darkMode={darkMode}
 										productKey={p.uniqueKey}
