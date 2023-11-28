@@ -99,7 +99,6 @@ const Main = styled.div`
 		width: 50%;
 		margin: 0 auto;
 		min-height: 25px;
-		padding-left: 10px;
 	}
 `;
 
@@ -251,7 +250,7 @@ const ProductOverlay = ({ darkMode, setProduct, id, updateList, selectedProducts
 	const handleSelect = (product) => {
 		const productId = product.uniqueKey;
 		// Check if the product is already selected
-		if (selectedProducts.some((selectedProduct) => selectedProduct.uniqueKey === productId)) {
+		if (selectedProducts.some((selectedProduct) => selectedProduct.uniqueKey == productId)) {
 			return;
 		}
 
@@ -414,7 +413,7 @@ const ProductOverlay = ({ darkMode, setProduct, id, updateList, selectedProducts
 												onChange={() => handleSelect(product)}
 												type="checkbox"
 												checked={selectedProducts.some(
-													(selectedProduct) => selectedProduct.uniqueKey === product.uniqueKey
+													(selectedProduct) => selectedProduct.uniqueKey == product.uniqueKey
 												)}
 											/>
 											<p className="name large">{product.name[language] || product.name.en}</p>
@@ -469,7 +468,7 @@ const ProductOverlay = ({ darkMode, setProduct, id, updateList, selectedProducts
 																	onChange={() => handleSelect(product)}
 																	type="checkbox"
 																	checked={selectedProducts.some(
-																		(selectedProduct) => selectedProduct.uniqueKey === product.uniqueKey
+																		(selectedProduct) => selectedProduct.uniqueKey == product.uniqueKey
 																	)}
 																/>
 																{product.name[language]}

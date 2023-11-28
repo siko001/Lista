@@ -190,7 +190,7 @@ const ProductEditOverlay = ({ setOpenEditProduct, productToEdit, item, listId, u
 		setOpenEditProduct((prev) => !prev);
 		updateList();
 		axiosClient
-			.put(`/update-product/${listId}`, formData)
+			.put(`/update-product/${listId}/${product.id}`, formData)
 			.then((res) => {})
 			.catch((err) => {
 				console.log(err);

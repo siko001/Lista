@@ -259,7 +259,6 @@ const ShoppingList = () => {
 		return listA.id === listB.id;
 	};
 	const updateList = () => {
-		
 		const localList = JSON.parse(localStorage.getItem(`allProductsInList${id}`));
 		const localReadyList = JSON.parse(localStorage.getItem(`readyProductsInList${id}`));
 		const localToBuyList = JSON.parse(localStorage.getItem(`toBuyProductsInList${id}`));
@@ -274,7 +273,6 @@ const ShoppingList = () => {
 			setToBuyProducts(localToBuyList);
 			//set The selected products from the all products array for the products overlay
 			setSelectedProducts(localList);
-
 			return;
 		} else {
 			// Local list doesn't exist or is different, fetch from the API
@@ -284,7 +282,7 @@ const ShoppingList = () => {
 	};
 
 	const fetchListData = () => {
-	
+		console.log(selectedProducts);
 		axiosClient
 			.get(`/list/${id}`)
 			.then((res) => {
@@ -302,7 +300,7 @@ const ShoppingList = () => {
 				setToBuyProducts(toBuy);
 				//set The selected products from the all products array for the products overlay
 				setSelectedProducts(products);
-			
+				console.log(selectedProducts);
 			})
 			.catch((error) => {
 				console.error('Error fetching list:', error);
@@ -320,7 +318,7 @@ const ShoppingList = () => {
 			};
 		}
 		// Call updateList only when needed (e.g., when component mounts)
-		updateList();
+		fetchListData();
 	}, [isEditingTitle]);
 
 	const editTitle = () => {
