@@ -5,36 +5,38 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ListController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\ProductController;
+use App\Http\Controllers\Api\SharedLinkController;
 
 Route::middleware(['auth:sanctum'])->group(function () {
     // Define the routes that require authentication here
-    // User Routes
 
 });
 
-Route::get("/shared-list/{id}", [ListController::class, "AddSharedList"]);
+
+// Sharing the List Routes
+// Generation of link
+Route::post("/share-list", [SharedLinkController::class, "generateShareableLink"]);
+//Activation of the link
+Route::get('/shared-links/{token}/{id}', [SharedLinkController::class, 'activateLink']);
+
+
+//User Related Rourtes
 Route::get("/user/{id}", [UserController::class, "getUser"]);
 
 
 
-Route::post("/share-list", [ListController::class, "generateShareableLink"]);
-
-
-
-
-// CRUD for the lists
+// CRUD for the lists Routes
 Route::post("/create-list", [ListController::class, "createList"]);
 Route::get("/get-lists/{id}", [ListController::class, "getAllLists"]);
 Route::put("/update-list-title/{id}", [ListController::class, "updateListTitle"]);
 Route::delete("list/delete/{id}", [ListController::class, "deleteList"]);
 Route::post("list/copy/{id}", [ListController::class, "copyList"]);
 
-
-
-// View for the List
+// View for the List for the user
 Route::get("/{name}/{id}", [ListController::class, "viewTheList"]);
 
-//CRUD for the producrts
+
+//CRUD for the products
 Route::post("/add-product/{name}", [ProductController::class, "addProduct"]);
 Route::delete("remove-product/{productId}/{listId} ", [ProductController::class, "removeProduct"]);
 Route::delete("empty-list/{id}", [ProductController::class, "removeAllProducts"]);

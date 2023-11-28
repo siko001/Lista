@@ -123,37 +123,6 @@ class ListController extends Controller {
 
 
 
-    public function generateShareableLink(Request $request) {
-        info($request);
-        // Validate request data
-        $request->validate([
-            'listId' => 'required|exists:shopping_lists,id',
-        ]);
-
-
-        // Check if the authenticated user owns the list
-        $list = ShoppingList::findOrFail($request->listId);
-
-        if (!$list->users()->where("user_id", $request["userId"])) {
-            return response(['error' => 'Unauthorized'], 401);
-        }
-
-        // Generate a unique token for the shared link
-        $token = uniqid();
-
-        // Associate the token with the list and user
-        $list->shared_links()->create([
-            'token' => $token,
-            'user_id' => $request["userId"],
-        ]);
-
-        // Return the generated link
-        $link = url("/api/shared-list/$token");
-        info($link);
-        return response(['link' => $link]);
-    }
-
-
     public function AddSharedList($id) {
         $sharedLink = SharedLink::where("token", $id)->first();
 

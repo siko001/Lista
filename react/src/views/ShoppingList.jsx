@@ -259,6 +259,7 @@ const ShoppingList = () => {
 		return listA.id === listB.id;
 	};
 	const updateList = () => {
+		
 		const localList = JSON.parse(localStorage.getItem(`allProductsInList${id}`));
 		const localReadyList = JSON.parse(localStorage.getItem(`readyProductsInList${id}`));
 		const localToBuyList = JSON.parse(localStorage.getItem(`toBuyProductsInList${id}`));
@@ -273,6 +274,7 @@ const ShoppingList = () => {
 			setToBuyProducts(localToBuyList);
 			//set The selected products from the all products array for the products overlay
 			setSelectedProducts(localList);
+
 			return;
 		} else {
 			// Local list doesn't exist or is different, fetch from the API
@@ -282,6 +284,7 @@ const ShoppingList = () => {
 	};
 
 	const fetchListData = () => {
+	
 		axiosClient
 			.get(`/list/${id}`)
 			.then((res) => {
@@ -299,6 +302,7 @@ const ShoppingList = () => {
 				setToBuyProducts(toBuy);
 				//set The selected products from the all products array for the products overlay
 				setSelectedProducts(products);
+			
 			})
 			.catch((error) => {
 				console.error('Error fetching list:', error);
@@ -552,7 +556,13 @@ const ShoppingList = () => {
 
 				{/* Edit Product Overlay */}
 				{openEditProduct && (
-					<ProductEditOverlay productToEdit={productToEdit} setOpenEditProduct={setOpenEditProduct} item={product} listId={id} updateList={updateList} />
+					<ProductEditOverlay
+						productToEdit={productToEdit}
+						setOpenEditProduct={setOpenEditProduct}
+						item={product}
+						listId={id}
+						updateList={updateList}
+					/>
 				)}
 
 				{/* Remove Product Overlay & loader */}

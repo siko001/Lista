@@ -129,7 +129,7 @@ const ListSetting = ({
 			.post('/share-list', data)
 			.then((res) => {
 				console.log(res);
-				setMessage(`Share this link: ${res.data.link}`);
+				copyToClipBoard(res.data.link);
 			})
 			.catch((err) => {
 				console.log(err);
@@ -139,6 +139,12 @@ const ListSetting = ({
 					setMessage(null);
 				}, 1600);
 			});
+	};
+
+	const copyToClipBoard = (link) => {
+		navigator.clipboard.writeText(link).then(() => {
+			setMessage(`Copied to Clipboard ${link}`);
+		});
 	};
 
 	//Handle The Delete

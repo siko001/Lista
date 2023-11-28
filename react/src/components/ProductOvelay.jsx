@@ -94,6 +94,13 @@ const Main = styled.div`
 	@media screen and (max-width: 950px) {
 		width: 90%;
 	}
+
+	.addProduct {
+		width: 50%;
+		margin: 0 auto;
+		min-height: 25px;
+		padding-left: 10px;
+	}
 `;
 
 const ProductTable = styled.div`
@@ -391,100 +398,114 @@ const ProductOverlay = ({ darkMode, setProduct, id, updateList, selectedProducts
 					</div>
 				</nav>
 
-				{/* Category Is Set At Random */}
-				<ProductTable>
-					{selectedFilter === 'random' &&
-						PopularProducts.filter((product) => {
-							const translatedName = product.name[language] || product.name.en;
-							return translatedName.toLowerCase().includes(searchTerm.toLowerCase());
-						}).map((product) => (
-							<ProductRow key={product.uniqueKey}>
-								<ProductCell>
-									<div className="grp-check boldest">
-										<input
-											className="radio"
-											onChange={() => handleSelect(product)}
-											type="checkbox"
-											checked={selectedProducts.some(
-												(selectedProduct) => selectedProduct.uniqueKey === product.uniqueKey
-											)}
-										/>
-										<p className="name large">{product.name[language] || product.name.en}</p>
-									</div>
-									<p className="category lighter">{product.category[language] || product.category.en}</p>
-									<p
-										onClick={() => {
-											const sameProduct = toBuyProducts.some((p) => p.uniqueKey === product.uniqueKey);
+				{selected === 'Popular Products' && (
+					// Category Is Set At Random
+					<ProductTable>
+						{selectedFilter === 'random' &&
+							PopularProducts.filter((product) => {
+								const translatedName = product.name[language] || product.name.en;
+								return translatedName.toLowerCase().includes(searchTerm.toLowerCase());
+							}).map((product) => (
+								<ProductRow key={product.uniqueKey}>
+									<ProductCell>
+										<div className="grp-check boldest">
+											<input
+												className="radio"
+												onChange={() => handleSelect(product)}
+												type="checkbox"
+												checked={selectedProducts.some(
+													(selectedProduct) => selectedProduct.uniqueKey === product.uniqueKey
+												)}
+											/>
+											<p className="name large">{product.name[language] || product.name.en}</p>
+										</div>
+										<p className="category lighter">{product.category[language] || product.category.en}</p>
+										<p
+											onClick={() => {
+												const sameProduct = toBuyProducts.some((p) => p.uniqueKey === product.uniqueKey);
 
-											if (sameProduct) {
-												handleUnselectProduct(product.uniqueKey, listId);
-											} else {
-												return;
+												if (sameProduct) {
+													handleUnselectProduct(product.uniqueKey, listId);
+												} else {
+													return;
+												}
+											}}
+										>
+											<FontAwesomeIcon icon={faXmark} />
+										</p>
+									</ProductCell>
+								</ProductRow>
+							))}
+
+						{/* If Selected is by Category */}
+						{selectedFilter === 'category' &&
+							Array.from(new Set([...PopularProducts, ...RecentProducts].map((product) => product.category[language]))).map(
+								(category, categoryIndex) => (
+									<React.Fragment key={categoryIndex}>
+										<ProductRow className="categoryRow">
+											<ProductCell
+												style={{
+													fontWeight: 'bold',
+													color: '#057753',
+													backgroundColor: '#00000033',
+												}}
+											>
+												{category}
+											</ProductCell>
+										</ProductRow>
+										{PopularProducts.concat(RecentProducts).map((product, productIndex) => {
+											if (
+												product.category[language] === category &&
+												product.name[language] &&
+												product.name[language] &&
+												product.name[language].toLowerCase().includes(searchTerm.toLowerCase())
+											) {
+												return (
+													<ProductRow key={product.uniqueKey}>
+														<ProductCell>
+															<div className="grp-check boldest">
+																<input
+																	className="radio"
+																	onChange={() => handleSelect(product)}
+																	type="checkbox"
+																	checked={selectedProducts.some(
+																		(selectedProduct) => selectedProduct.uniqueKey === product.uniqueKey
+																	)}
+																/>
+																{product.name[language]}
+															</div>
+															<p
+																onClick={() => {
+																	const sameProduct = toBuyProducts.some(
+																		(p) => p.uniqueKey === product.uniqueKey
+																	);
+
+																	if (sameProduct) {
+																		handleUnselectProduct(product.uniqueKey, listId);
+																	} else {
+																		return;
+																	}
+																}}
+															>
+																<FontAwesomeIcon icon={faXmark} />
+															</p>
+														</ProductCell>
+													</ProductRow>
+												);
 											}
-										}}
-									>
-										<FontAwesomeIcon icon={faXmark} />
-									</p>
-								</ProductCell>
-							</ProductRow>
-						))}
+											return null;
+										})}
+									</React.Fragment>
+								)
+							)}
+					</ProductTable>
+				)}
 
-					{/* If Selected is by Category */}
-					{selectedFilter === 'category' &&
-						Array.from(new Set([...PopularProducts, ...RecentProducts].map((product) => product.category[language]))).map(
-							(category, categoryIndex) => (
-								<React.Fragment key={categoryIndex}>
-									<ProductRow className="categoryRow">
-										<ProductCell style={{ fontWeight: 'bold', color: '#057753', backgroundColor: '#00000033' }}>
-											{category}
-										</ProductCell>
-									</ProductRow>
-									{PopularProducts.concat(RecentProducts).map((product, productIndex) => {
-										if (
-											product.category[language] === category &&
-											product.name[language] &&
-											product.name[language] &&
-											product.name[language].toLowerCase().includes(searchTerm.toLowerCase())
-										) {
-											return (
-												<ProductRow key={product.uniqueKey}>
-													<ProductCell>
-														<div className="grp-check boldest">
-															<input
-																className="radio"
-																onChange={() => handleSelect(product)}
-																type="checkbox"
-																checked={selectedProducts.some(
-																	(selectedProduct) => selectedProduct.uniqueKey === product.uniqueKey
-																)}
-															/>
-															{product.name[language]}
-														</div>
-														<p
-															onClick={() => {
-																const sameProduct = toBuyProducts.some(
-																	(p) => p.uniqueKey === product.uniqueKey
-																);
-
-																if (sameProduct) {
-																	handleUnselectProduct(product.uniqueKey, listId);
-																} else {
-																	return;
-																}
-															}}
-														>
-															<FontAwesomeIcon icon={faXmark} />
-														</p>
-													</ProductCell>
-												</ProductRow>
-											);
-										}
-										return null;
-									})}
-								</React.Fragment>
-							)
-						)}
-				</ProductTable>
+				{selected === 'My Products' && (
+					<ProductTable>
+						<input className="addProduct" placeholder={translate('addANewProduct')} />
+					</ProductTable>
+				)}
 			</Main>
 		</Container>
 	);

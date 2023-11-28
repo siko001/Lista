@@ -68,5 +68,6 @@
 	"english": "English",
 	"edit-product-header": "You're editing",
 	"unit&quantity-grp": "Quantity & Unit",
-	"removed-product":"Product removed"
+	"removed-product":"Product removed",
+	"addANewProduct":"Add a new product"
 }

@@ -98,7 +98,8 @@ const DeleteListAndProductOverlay = ({ title, setOpenEmptyAndDeleteListOverlay, 
 			<Container>
 				<InnerContainer>
 					<h3 className="heading">
-						{translate('empty-and-delete-text')} <br></br> 111{title} <br></br>
+						{translate('empty-and-delete-text')} <br></br>
+						{title} <br></br>
 						{translate('empty-and-delete-text-pt2')}
 					</h3>
 					<hr></hr>
