@@ -86,6 +86,12 @@ const SettingContainer = styled.div`
 			min-width: 100px;
 		}
 	}
+	.myLink {
+		color: inherit;
+		&:hover {
+			opacity: 0.5;
+		}
+	}
 `;
 
 const Setting = ({ onChangeDarkMode }) => {
@@ -139,7 +145,12 @@ const Setting = ({ onChangeDarkMode }) => {
 					<p>{translate('on')}</p>
 				</label>
 			</div>
-			Verion 1.0
+			<p style={{ color: darkMode ? 'white' : 'black' }}>
+				Verion 1.0 || Developer :{' '}
+				<a className="myLink" href="https://neilmallia.com" target="_blank">
+					Neil Mallia
+				</a>
+			</p>
 		</SettingContainer>
 	);
 };

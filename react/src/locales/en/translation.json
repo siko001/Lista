@@ -9,7 +9,7 @@
 	"on": "on",
 	"off": "off",
 	"darkMode": "Dark mode",
-	"languague": "Languague",
+	"languague": "Language",
 	"ifList": "Your shopping list",
 	"ifListmore1": "Your shopping lists",
 	"rename": "Rename",
@@ -68,6 +68,6 @@
 	"english": "English",
 	"edit-product-header": "You're editing",
 	"unit&quantity-grp": "Quantity & Unit",
-	"removed-product":"Product removed",
-	"addANewProduct":"Add a new product"
+	"removed-product": "Product removed",
+	"addANewProduct": "Add a new product"
 }

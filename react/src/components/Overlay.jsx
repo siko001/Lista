@@ -68,7 +68,7 @@ const InnerContainer = styled.div`
 	}
 `;
 
-const Overlay = ({ closeOverlay, setMessage, setStatus, setLoading, addNewList, fetchLists }) => {
+const Overlay = ({ closeOverlay, setMessage, setStatus, setLoading, addNewList, fetchLists, setNewList, setNewListB }) => {
 	const listRef = useRef();
 	const { translate } = useLanguage();
 	const [notIsValid, setNotIsValid] = useState(null);
@@ -105,6 +105,8 @@ const Overlay = ({ closeOverlay, setMessage, setStatus, setLoading, addNewList, 
 			.then((response) => {
 				setMessage(translate('response-200-created'));
 				addNewList(response.data);
+				setNewList(true);
+				setNewListB(true);
 				// Save the created list to local storage
 				const allLists = JSON.parse(localStorage.getItem('shoppingLists')) || [];
 				allLists.push(response.data);
@@ -123,6 +125,10 @@ const Overlay = ({ closeOverlay, setMessage, setStatus, setLoading, addNewList, 
 				setLoading(false);
 				closeOverlay(true);
 				fetchLists();
+				setTimeout(() => {
+					setNewList(false);
+				}, 100);
+
 				return setTimeout(() => {
 					setStatus(200);
 					setMessage(null);

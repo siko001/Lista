@@ -13,12 +13,26 @@ class SharedLinkController extends Controller {
 
     //When the user Clicks the link copies the list to his name
     public function activateLink($token, $id) {
-        //
         $link = SharedLink::where('token', $token)->first();
-
+        $originalList = ShoppingList::where("id", $link->shopping_list_id)->first();
+        //If the Link is not in the db
         if (!$link) {
             return response()->json(['error' => 'Invalid link'], 404);
         }
+        // Check if the user clicking the link is the same as the user who sent the link
+        if ($link->user_id == $id) {
+            return response()->json(['error' => 'You cannot activate a link sent by yourself'], 400);
+        }
+
+
+        // Check if the user has already activated the link
+        $alreadyActivated = $originalList->users()->where('user_id', $id)->exists();
+
+        if ($alreadyActivated) {
+            info("Already activated by this user");
+            return response()->json(['error' => 'Link has already been activated by this user'], 400);
+        }
+
         // Retrieve shopping list and user information
         // UserThat Sent The List
         $userId = $link->user_id;
@@ -31,21 +45,18 @@ class SharedLinkController extends Controller {
         if (!$originalShoppingList) {
             return response()->json(['error' => 'Shopping list not found'], 404);
         }
-        $user->shoppingLists()->attach($originalShoppingList->id);
 
-        $link->delete();
+        $user->shoppingLists()->attach($originalShoppingList->id);
         return response()->json(['message' => 'Link activated successfully']);
     }
 
 
 
     public function generateShareableLink(Request $request) {
-        info($request);
         // Validate request data
         $request->validate([
             'listId' => 'required|exists:shopping_lists,id',
         ]);
-
 
         // Check if the authenticated user owns the list
         $list = ShoppingList::findOrFail($request->listId);
@@ -64,7 +75,6 @@ class SharedLinkController extends Controller {
 
         // Return the generated link
         $link = "http://localhost:5000/shared-list/$token";
-        info($link);
         return response(['link' => $link]);
     }
 }

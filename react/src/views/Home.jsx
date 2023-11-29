@@ -36,7 +36,7 @@ const Header = styled.div`
 	}
 	button {
 		padding: 0.75rem 1.5rem;
-		border-radius: 3px;
+		border-radius: 5px;
 		background-color: rgba(10, 107, 222, 0.9);
 		font-size: 1.1rem;
 		position: relative;
@@ -52,7 +52,7 @@ const Header = styled.div`
 			height: 20%;
 			border: 3px solid;
 			transition: all 0.6s ease;
-			border-radius: 2px;
+			border-radius: 5px;
 		}
 		&.type1::after {
 			bottom: 0;
@@ -139,6 +139,10 @@ const Home = () => {
 	const [deleteLoader, setDeleteLoader] = useState(false);
 	const [copyLoader, setCopyLoader] = useState(false);
 	const intervalIdRef = useRef(null);
+	const [newList, setNewList] = useState(false);
+	const [newListB, setNewListB] = useState(false);
+	const [newListId, setnewListId] = useState();
+	const [listAboutToDelete, setListAboutToDelete] = useState();
 
 	useEffect(() => {
 		fetchLists();
@@ -205,7 +209,7 @@ const Home = () => {
 
 		return true;
 	}
-
+	console.log(newListB);
 	const startImageInterval = () => {
 		const newIntervalId = setInterval(() => {
 			const newIndex = Math.floor(Math.random() * images.length);
@@ -216,6 +220,7 @@ const Home = () => {
 
 	const addNewList = (newList) => {
 		setShoppingList((prevList) => [...prevList, newList]);
+		setnewListId(newList.id);
 	};
 
 	const updateList = () => {
@@ -223,7 +228,7 @@ const Home = () => {
 	};
 
 	return (
-		<ProductCountProvider id={1}>
+		<ProductCountProvider>
 			<Container className={`${darkMode ? 'darkMode' : 'lightMode'} `}>
 				{/* NavBar Component */}
 				<Navbar />
@@ -238,6 +243,7 @@ const Home = () => {
 						setDeleteLoader={setDeleteLoader}
 						updateList={updateList}
 						deleteTitle={deleteTitle}
+						setListAboutToDelete={setListAboutToDelete}
 					/>
 				)}
 				{deleteLoader && <DeleteListLoader />}
@@ -251,6 +257,8 @@ const Home = () => {
 						setLoading={setLoading}
 						addNewList={addNewList}
 						fetchLists={fetchLists}
+						setNewList={setNewList}
+						setNewListB={setNewListB}
 					/>
 				)}
 				{loading && <CreateListLoader />}
@@ -287,6 +295,14 @@ const Home = () => {
 								setCopyLoader={setCopyLoader}
 								totalProducts={totalProducts}
 								totalReadyProduct={totalReadyProduct}
+								newList={newList}
+								newListId={newListId}
+								listAboutToDelete={listAboutToDelete}
+								deleteID={deleteID}
+								setNewList={setNewList}
+								setNewListId={setnewListId}
+								newListB={newListB}
+								setNewListB={setNewListB}
 							/>
 						</>
 					)}

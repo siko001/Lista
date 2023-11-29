@@ -6,13 +6,15 @@ import { useLanguage } from '../contexts/LanguageContext';
 import axiosClient from '../axiosClient';
 
 const Container = styled.div`
-	z-index: 2;
+	z-index: 9;
 	position: absolute;
 	border: 1px solid rgba(114, 109, 109, 0.548);
 	right: -0px;
-	top: 40px;
+	top: 0px;
 	width: 200px;
 	padding: 20px;
+	z-index: 999 !important;
+	border-radius: 10px;
 
 	ul {
 		display: flex;
@@ -51,6 +53,9 @@ const ListSetting = ({
 	setStatus,
 	fetchLists,
 	setCopyLoader,
+	setNewList,
+	setNewListId,
+	setNewListB,
 }) => {
 	const [isVisible, setIsVisible] = useState(true);
 	const ref = useRef();
@@ -85,20 +90,24 @@ const ListSetting = ({
 	const handleCopy = (ID) => {
 		setSettingPageOpen(false);
 		setCopyLoader(true);
+		setNewListB(true);
+		const user = localStorage.getItem('ACCESS_TOKEN');
+
 		axiosClient
-			.post(`list/copy/${ID}`, ID)
+			.post(`list/copy/${ID}/${user}`, ID)
 			.then((response) => {
 				// Fetch the existing lists from local storage
 				let allLists = localStorage.getItem('shoppingLists');
 				allLists = JSON.parse(allLists) || [];
 				// Append the copied list to the existing lists
 				allLists.push(response.data);
+				setNewListId(response.data.id);
+				setNewList(response.data);
 
 				// Update the local storage with the new list
 				localStorage.setItem('shoppingLists', JSON.stringify(allLists));
 
 				// Fetch the lists again (if needed)
-				fetchLists();
 				fetchLists();
 				setMessage(translate('notification-copied'));
 			})
@@ -112,6 +121,10 @@ const ListSetting = ({
 					setStatus(null);
 					setMessage(null);
 				}, 1600);
+				return setTimeout(() => {
+					setNewListId(false);
+					setNewList(false);
+				}, 300);
 			});
 	};
 

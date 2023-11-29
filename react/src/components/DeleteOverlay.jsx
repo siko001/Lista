@@ -62,24 +62,23 @@ const InnerContainer = styled.div`
 	}
 `;
 
-const DeleteOverlay = ({ closeOverlay, setMessage, deleteID, setDeleteLoader, setStatus, updateList, deleteTitle }) => {
+const DeleteOverlay = ({ closeOverlay, setMessage, deleteID, setDeleteLoader, setStatus, updateList, deleteTitle, setListAboutToDelete }) => {
 	const { translate } = useLanguage();
 
 	//Continue the dlete logic
 	const handleDeleteConfirmation = () => {
+		setListAboutToDelete(true);
 		setDeleteLoader(true);
 		closeOverlay((prev) => !prev);
 		axiosClient
 			.delete(`list/delete/${deleteID}`, deleteID)
 			.then(() => {
-				setMessage(deleteTitle + ' ' + translate('notification-delete-success'));
-
 				// Update the local storage data after deleting from the database
 				let allLists = localStorage.getItem('shoppingLists');
 				localStorage.removeItem('readyProductsInList' + deleteID);
 				localStorage.removeItem('allProductsInList' + deleteID);
 				localStorage.removeItem('toBuyProductsInList' + deleteID);
-
+				setMessage(deleteTitle + ' ' + translate('notification-delete-success'));
 				// Assuming allLists is a string representation of JSON data, parse it into an array
 				allLists = JSON.parse(allLists) || [];
 
@@ -88,7 +87,12 @@ const DeleteOverlay = ({ closeOverlay, setMessage, deleteID, setDeleteLoader, se
 
 				// Save the updated data back to local storage
 				localStorage.setItem('shoppingLists', JSON.stringify(updatedLists));
-				updateList();
+
+				//make the red color to the product deleted
+
+				setTimeout(() => {
+					updateList();
+				}, 1200);
 			})
 			.catch(() => {
 				setStatus(400);
@@ -96,9 +100,11 @@ const DeleteOverlay = ({ closeOverlay, setMessage, deleteID, setDeleteLoader, se
 			})
 			.finally(() => {
 				setDeleteLoader(false);
+
 				return setTimeout(() => {
 					setStatus(null);
 					setMessage(null);
+					setListAboutToDelete((prev) => !prev);
 				}, 1600);
 			});
 	};

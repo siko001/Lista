@@ -30,7 +30,7 @@ Route::post("/create-list", [ListController::class, "createList"]);
 Route::get("/get-lists/{id}", [ListController::class, "getAllLists"]);
 Route::put("/update-list-title/{id}", [ListController::class, "updateListTitle"]);
 Route::delete("list/delete/{id}", [ListController::class, "deleteList"]);
-Route::post("list/copy/{id}", [ListController::class, "copyList"]);
+Route::post("list/copy/{id}/{userID}", [ListController::class, "copyList"]);
 
 // View for the List for the user
 Route::get("/{name}/{id}", [ListController::class, "viewTheList"]);
@@ -46,4 +46,4 @@ Route::put('update/all-to_buy/{listId}', [ProductController::class, "markAllToBu
 Route::delete("remove/ready/{listId}", [ProductController::class, "removeAllReady"]);
 Route::delete("/delete/all-products/and-list{id}", [ProductController::class, "removeListAndCorrispodingProducts"]);
 Route::get("/products/count/{id}", [ProductController::class, "getAllCounts"]);
-Route::put("/update-product/{listId}", [ProductController::class, "updateProductDetails"]);
+Route::put("/update-product/{listId}/{productId}", [ProductController::class, "updateProductDetails"]);

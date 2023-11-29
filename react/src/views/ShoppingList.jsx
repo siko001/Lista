@@ -395,9 +395,13 @@ const ShoppingList = () => {
 		setToBuyProducts((prevToBuyProducts) => prevToBuyProducts.filter((toBuyProducts) => toBuyProducts.uniqueKey !== id));
 	};
 
-	const matchingReadyProducts = readyProducts.filter((p) => p.name.mt || p.name.en.toLowerCase().includes(searchTerm.toLowerCase()));
+	const matchingReadyProducts = readyProducts.filter(
+		(p) => p.name.mt.toLowerCase().includes(searchTerm.toLowerCase()) || p.name.en.toLowerCase().includes(searchTerm.toLowerCase())
+	);
 
-	const matchToBuyProducts = toBuyProducts.filter((p) => p.name.mt || p.name.en.toLowerCase().includes(searchTerm.toLowerCase()));
+	const matchToBuyProducts = toBuyProducts.filter(
+		(p) => p.name.mt.toLowerCase().includes(searchTerm.toLowerCase()) || p.name.en.toLowerCase().includes(searchTerm.toLowerCase())
+	);
 	console.log(searchTerm);
 	return (
 		<Container className={darkMode ? 'darkMode' : 'lightMode'}>

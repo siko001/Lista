@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useContext } from 'react';
-import styled from 'styled-components';
+import styled, { css, keyframes } from 'styled-components';
 import ListSetting from './ListSetting';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGears } from '@fortawesome/free-solid-svg-icons';
@@ -9,16 +9,18 @@ import { useNavigate } from 'react-router-dom';
 import { useProductCount } from '../contexts/ProductCountContext';
 
 const Container = styled.div`
+	position: relative;
 	border: 1px solid rgba(114, 109, 109, 0.548);
-	width: 95%;
+	width: 100%;
 	max-width: 850px;
 	height: 70px;
 	border-radius: 10px;
 	display: flex;
 	align-items: center;
 	justify-content: center;
+
 	&:hover {
-		transition: 0.3s ease-in;
+		transition: transform 1s ease-in;
 		transform: scale(1.05);
 	}
 	&:not(:hover) {
@@ -26,6 +28,10 @@ const Container = styled.div`
 		transform: scale(1);
 	}
 	@media screen and (max-width: 950px) {
+		max-width: 600px;
+		margin: 0 auto;
+	}
+	@media screen and (max-width: 650px) {
 		max-width: 400px;
 	}
 	.leftSpace {
@@ -147,6 +153,14 @@ const List = ({
 	setCopyLoader,
 	totalReadyProduct,
 	totalProducts,
+	newList,
+	newListId,
+	listAboutToDelete,
+	deleteID,
+	setNewList,
+	setNewListId,
+	newListB,
+	setNewListB,
 }) => {
 	const percentage = (totalReadyProduct / totalProducts) * 100;
 	const [title, setTitle] = useState(name);
@@ -226,58 +240,75 @@ const List = ({
 		const listUrl = `/${listName}/${id}`;
 		navigate(listUrl);
 	};
+
 	return (
-		<Container style={{ backgroundColor: darkMode ? '#161616' : '#fff' }}>
-			<div onClick={handleOpenList} className="leftSpace"></div>
-			<Content>
-				<div onClick={handleOpenList} className="aboveSpace"></div>
-				<Top>
-					<div className="left">
-						{!isEditingTitle ? (
-							<p onClick={editTitle}>{title || titleReplacment} </p>
-						) : (
-							<input
-								style={{ color: darkMode ? '#fff' : '#000' }}
-								maxLength={20}
-								onBlur={saveTitle}
-								defaultValue={title}
-								ref={inputRef}
-							/>
-						)}
-					</div>
-					<div onClick={handleOpenList} className="center"></div>
-					<div className="right">
-						<div className="quantity">
-							{totalReadyProduct}/{totalProducts}
-						</div>
-						<div className="settings">
-							<FontAwesomeIcon icon={faGears} onClick={handelOpenSettingPage} />
-							{settingPageOpen && (
-								<ListSetting
-									darkMode={darkMode}
-									setSettingPageOpen={setSettingPageOpen}
-									setDeleteOverlay={setDeleteOverlay}
-									setIsEditingTitle={setIsEditingTitle}
-									setMessage={setMessage}
-									listID={listID}
-									setDeleteID={setDeleteID}
-									setDeleteTitle={setDeleteTitle}
-									title={title}
-									setStatus={setStatus}
-									fetchLists={fetchLists}
-									setCopyLoader={setCopyLoader}
+		<>
+			{settingPageOpen && (
+				<ListSetting
+					darkMode={darkMode}
+					setSettingPageOpen={setSettingPageOpen}
+					setDeleteOverlay={setDeleteOverlay}
+					setIsEditingTitle={setIsEditingTitle}
+					setMessage={setMessage}
+					listID={listID}
+					setDeleteID={setDeleteID}
+					setDeleteTitle={setDeleteTitle}
+					title={title}
+					setStatus={setStatus}
+					fetchLists={fetchLists}
+					setCopyLoader={setCopyLoader}
+					setNewList={setNewList}
+					setNewListId={setNewListId}
+					setNewListB={setNewListB}
+				/>
+			)}
+			<Container
+				style={{
+					backgroundColor: darkMode ? '#161616' : '#fff',
+					border:
+						newListB && newListId == listID ? '2px solid green' : listAboutToDelete && deleteID == listID ? '2px solid red' : '',
+					opacity: listAboutToDelete && deleteID == listID ? '0' : newList && newListId == listID ? '1' : '',
+					transition: 'opacity 1s, top 2s, transform 0.5s ',
+					top: listAboutToDelete && deleteID == listID ? '200px' : newList && newListId == listID ? '-100px' : '0',
+					transitionDelay: listAboutToDelete && deleteID === listID ? '1s' : newList && newListId == listID ? '1s' : '',
+				}}
+			>
+				<div onClick={handleOpenList} className="leftSpace"></div>
+				<Content>
+					<div onClick={handleOpenList} className="aboveSpace"></div>
+					<Top>
+						<div className="left">
+							{!isEditingTitle ? (
+								<p onClick={editTitle}>{title || titleReplacment} </p>
+							) : (
+								<input
+									style={{ color: darkMode ? '#fff' : '#000' }}
+									maxLength={20}
+									onBlur={saveTitle}
+									defaultValue={title}
+									ref={inputRef}
 								/>
 							)}
 						</div>
-					</div>
-				</Top>
-				<Bottom percentage={percentage}>
-					<div className="filler"></div>
-				</Bottom>
-				<div onClick={handleOpenList} className="underbottom"></div>
-			</Content>
-			<div onClick={handleOpenList} className="rightSpace"></div>
-		</Container>
+						<div onClick={handleOpenList} className="center"></div>
+						<div className="right">
+							<div className="quantity">
+								{totalReadyProduct}/{totalProducts}
+							</div>
+							<div className="settings">
+								<FontAwesomeIcon icon={faGears} onClick={handelOpenSettingPage} />
+							</div>
+						</div>
+					</Top>
+
+					<Bottom percentage={percentage}>
+						<div className="filler"></div>
+					</Bottom>
+					<div onClick={handleOpenList} className="underbottom"></div>
+				</Content>
+				<div onClick={handleOpenList} className="rightSpace"></div>
+			</Container>
+		</>
 	);
 };
 

@@ -6,13 +6,19 @@ const Container = styled.div`
 	display: flex;
 	flex-direction: column;
 	align-items: center;
+	z-index: 0;
 	position: relative;
-	width: 60%;
+	width: 50%;
 	min-height: 200px;
 	gap: 20px;
 	margin-top: 50px;
 	@media screen and (max-width: 950px) {
 		width: 90%;
+	}
+
+	.settingHook {
+		width: 100%;
+		position: relative;
 	}
 `;
 
@@ -26,6 +32,14 @@ const ListContainer = ({
 	setStatus,
 	fetchLists,
 	setCopyLoader,
+	newList,
+	newListId,
+	listAboutToDelete,
+	deleteID,
+	setNewList,
+	setNewListId,
+	newListB,
+	setNewListB,
 }) => {
 	const handleDeleteOverlay = (deleteOverlayState) => {
 		setDeleteOverlay(deleteOverlayState);
@@ -36,21 +50,31 @@ const ListContainer = ({
 	return (
 		<Container>
 			{reversedLists.map((list) => (
-				<List
-					key={list.id}
-					darkMode={darkMode}
-					setDeleteOverlay={handleDeleteOverlay}
-					setMessage={setMessage}
-					name={list.name}
-					listID={list.id}
-					setDeleteID={setDeleteID}
-					setDeleteTitle={setDeleteTitle}
-					setStatus={setStatus}
-					fetchLists={fetchLists}
-					setCopyLoader={setCopyLoader}
-					totalProducts={list.totalProductCount}
-					totalReadyProduct={list.totalReadyProducts}
-				/>
+				<div className="settingHook">
+					<List
+						key={list.id}
+						darkMode={darkMode}
+						setDeleteOverlay={handleDeleteOverlay}
+						setMessage={setMessage}
+						name={list.name}
+						listID={list.id}
+						setDeleteID={setDeleteID}
+						setDeleteTitle={setDeleteTitle}
+						setStatus={setStatus}
+						fetchLists={fetchLists}
+						setCopyLoader={setCopyLoader}
+						totalProducts={list.totalProductCount}
+						totalReadyProduct={list.totalReadyProducts}
+						newList={newList}
+						newListId={newListId}
+						listAboutToDelete={listAboutToDelete}
+						deleteID={deleteID}
+						setNewListId={setNewListId}
+						setNewList={setNewList}
+						newListB={newListB}
+						setNewListB={setNewListB}
+					/>
+				</div>
 			))}
 		</Container>
 	);
