@@ -40,6 +40,7 @@ const ListContainer = ({
 	setNewListId,
 	newListB,
 	setNewListB,
+	setShare,
 }) => {
 	const handleDeleteOverlay = (deleteOverlayState) => {
 		setDeleteOverlay(deleteOverlayState);
@@ -73,6 +74,7 @@ const ListContainer = ({
 						setNewList={setNewList}
 						newListB={newListB}
 						setNewListB={setNewListB}
+						setShare={setShare}
 					/>
 				</div>
 			))}

@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import styled from 'styled-components';
 import { useLanguage } from '../contexts/LanguageContext';
 import axiosClient from '../axiosClient';
@@ -6,6 +6,7 @@ import ReadyProduct from './ReadyProduct';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import { useDarkMode } from '../contexts/DarkModeContext';
+import Echo from 'laravel-echo';
 
 const Container = styled.div`
 	justify-content: space-between;
@@ -145,6 +146,7 @@ const Product = ({
 	setOpenEditProduct,
 	setProductToEdit,
 	wholeProduct,
+	fetchListData,
 }) => {
 	const { translate } = useLanguage();
 	const { darkMode, setDarkMode } = useDarkMode();
@@ -170,6 +172,7 @@ const Product = ({
 
 		const allProductsInToBuy = JSON.parse(localStorage.getItem(`toBuyProductsInList${listId}`));
 		const allProductsInReady = JSON.parse(localStorage.getItem(`readyProductsInList${listId}`));
+		const userId = localStorage.getItem('ACCESS_TOKEN');
 
 		// FIND AND REMOVE THE ITEM FROM THE TO-BUY LOCALSTORAGE AND MOVE TO READY
 		// Find the index of the selected product in the toBuyProductsInList array
@@ -204,7 +207,7 @@ const Product = ({
 		}
 
 		axiosClient
-			.put(`/update/product${id}/${listId}`, [id, listId])
+			.put(`/update/product${id}/${listId}/${userId}`, [id, listId])
 			.then((res) => {
 				// console.log(res);
 			})
@@ -215,7 +218,7 @@ const Product = ({
 	};
 	const handleProductSelect = (wholeProduct) => {
 		setOpenEditProduct((prev) => !prev);
-		
+
 		setProductToEdit(wholeProduct);
 	};
 

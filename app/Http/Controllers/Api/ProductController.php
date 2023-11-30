@@ -3,9 +3,15 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\Product;
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
+use App\Events\AddProduct;
 use App\Models\ShoppingList;
+use Illuminate\Http\Request;
+use App\Events\DeleteProduct;
+use App\Events\MarkProductReady;
+use App\Events\RemoveAllProducts;
+use App\Events\MarkAllProductReady;
+use App\Http\Controllers\Controller;
+use App\Events\DeleteProductShouldBroadcast;
 
 class ProductController extends Controller {
 
@@ -61,13 +67,19 @@ class ProductController extends Controller {
 
     // Function to add a product to the to buy list
     public function addProduct(Request $request) {
-        info($request);
         $id = $request[0];
         $product = $request[1];
         $list = ShoppingList::where("id", $id)->first();
         $product["list_id"] = $list["id"];
 
+        //if The Product is Found
         if ($product) {
+
+            //if the product is shared
+            if ($list->shared == true) {
+                event(new AddProduct($product, $list));
+            }
+
             $this->addToListTotalproduct($list);
             $product = Product::create([
                 "uniqueKey" => $product["uniqueKey"],
@@ -82,11 +94,19 @@ class ProductController extends Controller {
     }
 
 
+
     //Function to remove 1 Product from the to List
     public function removeProduct($productId, $listId) {
         $product = Product::where("uniqueKey", $productId)->where("list_id", $listId)->first();
         $list = ShoppingList::where("id", $listId)->first();
         if ($product) {
+
+            //if the product is shared
+            if ($list->shared == true) {
+                event(new DeleteProduct($product, $list));
+            }
+
+
             if ($product->status == "to buy") {
                 $this->removeFromListTotal($list);
             } else {
@@ -100,12 +120,15 @@ class ProductController extends Controller {
         }
     }
 
+
     // Function to remove all Products from the list
     public function removeAllProducts($id) {
         $list = ShoppingList::where("id", $id)->first();
         $allProductsInList = Product::where("list_id", $id)->get();
-
         if ($allProductsInList->isNotEmpty()) {
+            if ($list->shared == true) {
+                event(new RemoveAllProducts($list));
+            }
             foreach ($allProductsInList as $product) {
                 $product->delete();
             }
@@ -121,14 +144,20 @@ class ProductController extends Controller {
 
 
     // Function to mark ONE product as ready
-    public function markProductReady($productID, $listID) {
+    public function markProductReady($productID, $listID, $userId) {
         $list = ShoppingList::where("id", $listID)->first();
         $product = Product::where("uniqueKey", $productID)->where("list_id", $listID)->first();
         if ($product) {
+
+            if ($list->shared == true) {
+                event(new MarkProductReady($productID, $userId, $product, $list));
+            }
+
             $this->addToReadyListTotalproduct($list);
             if ($product->status == "to buy") {
                 $product->status = "ready";
                 $product->update();
+
                 return response(["message" => "Product Marked as ready"], 200);
             } else {
                 return response(["message" => "Product already marked as Ready"], 400);
@@ -138,11 +167,16 @@ class ProductController extends Controller {
         }
     }
 
+
+
     //function to move ALL to buy products to the Ready products array
     public function markAllAsReady($id) {
         $list = ShoppingList::where("id", $id)->first();
         $products = Product::where("list_id", $id)->where("status", "to buy")->get();
         if ($products) {
+            if ($list->shared == true) {
+                event(new MarkAllProductReady($list));
+            }
             $this->moveProductsToReady($list);
             foreach ($products as $product) {
                 $product->status = "ready";
@@ -160,6 +194,9 @@ class ProductController extends Controller {
         $list = ShoppingList::where("id", $id)->first();
         $products = Product::where("list_id", $id)->where("status", "ready")->get();
         if ($products) {
+            if ($list->shared == true) {
+                event(new MarkAllProductReady($list));
+            }
             $this->emptyReadyProducts($list);
             foreach ($products as $product) {
                 $product->status = "to buy";
@@ -177,7 +214,9 @@ class ProductController extends Controller {
         $list = ShoppingList::where("id", $id)->first();
         $products = Product::where("list_id", $id)->where("status", "ready")->get();
         if ($products) {
-
+            if ($list->shared == true) {
+                event(new MarkAllProductReady($list));
+            }
             $this->parallelEmpty($list);
             info("parallel");
             info("removed");
@@ -193,6 +232,9 @@ class ProductController extends Controller {
         $products = Product::where("list_id", $id)->get();
         $list = ShoppingList::where("id", $id)->first();
         if ($list) {
+            if ($list->shared == true) {
+                event(new MarkAllProductReady($list));
+            }
             if ($products) {
                 foreach ($products as $product) {
                     $product->delete();
@@ -209,21 +251,20 @@ class ProductController extends Controller {
     }
 
     public function updateProductDetails($listId, $productId, Request  $request) {
-
-        info($listId);
-        info($productId);
-        info($request);
+        $list = ShoppingList::where("id", $listId)->first();
         $validateProduct = $request->validate([
             'nameEN' => 'required',
             'nameMT' => 'required',
             'categoryEN' => 'required',
             'categoryMT' => 'required',
-            'quantity' => 'numeric', 
+            'quantity' => 'numeric',
             'price' => 'numeric',
         ]);
 
         $product = Product::where("list_id", $listId)->where("id", $productId)->first();
-
+        if ($list->shared == true) {
+            event(new MarkAllProductReady($list));
+        }
         $product->update($validateProduct);
     }
 }

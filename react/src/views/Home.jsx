@@ -132,6 +132,7 @@ const Home = () => {
 	//message state
 	const [message, setMessage] = useState('');
 	const [status, setStatus] = useState(200);
+	const [share, setShare] = useState();
 
 	//Loaders State
 	const [loading, setLoading] = useState(null);
@@ -153,7 +154,7 @@ const Home = () => {
 				clearInterval(intervalIdRef.current);
 			}
 		};
-	}, []);
+	}, [share]);
 
 	//Create New List Overlay
 	const handleOpenOverlay = () => {
@@ -209,7 +210,7 @@ const Home = () => {
 
 		return true;
 	}
-	console.log(newListB);
+
 	const startImageInterval = () => {
 		const newIntervalId = setInterval(() => {
 			const newIndex = Math.floor(Math.random() * images.length);
@@ -303,6 +304,7 @@ const Home = () => {
 								setNewListId={setnewListId}
 								newListB={newListB}
 								setNewListB={setNewListB}
+								setShare={setShare}
 							/>
 						</>
 					)}

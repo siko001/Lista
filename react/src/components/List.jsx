@@ -161,6 +161,7 @@ const List = ({
 	setNewListId,
 	newListB,
 	setNewListB,
+	setShare,
 }) => {
 	const percentage = (totalReadyProduct / totalProducts) * 100;
 	const [title, setTitle] = useState(name);
@@ -260,6 +261,7 @@ const List = ({
 					setNewList={setNewList}
 					setNewListId={setNewListId}
 					setNewListB={setNewListB}
+					setShare={setShare}
 				/>
 			)}
 			<Container

@@ -64,10 +64,21 @@ const Container = styled.div`
 		z-index: 10;
 		box-shadow: 0px -4px 7px rgba(0, 0, 0, 0.5);
 		box-sizing: border-box;
+		-webkit-animation: animloader 4s linear infinite;
 		animation: animloader 4s linear infinite;
 	}
 
 	@keyframes animloader {
+		0% {
+			height: 0px;
+		}
+		90%,
+		100% {
+			height: 64px;
+		}
+	}
+
+	@-webkit-keyframes animloader {
 		0% {
 			height: 0px;
 		}
@@ -90,6 +101,7 @@ const Container = styled.div`
 		background-repeat: no-repeat;
 		position: relative;
 		box-sizing: border-box;
+		transform: translate3d(0, 0, 0);
 	}
 	.loaderRedirect::after {
 		content: '';
@@ -104,6 +116,7 @@ const Container = styled.div`
 		border: 5px solid transparent;
 		border-color: #ff3d00 transparent;
 		box-sizing: border-box;
+		-webkit-animation: rotation 1s linear infinite;
 		animation: rotation 1s linear infinite;
 	}
 	.txt2 {
@@ -121,6 +134,16 @@ const Container = styled.div`
 			transform: rotate(0deg);
 		}
 		100% {
+			transform: rotate(360deg);
+		}
+	}
+	@-webkit-keyframes rotation {
+		0% {
+			-webkit-transform: rotate(0deg);
+			transform: rotate(0deg);
+		}
+		100% {
+			-webkit-transform: rotate(360deg);
 			transform: rotate(360deg);
 		}
 	}
@@ -149,10 +172,30 @@ const Container = styled.div`
 		height: 6px;
 		color: #fff;
 		box-sizing: border-box;
+		-webkit-animation: animloaderError 0.6s linear infinite;
 		animation: animloaderError 0.6s linear infinite;
+		transform: translate3d(0, 0, 0);
 	}
 
 	@keyframes animloaderError {
+		0% {
+			box-shadow: 25px 0 white, 50px 0 white, 75px 0 white, 100px 0 white, 125px 0 white, 150px 0 white, 25px 0 white, 50px 0 white,
+				75px 0 white, 100px 0 white, 125px 0 white, 150px 0 white;
+		}
+		50% {
+			box-shadow: 25px 20px white, 50px 60px rgba(255, 255, 255, 0), 75px 30px rgba(255, 255, 255, 0), 100px 70px rgba(255, 255, 255, 0),
+				125px 40px white, 150px 60px rgba(255, 255, 255, 0), 25px 20px white, 50px 30px white, 75px 10px white, 100px 30px white,
+				125px 30px rgba(255, 255, 255, 0), 150px 30px rgba(255, 255, 255, 0);
+		}
+		100% {
+			box-shadow: 25px 60px rgba(255, 255, 255, 0), 50px 60px rgba(255, 255, 255, 0), 75px 50px rgba(255, 255, 255, 0),
+				100px 70px rgba(255, 255, 255, 0), 125px 70px rgba(255, 255, 255, 0), 150px 60px rgba(255, 255, 255, 0),
+				25px 80px rgba(255, 255, 255, 0), 50px 80px rgba(255, 255, 255, 0), 75px 70px rgba(255, 255, 255, 0),
+				100px 60px rgba(255, 255, 255, 0), 125px 30px rgba(255, 255, 255, 0), 150px 30px rgba(255, 255, 255, 0);
+		}
+	}
+
+	@-webkit-keyframes animloaderError {
 		0% {
 			box-shadow: 25px 0 white, 50px 0 white, 75px 0 white, 100px 0 white, 125px 0 white, 150px 0 white, 25px 0 white, 50px 0 white,
 				75px 0 white, 100px 0 white, 125px 0 white, 150px 0 white;

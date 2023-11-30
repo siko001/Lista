@@ -56,6 +56,7 @@ const ListSetting = ({
 	setNewList,
 	setNewListId,
 	setNewListB,
+	setShare,
 }) => {
 	const [isVisible, setIsVisible] = useState(true);
 	const ref = useRef();
@@ -143,6 +144,7 @@ const ListSetting = ({
 			.then((res) => {
 				console.log(res);
 				copyToClipBoard(res.data.link);
+				setShare(true);
 			})
 			.catch((err) => {
 				console.log(err);
@@ -150,6 +152,7 @@ const ListSetting = ({
 			.finally(() => {
 				setTimeout(() => {
 					setMessage(null);
+					setShare(false);
 				}, 1600);
 			});
 	};

@@ -126,35 +126,4 @@ class ListController extends Controller {
         $ready = $Products->where("status", "!=", "to buy");
         return response([$listdetails, $Products, $toBuy, $ready]);
     }
-
-
-// // Function to Create
-//     public function shareTheList(Request $request) {
-//         // Validate request data
-//         $request->validate([
-//             'listId' => 'required|exists:shopping_lists,id',
-//             'userId' => 'required|exists:users,id',
-//         ]);
-//         // Check if the authenticated user owns the list
-//         $list = ShoppingList::findOrFail($request->listId);
-//         if ($list->user_id !== auth()->id()) {
-//             return response(['error' => 'Unauthorized'], 401);
-//         }
-
-//         // Attach the user to the shopping list
-//         $list->users()->attach($request->userId);
-
-//         return response(['message' => 'List shared successfully']);
-//     }
-
-
-
-//     public function AddSharedList($id) {
-//         $sharedLink = SharedLink::where("token", $id)->first();
-
-//         if (!$sharedLink) {
-//             return response(['error' => 'List not found'], 404);
-//         }
-//         $listId = $sharedLink["shopping_list_id"];
-//     }
 }

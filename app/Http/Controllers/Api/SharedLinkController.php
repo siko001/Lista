@@ -67,6 +67,11 @@ class SharedLinkController extends Controller {
 
         // Generate a unique token for the shared link
         $token = Str::uuid()->toString();
+
+        $list->shared = true;
+        $list->link_url = $token;
+        $list->update();
+
         // Associate the token with the list and user
         $list->shared_links()->create([
             'token' => $token,

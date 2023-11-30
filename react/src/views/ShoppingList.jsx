@@ -18,6 +18,7 @@ import ReadyProduct from '../components/ReadyProduct';
 import DeleteListAndProductOverlay from '../components/DeleteListAndProductOverlay';
 import EmptyAndDeleteListLoader from '../components/EmptyAndDeleteListLoader';
 import ProductEditOverlay from '../components/ProductEditOverlay';
+import Pusher from 'pusher-js';
 
 const Container = styled.div`
 	width: 100%;
@@ -264,8 +265,6 @@ const ShoppingList = () => {
 		const localToBuyList = JSON.parse(localStorage.getItem(`toBuyProductsInList${id}`));
 
 		if (localList && localReadyList && localToBuyList && areListsEqual(localList, product)) {
-			console.log('local storage and db are the same');
-
 			setProduct(localList);
 			// Set The all Ready Array (if any)
 			setReadyProducts(localReadyList);
@@ -276,13 +275,11 @@ const ShoppingList = () => {
 			return;
 		} else {
 			// Local list doesn't exist or is different, fetch from the API
-			console.log('db and local are not the same');
 			fetchListData();
 		}
 	};
 
 	const fetchListData = () => {
-		console.log(selectedProducts);
 		axiosClient
 			.get(`/list/${id}`)
 			.then((res) => {
@@ -300,7 +297,6 @@ const ShoppingList = () => {
 				setToBuyProducts(toBuy);
 				//set The selected products from the all products array for the products overlay
 				setSelectedProducts(products);
-				console.log(selectedProducts);
 			})
 			.catch((error) => {
 				console.error('Error fetching list:', error);
@@ -309,6 +305,64 @@ const ShoppingList = () => {
 	};
 
 	useEffect(() => {
+		const allLists = JSON.parse(localStorage.getItem('shoppingLists'));
+		const sharedList = allLists.find((p) => p.id == id);
+		if (sharedList.shared == true && sharedList.link_url != null) {
+			var pusher = new Pusher('9d3825eb76271a0fd1f7', {
+				cluster: 'eu',
+			});
+			var channel = pusher.subscribe('shopping-list.' + sharedList.link_url);
+			channel.bind('MarkedAsReady', (data) => {
+				const thisUserId = localStorage.getItem('ACCESS_TOKEN');
+				const userThatMarkedId = data.userId;
+
+				if (thisUserId !== userThatMarkedId) {
+					fetchListData();
+				}
+			});
+
+			channel.bind('ProductAdded', () => {
+				const thisUserId = localStorage.getItem('ACCESS_TOKEN');
+				const userThatMarkedId = data.userId;
+
+				if (thisUserId !== userThatMarkedId) {
+					fetchListData();
+				}
+			});
+			channel.bind('ProductDeleted', () => {
+				const thisUserId = localStorage.getItem('ACCESS_TOKEN');
+				const userThatMarkedId = data.userId;
+
+				if (thisUserId !== userThatMarkedId) {
+					fetchListData();
+				}
+			});
+			channel.bind('ProductDeleted', () => {
+				const thisUserId = localStorage.getItem('ACCESS_TOKEN');
+				const userThatMarkedId = data.userId;
+
+				if (thisUserId !== userThatMarkedId) {
+					fetchListData();
+				}
+			});
+			channel.bind('RemoveAllProducts', () => {
+				const thisUserId = localStorage.getItem('ACCESS_TOKEN');
+				const userThatMarkedId = data.userId;
+
+				if (thisUserId !== userThatMarkedId) {
+					fetchListData();
+				}
+			});
+			channel.bind('MarkAllProductsReady', () => {
+				const thisUserId = localStorage.getItem('ACCESS_TOKEN');
+				const userThatMarkedId = data.userId;
+
+				if (thisUserId !== userThatMarkedId) {
+					fetchListData();
+				}
+			});
+		}
+
 		const inputElement = inputRef.current;
 		if (isEditingTitle && inputElement) {
 			inputElement.focus();
@@ -356,9 +410,7 @@ const ShoppingList = () => {
 					setMessage(null);
 				}, 1600);
 			})
-			.catch((err) => {
-				console.log(err);
-			})
+			.catch((err) => {})
 			.finally(() => {});
 	};
 
@@ -402,7 +454,7 @@ const ShoppingList = () => {
 	const matchToBuyProducts = toBuyProducts.filter(
 		(p) => p.name.mt.toLowerCase().includes(searchTerm.toLowerCase()) || p.name.en.toLowerCase().includes(searchTerm.toLowerCase())
 	);
-	console.log(searchTerm);
+
 	return (
 		<Container className={darkMode ? 'darkMode' : 'lightMode'}>
 			<Navbar />
@@ -509,6 +561,7 @@ const ShoppingList = () => {
 										setSelectedProducts={setSelectedProducts}
 										setOpenEditProduct={setOpenEditProduct}
 										setProductToEdit={setProductToEdit}
+										fetchListData={fetchListData}
 									/>
 								))}
 					{searchTerm.trim() !== '' && toBuyProducts.length > 0 && matchToBuyProducts == 0 && (

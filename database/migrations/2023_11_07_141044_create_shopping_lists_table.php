@@ -15,8 +15,9 @@ return new class extends Migration {
             $table->string("name")->nullable();
             $table->integer("totalProductCount")->default(0);
             $table->integer("totalReadyProducts")->default(0)->nullable();
+            $table->string("shared")->default(false);
+            $table->string("link_url")->nullable();
         });
-
     }
 
     /**
