@@ -16,6 +16,8 @@ const Container = styled.div`
 	top: 50px;
 	width: 200px;
 	padding: 20px;
+	border-radius: 10px;
+	padding: 1.5rem;
 	@media screen and (max-width: 750px) {
 		right: -50px;
 		transform: translate(10%);
@@ -102,6 +104,7 @@ const MainSettings = ({
 	setProduct,
 	setSelectedProducts,
 	setOpenEmptyAndDeleteListOverlay,
+	setMessage,
 }) => {
 	const { darkMode } = useDarkMode();
 	const { translate } = useLanguage();
@@ -122,8 +125,39 @@ const MainSettings = ({
 		editTitle();
 	};
 
+	//Setting No. 2
+
+	//Handle The Share to A User (for the end)
+	const handleShare = (id) => {
+		const userID = localStorage.getItem('ACCESS_TOKEN');
+		setOpenSettings((prev) => !prev);
+		// Assuming listId and userId are available
+		const data = {
+			listId: id,
+			userId: userID,
+		};
+		axiosClient
+			.post('/share-list', data)
+			.then((res) => {
+				copyToClipBoard(res.data.link);
+			})
+			.catch((err) => {
+				console.log(err);
+			})
+			.finally(() => {
+				setTimeout(() => {}, 1600);
+			});
+	};
+
+	const copyToClipBoard = (link) => {
+		navigator.clipboard.writeText(link).then(() => {
+			setMessage(`Copied to Clipboard ${link}`);
+		});
+	};
+
 	// Setting No. 3 Mark All As Ready
 	const handleMarkAllToBuyAsReady = (id) => {
+		setOpenSettings((prev) => !prev);
 		// Fetch all products
 		const allProducts = JSON.parse(localStorage.getItem('allProductsInList' + id));
 		const allLists = JSON.parse(localStorage.getItem('shoppingLists'));
@@ -162,6 +196,7 @@ const MainSettings = ({
 
 	// Setting 4 Revert everything back to the to buy list
 	const handleRevertToBackToBuy = (id) => {
+		setOpenSettings((prev) => !prev);
 		// Fetch all products
 		const allProducts = JSON.parse(localStorage.getItem('allProductsInList' + id));
 		// Filter products that are  ready
@@ -197,6 +232,7 @@ const MainSettings = ({
 
 	//Setting 5 Remove ONLY all Ready products from the List
 	const handleRemoveReadyMarkedProducts = (id) => {
+		setOpenSettings((prev) => !prev);
 		// Fetch all products
 		const allProducts = JSON.parse(localStorage.getItem('allProductsInList' + id));
 
@@ -263,7 +299,12 @@ const MainSettings = ({
 
 				{/* Share the list and it's content 2*/}
 				<li>
-					<div className="setting-header__group">
+					<div
+						onClick={() => {
+							handleShare(listId);
+						}}
+						className="setting-header__group"
+					>
 						<p className="blue largest">
 							<FontAwesomeIcon icon={faShare} />
 						</p>

@@ -49,4 +49,8 @@ class User extends Authenticatable {
     public function shoppingLists() {
         return $this->belongsToMany(ShoppingList::class);
     }
+
+    public function customProducts() {
+        return $this->hasMany(CustomProduct::class);
+    }
 }

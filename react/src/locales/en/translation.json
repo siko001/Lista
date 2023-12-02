@@ -69,5 +69,7 @@
 	"edit-product-header": "You're editing",
 	"unit&quantity-grp": "Quantity & Unit",
 	"removed-product": "Product removed",
-	"addANewProduct": "Add a new product"
+	"addANewProduct": "Add a new product",
+	"delete-custom-item": "You're about to delete your product ",
+	"placeholder-example": "Search for a product"
 }

@@ -128,6 +128,9 @@ const Overlay = ({ closeOverlay, setMessage, setStatus, setLoading, addNewList, 
 				setTimeout(() => {
 					setNewList(false);
 				}, 100);
+				setTimeout(() => {
+					setNewListB(false);
+				}, 8000);
 
 				return setTimeout(() => {
 					setStatus(200);

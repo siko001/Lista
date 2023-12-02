@@ -110,6 +110,7 @@ const ContentContainer = styled.div`
 
 const ProductEditOverlay = ({ setOpenEditProduct, productToEdit, item, listId, updateList }) => {
 	const product = productToEdit;
+	console.log(product);
 	const [formData, setFormData] = useState({
 		nameEN: product.name['en'],
 		nameMT: product.name['mt'],
@@ -137,64 +138,65 @@ const ProductEditOverlay = ({ setOpenEditProduct, productToEdit, item, listId, u
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
+		{
+			// Retrieve the existing product from localStorage
+			const allProductsList = JSON.parse(localStorage.getItem('allProductsInList' + listId));
+			const toBuyList = JSON.parse(localStorage.getItem('toBuyProductsInList' + listId));
 
-		// Retrieve the existing product from localStorage
-		const allProductsList = JSON.parse(localStorage.getItem('allProductsInList' + listId));
-		const toBuyList = JSON.parse(localStorage.getItem('toBuyProductsInList' + listId));
+			const productIndex = allProductsList.findIndex((p) => p.uniqueKey === productToEdit.uniqueKey);
+			const productIndexToBuy = toBuyList.findIndex((p) => p.uniqueKey === productToEdit.uniqueKey);
 
-		const productIndex = allProductsList.findIndex((p) => p.uniqueKey === productToEdit.uniqueKey);
-		const productIndexToBuy = toBuyList.findIndex((p) => p.uniqueKey === productToEdit.uniqueKey);
+			if (productIndexToBuy !== -1) {
+				// Clone the existing product to avoid mutating the original array
+				const updatedProduct = { ...toBuyList[productIndexToBuy] };
 
-		if (productIndexToBuy !== -1) {
-			// Clone the existing product to avoid mutating the original array
-			const updatedProduct = { ...toBuyList[productIndexToBuy] };
+				// Update specific details with the form data
+				updatedProduct.name['en'] = formData.nameEN || updatedProduct.nameEN;
+				updatedProduct.name['mt'] = formData.nameMT || updatedProduct.nameMT;
+				updatedProduct.category['en'] = formData.categoryEN || updatedProduct.categoryEN;
+				updatedProduct.category['mt'] = formData.categoryMT || updatedProduct.categoryMT;
+				updatedProduct.quantity = formData.quantity || updatedProduct.quantity;
+				updatedProduct.unit = formData.unit || updatedProduct.unit;
+				updatedProduct.price = formData.price || updatedProduct.price;
 
-			// Update specific details with the form data
-			updatedProduct.name['en'] = formData.nameEN || updatedProduct.nameEN;
-			updatedProduct.name['mt'] = formData.nameMT || updatedProduct.nameMT;
-			updatedProduct.category['en'] = formData.categoryEN || updatedProduct.categoryEN;
-			updatedProduct.category['mt'] = formData.categoryMT || updatedProduct.categoryMT;
-			updatedProduct.quantity = formData.quantity || updatedProduct.quantity;
-			updatedProduct.unit = formData.unit || updatedProduct.unit;
-			updatedProduct.price = formData.price || updatedProduct.price;
+				// Update the product in the allProductsList array
+				toBuyList[productIndexToBuy] = updatedProduct;
+				console.log(toBuyList);
+				// Save the updated allProductsList back to localStorage
+				localStorage.setItem('toBuyProductsInList' + listId, JSON.stringify(toBuyList));
+			}
 
-			// Update the product in the allProductsList array
-			toBuyList[productIndexToBuy] = updatedProduct;
-			console.log(toBuyList);
-			// Save the updated allProductsList back to localStorage
-			localStorage.setItem('toBuyProductsInList' + listId, JSON.stringify(toBuyList));
+			if (productIndex !== -1) {
+				// Clone the existing product to avoid mutating the original array
+				const updatedProduct = { ...allProductsList[productIndex] };
+
+				// Update specific details with the form data
+				// Update specific details with the form data
+				updatedProduct.name['en'] = formData.nameEN || updatedProduct.nameEN;
+				updatedProduct.name['mt'] = formData.nameMT || updatedProduct.nameMT;
+				updatedProduct.category['en'] = formData.categoryEN || updatedProduct.categoryEN;
+				updatedProduct.category['mt'] = formData.categoryMT || updatedProduct.categoryMT;
+				updatedProduct.quantity = formData.quantity || updatedProduct.quantity;
+				updatedProduct.unit = formData.unit || updatedProduct.unit;
+				updatedProduct.price = formData.price || updatedProduct.price;
+
+				// Update the product in the allProductsList array
+				allProductsList[productIndex] = updatedProduct;
+
+				// Save the updated allProductsList back to localStorage
+				localStorage.setItem('allProductsInList52', JSON.stringify(allProductsList));
+
+				console.log('Updated Product:', updatedProduct);
+			}
+			setOpenEditProduct((prev) => !prev);
+			updateList();
+			axiosClient
+				.put(`/update-product/${listId}/${product.uniqueKey}`, formData)
+				.then((res) => {})
+				.catch((err) => {
+					console.log(err);
+				});
 		}
-
-		if (productIndex !== -1) {
-			// Clone the existing product to avoid mutating the original array
-			const updatedProduct = { ...allProductsList[productIndex] };
-
-			// Update specific details with the form data
-			// Update specific details with the form data
-			updatedProduct.name['en'] = formData.nameEN || updatedProduct.nameEN;
-			updatedProduct.name['mt'] = formData.nameMT || updatedProduct.nameMT;
-			updatedProduct.category['en'] = formData.categoryEN || updatedProduct.categoryEN;
-			updatedProduct.category['mt'] = formData.categoryMT || updatedProduct.categoryMT;
-			updatedProduct.quantity = formData.quantity || updatedProduct.quantity;
-			updatedProduct.unit = formData.unit || updatedProduct.unit;
-			updatedProduct.price = formData.price || updatedProduct.price;
-
-			// Update the product in the allProductsList array
-			allProductsList[productIndex] = updatedProduct;
-
-			// Save the updated allProductsList back to localStorage
-			localStorage.setItem('allProductsInList52', JSON.stringify(allProductsList));
-
-			console.log('Updated Product:', updatedProduct);
-		}
-		setOpenEditProduct((prev) => !prev);
-		updateList();
-		axiosClient
-			.put(`/update-product/${listId}/${product.id}`, formData)
-			.then((res) => {})
-			.catch((err) => {
-				console.log(err);
-			});
 	};
 
 	return (

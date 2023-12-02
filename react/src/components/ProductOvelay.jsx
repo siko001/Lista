@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import PopularProducts from '../PopularProducts';
 import axiosClient from '../axiosClient';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faXmark } from '@fortawesome/free-solid-svg-icons';
+import { faXmark, faTrashCan } from '@fortawesome/free-solid-svg-icons';
 import { useLanguage } from '../contexts/LanguageContext';
-
+import DeleteCustomProduct from './DeleteCustomProduct';
+import ProductEditOverLay from './ProductEditOverlay';
 const Container = styled.div`
 	z-index: 999;
 	color: #fff;
@@ -16,12 +17,74 @@ const Container = styled.div`
 	max-width: 100vw;
 	position: fixed;
 
+	.top {
+		height: 20px;
+		position: absolute;
+		width: 85%;
+		&:hover {
+			cursor: pointer;
+		}
+	}
+	.bottom {
+		position: absolute;
+		margin-top: -20px;
+		width: 85%;
+		height: 20px;
+		&:hover {
+			cursor: pointer;
+		}
+	}
+
+	.custom-item {
+		width: 100%;
+
+		@media screen and (max-width: 650px) {
+			max-width: 150px;
+			overflow: hidden;
+		}
+		input {
+			border: 1px solid;
+			width: 20px;
+			height: 20px;
+		}
+	}
+
+	.center-div {
+		min-height: 370px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.custom-grp {
+		margin: 0 0 20px;
+		width: 100%;
+		input {
+			min-width: 60%;
+			max-width: 200px;
+			height: 35px;
+			padding-left: 10px;
+			outline: none;
+			@media screen and (max-width: 650px) {
+				max-width: 60%;
+			}
+		}
+		button {
+			height: 36px;
+			padding: 0.35rem 0.65rem;
+			background-color: #110ae3;
+			color: inherit;
+			font-size: 0.9rem;
+			font-weight: 600;
+			border-radius: 2px;
+		}
+	}
 	.name {
 		min-width: 200px;
 		overflow: hidden;
+
 		@media screen and (max-width: 750px) {
 			min-width: 170px;
-
 			wdith: 160px;
 			max-width: 160px;
 			font-size: 0.9rem;
@@ -38,6 +101,29 @@ const Container = styled.div`
 		align-items: center;
 		width: 100px;
 		padding-bottom: 6px;
+	}
+	.narrow {
+		justify-content: end;
+		gap: 20px;
+		align-items: end;
+		font-size: 1.2rem;
+	}
+	.trash {
+	}
+	.trash:hover {
+		color: red;
+	}
+
+	.remove {
+		display: grid;
+		place-items: center;
+		width: 25px;
+		height: 25px;
+		border-radius: 50%;
+	}
+	.remove:hover {
+		color: yellow;
+		border: 1px solid yellow;
 	}
 
 	nav {
@@ -157,6 +243,7 @@ const ProductTable = styled.div`
 const ProductRow = styled.div`
 	min-width: 100%;
 	border-radius: 10px;
+
 	.categoryRow {
 		background-color: rgba(0, 0, 0, 0.3);
 		border-radius: 18px;
@@ -165,10 +252,9 @@ const ProductRow = styled.div`
 
 const ProductCell = styled.div`
 	display: flex;
-	justify-content: space-between;
-	width: 98%;
 	padding: 10px 20px;
-
+	align-items: center;
+	justify-content: space-between;
 	@media screen and (max-width: 750px) {
 		padding: 10px 2px;
 	}
@@ -217,13 +303,27 @@ const ProductFilterButton = styled.option`
 	background-color: ${(props) => (props.active ? '#aaa' : 'transparent')};
 `;
 
-const ProductOverlay = ({ darkMode, setProduct, id, updateList, selectedProducts, setSelectedProducts, toBuyProducts }) => {
+const ProductOverlay = ({
+	darkMode,
+	setProduct,
+	id,
+	updateList,
+	selectedProducts,
+	setSelectedProducts,
+	toBuyProducts,
+	setOpenEditProduct,
+	setProductToEdit,
+}) => {
 	const [selected, setSelected] = useState('Popular Products');
 	const [selectedFilter, setSelectedFilter] = useState('random');
+	const [customItemNameValid, setCustomItemNameValid] = useState(false);
 	const [searchTerm, setSearchTerm] = useState('');
-
+	const userId = localStorage.getItem('ACCESS_TOKEN');
+	const [customProducts, setCustomProducts] = useState([]);
+	const [customProductToDelete, setCustomProductToDelete] = useState();
+	const englishNameRef = useRef();
+	const malteseNameRef = useRef();
 	const { language, translate, translateProductNames } = useLanguage();
-
 	const listId = id;
 
 	useEffect(() => {
@@ -231,7 +331,7 @@ const ProductOverlay = ({ darkMode, setProduct, id, updateList, selectedProducts
 		// console.log(toBuyProducts);
 		// const storedProducts = JSON.parse(localStorage.getItem(`allProductsInList` + id)) || [];
 		setSelectedProducts(selectedProducts);
-
+		getMyProducts();
 		document.body.style.overflow = 'hidden';
 		return () => {
 			document.body.style.overflow = 'unset';
@@ -299,6 +399,19 @@ const ProductOverlay = ({ darkMode, setProduct, id, updateList, selectedProducts
 		updateList();
 	};
 
+	const getMyProducts = () => {
+		const userId = localStorage.getItem('ACCESS_TOKEN');
+		axiosClient
+			.get(`/custom-products/${userId}`)
+			.then((res) => {
+				setCustomProducts(res.data);
+			})
+			.catch((err) => {
+				console.log(err);
+			})
+			.finally(() => {});
+	};
+
 	const handleUnselectProduct = (productId, listId) => {
 		// // Update local storage
 		const allLists = JSON.parse(localStorage.getItem(`shoppingLists`)) || [];
@@ -336,20 +449,89 @@ const ProductOverlay = ({ darkMode, setProduct, id, updateList, selectedProducts
 			.finally(() => {});
 	};
 
-	const RecentProducts = [
-		{
-			name: '',
-			category: '',
-			price: '',
-			unit: '',
-			Quantity: '',
-		},
-	];
+	//continue down here
+	const addProductRequest = (userId, name, lang) => {
+		if (lang == 'mt') {
+			const data = {
+				nameEn: '',
+				nameMt: name,
+			};
+
+			axiosClient
+				.post(`/create-myProduct/${userId}`, data)
+				.then((res) => {
+					console.log(res);
+
+					// update the local storage
+					getMyProducts();
+				})
+				.catch((err) => {
+					console.log(err);
+				})
+				.finally(() => {});
+		} else {
+			const data = {
+				nameEn: name,
+				nameMt: '',
+			};
+
+			axiosClient
+				.post(`/create-myProduct/${userId}`, data)
+				.then((res) => {
+					console.log(res);
+				})
+				.catch((err) => {
+					console.log(err);
+				})
+				.finally(() => {});
+		}
+	};
+
+	const handleDeleteCustomItem = (customItem, userId) => {
+		setCustomProductToDelete(customItem);
+	};
+
+	const handleAddEnglishProduct = (english) => {
+		const productName = englishNameRef.current.value;
+		addProductRequest(userId, productName, english);
+		englishNameRef.current.value = '';
+		setCustomItemNameValid(false);
+	};
+
+	const handleAddMalteseProduct = (maltese) => {
+		const productName = malteseNameRef.current.value;
+		addProductRequest(userId, productName, maltese);
+		malteseNameRef.current.value = '';
+		setCustomItemNameValid(false);
+	};
+
+	const handleAddEnglishCustomValidity = () => {
+		console.log(englishNameRef);
+		if (englishNameRef.current.value.length >= 3) {
+			setCustomItemNameValid(true);
+		} else {
+			setCustomItemNameValid(false);
+		}
+	};
+
+	const handleAddMalteseCustomValidity = () => {
+		if (malteseNameRef.current.value.length >= 3) {
+			setCustomItemNameValid(true);
+		} else {
+			setCustomItemNameValid(false);
+		}
+	};
+
+	const handleEditCustomItem = (item) => {
+		console.log(item.name);
+		setOpenEditProduct((prev) => !prev);
+		setProductToEdit(item);
+	};
 
 	return (
 		<Container style={{ backgroundColor: darkMode ? 'rgb(0,0,0)' : 'rgb(255,255,255)' }}>
 			<SearchInput
-				placeholder="Eg. Broccoli"
+				placeholder={translate('placeholder-example')}
 				style={{
 					backgroundColor: darkMode ? 'rgba(43, 43, 43, 1)' : '#bcbcbc',
 					color: darkMode ? 'rgba(255,255,255,1)' : 'rgba(0,0,0,1)',
@@ -358,7 +540,6 @@ const ProductOverlay = ({ darkMode, setProduct, id, updateList, selectedProducts
 				value={searchTerm}
 				onChange={(e) => setSearchTerm(e.target.value)}
 			></SearchInput>
-
 			<Main
 				style={{
 					backgroundColor: darkMode ? 'rgba(43, 43, 43, 1)' : '#bcbcbc',
@@ -438,7 +619,7 @@ const ProductOverlay = ({ darkMode, setProduct, id, updateList, selectedProducts
 
 						{/* If Selected is by Category */}
 						{selectedFilter === 'category' &&
-							Array.from(new Set([...PopularProducts, ...RecentProducts].map((product) => product.category[language]))).map(
+							Array.from(new Set([...PopularProducts].map((product) => product.category[language]))).map(
 								(category, categoryIndex) => (
 									<React.Fragment key={categoryIndex}>
 										<ProductRow className="categoryRow">
@@ -452,7 +633,7 @@ const ProductOverlay = ({ darkMode, setProduct, id, updateList, selectedProducts
 												{category}
 											</ProductCell>
 										</ProductRow>
-										{PopularProducts.concat(RecentProducts).map((product, productIndex) => {
+										{PopularProducts.map((product, productIndex) => {
 											if (
 												product.category[language] === category &&
 												product.name[language] &&
@@ -502,10 +683,132 @@ const ProductOverlay = ({ darkMode, setProduct, id, updateList, selectedProducts
 
 				{selected === 'My Products' && (
 					<ProductTable>
-						<input className="addProduct" placeholder={translate('addANewProduct')} />
+						{language == 'mt' && (
+							<div className="custom-grp">
+								<input
+									onChange={handleAddMalteseCustomValidity}
+									className="addProduct"
+									ref={malteseNameRef}
+									placeholder="Zied prodott gdid"
+								/>
+								<button
+									className={!customItemNameValid && 'lightest'}
+									onClick={() => {
+										handleAddMalteseProduct('mt');
+									}}
+									disabled={!customItemNameValid}
+								>
+									Zied il prodott
+								</button>
+							</div>
+						)}
+
+						{language == 'en' && (
+							<div className="custom-grp">
+								<input
+									onChange={handleAddEnglishCustomValidity}
+									className="addProduct"
+									ref={englishNameRef}
+									placeholder="Add a new product"
+								/>
+								<button
+									className={customItemNameValid == false ? 'disabled' : 'disabled'}
+									onClick={() => {
+										handleAddEnglishProduct('en');
+									}}
+									disabled={!customItemNameValid}
+								>
+									Add the product
+								</button>
+							</div>
+						)}
+
+						{/* Continue over here */}
+						{customProducts.length == 0 && <div className="center-div">No custom Products</div>}
+						{customProducts.length > 0 &&
+							customProducts
+								.filter((product) => {
+									const translatedName = product.name[language] || product.name.en;
+									return translatedName.toLowerCase().includes(searchTerm.toLowerCase());
+								})
+								.map((product) => (
+									<ProductRow className="myProductsRows" key={product.uniqueKey}>
+										<div
+											onClick={() => {
+												handleEditCustomItem(product);
+											}}
+											className="top"
+										></div>
+										<ProductCell>
+											<div className="grp-check custom-item boldest">
+												<input
+													className="radio"
+													onChange={() => handleSelect(product)}
+													type="checkbox"
+													checked={selectedProducts.some(
+														(selectedProduct) => selectedProduct.uniqueKey == product.uniqueKey
+													)}
+												/>
+												<p
+													onClick={() => {
+														handleEditCustomItem(product);
+													}}
+													className="name large"
+												>
+													{product.name[language] || product.name.en}
+												</p>
+											</div>
+											<p
+												onClick={() => {
+													handleEditCustomItem(product);
+												}}
+												className="category lighter"
+											>
+												{product.category == null ? '' : product.category.en}
+											</p>
+											<div className="grp narrow">
+												<p
+													className="trash"
+													onClick={() => {
+														handleDeleteCustomItem(product, userId);
+													}}
+												>
+													<FontAwesomeIcon icon={faTrashCan} />
+												</p>
+												<p
+													className="remove"
+													onClick={() => {
+														const sameProduct = toBuyProducts.some((p) => p.uniqueKey === product.uniqueKey);
+
+														if (sameProduct) {
+															handleUnselectProduct(product.uniqueKey, listId);
+														} else {
+															return;
+														}
+													}}
+												>
+													<FontAwesomeIcon icon={faXmark} />
+												</p>
+											</div>
+										</ProductCell>
+										<div
+											onClick={() => {
+												handleEditCustomItem(product);
+											}}
+											className="bottom"
+										></div>
+									</ProductRow>
+								))}
 					</ProductTable>
 				)}
 			</Main>
+			{customProductToDelete && (
+				<DeleteCustomProduct
+					setCustomProductToDelete={setCustomProductToDelete}
+					customProductToDelete={customProductToDelete}
+					getMyProducts={getMyProducts}
+				/>
+			)}
 		</Container>
 	);
 };

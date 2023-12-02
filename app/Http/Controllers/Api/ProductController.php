@@ -261,10 +261,28 @@ class ProductController extends Controller {
             'price' => 'numeric',
         ]);
 
-        $product = Product::where("list_id", $listId)->where("id", $productId)->first();
+        info($validateProduct);
+
+        $product = Product::where("uniqueKey", $productId)->where("list_id", $listId)->first();
+
         if ($list->shared == true) {
             event(new MarkAllProductReady($list));
         }
-        $product->update($validateProduct);
+        if ($product) {
+            // Update the product fields
+            $product->name = [
+                'en' => $request->input('nameEN'),
+                'mt' => $request->input('nameMT'),
+            ];
+            $product->category = [
+                'en' => $request->input('categoryEN'),
+                'mt' => $request->input('categoryMT'),
+            ];
+
+            $product->quantity = $request->input('quantity');
+            $product->price = $request->input('price');
+            $product->update();
+        }
     }
+
 }

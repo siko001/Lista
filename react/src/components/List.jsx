@@ -82,7 +82,7 @@ const Top = styled.div`
 	}
 
 	input {
-		background-color: transparent;
+		background-color: gray;
 		border: none;
 		outline: none;
 	}
@@ -105,11 +105,12 @@ const Top = styled.div`
 			justify-content: center;
 			align-items: center;
 			color: gray;
-			width: 30px;
-			height: 25px;
+			width: 35px;
+			height: 30px;
 			border-radius: 50%;
 		}
 		.settings:hover {
+			cursor: pointer;
 			background-color: #80808044;
 		}
 	}
@@ -130,7 +131,7 @@ const Bottom = styled.div`
 	position: relative;
 
 	.filler {
-		width: ${(props) => (props.percentage === NaN ? '0' : `${props.percentage}%`)};
+		width: ${(props) => (props.percentage == undefined ? '' : `${props.percentage}%`)};
 		height: 100%;
 		border-radius: 5px;
 		background-color: green;

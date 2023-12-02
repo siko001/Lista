@@ -6,11 +6,19 @@ use App\Http\Controllers\Api\ListController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\SharedLinkController;
+use App\Http\Controllers\Api\CustomProductController;
 
-Route::middleware(['auth:sanctum'])->group(function () {
-    // Define the routes that require authentication here
 
-});
+
+
+//Custom Products Routes
+Route::get("/custom-products/{userId}", [CustomProductController::class, "getAllUserCustomProducts"]);
+
+Route::delete("/delete-myProduct/{productId}/{userId}", [CustomProductController::class, "deleteCustomProduct"]);
+
+Route::put("/update-myProduct/{productId/{userId}", [CustomProductController::class, "updateCustomProduct"]);
+Route::post("/create-myProduct/{userId}", [CustomProductController::class, "createCustomProduct"]);
+
 
 
 // Sharing the List Routes
@@ -36,7 +44,7 @@ Route::post("list/copy/{id}/{userID}", [ListController::class, "copyList"]);
 Route::get("/{name}/{id}", [ListController::class, "viewTheList"]);
 
 
-//CRUD for the products
+//CRUD for the standard products
 Route::post("/add-product/{name}", [ProductController::class, "addProduct"]);
 Route::delete("remove-product/{productId}/{listId} ", [ProductController::class, "removeProduct"]);
 Route::delete("empty-list/{id}", [ProductController::class, "removeAllProducts"]);

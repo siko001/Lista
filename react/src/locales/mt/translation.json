@@ -68,5 +68,7 @@
 	"english": "Inglis",
 	"edit-product-header": "Qed t'editja",
 	"removed-product": "Prodott imnehhi",
-	"addANewProduct": "Zied prodott gdid"
+	"addANewProduct": "Zied prodott gdid",
+	"delete-custom-item": "Ha thassar il-prodott tieghek ",
+	"placeholder-example": "Fittex prodott"
 }

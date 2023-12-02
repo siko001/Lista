@@ -122,8 +122,11 @@ const ListSetting = ({
 					setStatus(null);
 					setMessage(null);
 				}, 1600);
-				return setTimeout(() => {
+				setTimeout(() => {
+					setNewListB(false);
 					setNewListId(false);
+				}, 5000);
+				return setTimeout(() => {
 					setNewList(false);
 				}, 300);
 			});

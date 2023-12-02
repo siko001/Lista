@@ -124,6 +124,11 @@ h4 {
 	position: relative;
 	animation: mela2 0.25s ease-in-out;
 }
+
+.disabled {
+	opacity: 0.5;
+}
+
 @keyframes mela {
 	from {
 		top: -150px;

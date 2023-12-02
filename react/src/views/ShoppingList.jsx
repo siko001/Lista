@@ -194,7 +194,7 @@ const Closebutton = styled.button`
 		border: 1px solid;
 	}
 `;
-const ShoppingList = () => {
+const ShoppingList = ({}) => {
 	//params for fast loading
 	const navigate = useNavigate();
 	const { id, listName } = useParams();
@@ -377,10 +377,6 @@ const ShoppingList = () => {
 
 	const editTitle = () => {
 		setIsEditingTitle(true);
-		const titleInput = inputRef.current;
-		setTimeout(() => {
-			titleInput.focus();
-		}, 200);
 	};
 
 	const saveTitle = (e) => {
@@ -474,6 +470,7 @@ const ShoppingList = () => {
 						setProduct={setProduct}
 						setSelectedProducts={setSelectedProducts}
 						setOpenEmptyAndDeleteListOverlay={setOpenEmptyAndDeleteListOverlay}
+						setMessage={setMessage}
 					/>
 				)}
 				<ListHeader style={{ backgroundColor: darkMode ? 'black' : 'white' }}>
@@ -609,7 +606,8 @@ const ShoppingList = () => {
 						setToBuyProducts={setToBuyProducts}
 						readyProducts={readyProducts}
 						setReadyProducts={setReadyProducts}
-						productToEdit={productToEdit}
+						setOpenEditProduct={setOpenEditProduct}
+						setProductToEdit={setProductToEdit}
 					/>
 				)}
 
