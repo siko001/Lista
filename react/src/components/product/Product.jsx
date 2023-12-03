@@ -1,11 +1,11 @@
 import React, { useContext, useEffect } from 'react';
 import styled from 'styled-components';
-import { useLanguage } from '../contexts/LanguageContext';
-import axiosClient from '../axiosClient';
+import { useLanguage } from '../../contexts/LanguageContext';
+import axiosClient from '../../axiosClient';
 import ReadyProduct from './ReadyProduct';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
-import { useDarkMode } from '../contexts/DarkModeContext';
+import { useDarkMode } from '../../contexts/DarkModeContext';
 import Echo from 'laravel-echo';
 
 const Container = styled.div`

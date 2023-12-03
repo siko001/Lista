@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { useLanguage } from '../contexts/LanguageContext';
+import { useLanguage } from '../../contexts/LanguageContext';
 
 const Container = styled.div`
 	padding: 50px 0;

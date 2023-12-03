@@ -45,7 +45,7 @@ Route::get("/{name}/{id}", [ListController::class, "viewTheList"]);
 
 
 //CRUD for the standard products
-Route::post("/add-product/{name}", [ProductController::class, "addProduct"]);
+Route::post("/add-product/{name}/{userId}", [ProductController::class, "addProduct"]);
 Route::delete("remove-product/{productId}/{listId} ", [ProductController::class, "removeProduct"]);
 Route::delete("empty-list/{id}", [ProductController::class, "removeAllProducts"]);
 Route::put("/update/product{id}/{listId}/{userId}", [ProductController::class, "markProductReady"]);

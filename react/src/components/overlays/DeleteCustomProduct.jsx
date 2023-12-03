@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
-import { useLanguage } from '../contexts/LanguageContext';
+import { useLanguage } from '../../contexts/LanguageContext';
 import { useNavigate } from 'react-router-dom';
-import axiosClient from '../axiosClient';
+import axiosClient from '../../axiosClient';
+import RemoveProductLoader from '../loaders/RemoveProductLoader';
 
 const Background = styled.div`
 	display: flex;
@@ -63,58 +64,58 @@ const InnerContainer = styled.div`
 	}
 `;
 
-//Make A Deleting List and Products Loader
-const DeleteListAndProductOverlay = ({ title, setOpenEmptyAndDeleteListOverlay, setEmptyList, listId, setEmptyAndDeleteList }) => {
-	const id = listId;
-	const navigate = useNavigate();
-	const { translate } = useLanguage();
-	const handleDeleteConfirmation = () => {
-		setEmptyAndDeleteList(true);
-		setOpenEmptyAndDeleteListOverlay((prev) => !prev);
-		// Update the local storage to empty
-		localStorage.removeItem(`allProductsInList${listId}`);
-		localStorage.removeItem(`readyProductsInList${listId}`);
-		localStorage.removeItem(`toBuyProductsInList${listId}`);
+const DeleteCustomProduct = ({ customProductToDelete, setCustomProductToDelete, getMyProducts }) => {
+	const { translate, language } = useLanguage();
+	const [productBeingRemove, setSroductBeingRemove] = useState(false);
+	const close = () => {
+		setCustomProductToDelete((prev) => !prev);
+	};
 
+	const handleDeleteItem = (customProductToDelete) => {
+		const { user_id, uniqueKey } = customProductToDelete;
+		setSroductBeingRemove(true);
 		axiosClient
-			.delete(`/delete/all-products/and-list${id}`, id)
+			.delete(`/delete-myProduct/${uniqueKey}/${user_id}`)
 			.then((res) => {
-				const homeUrl = '/';
-				navigate(homeUrl);
+				console.log(res);
+				setCustomProductToDelete((prev) => !prev);
 			})
-			.then((err) => {
-				console.log(err.message);
+			.catch((err) => {
+				console.log(err);
 			})
 			.finally(() => {
-				setEmptyAndDeleteList(false);
+				setSroductBeingRemove(false);
+				getMyProducts();
 			});
 	};
 
-	const close = () => {
-		setOpenEmptyAndDeleteListOverlay((prev) => !prev);
-	};
 	return (
 		<Background>
 			<Container>
 				<InnerContainer>
 					<h3 className="heading">
-						{translate('empty-and-delete-text')} <br></br>
-						{title} <br></br>
-						{translate('empty-and-delete-text-pt2')}
+						{translate('delete-custom-item')} <br></br>
+						{customProductToDelete.name[language]}
 					</h3>
 					<hr></hr>
 					<div className="group">
 						<button className="btn" onClick={close}>
 							{translate('cancel-btn')}
 						</button>
-						<button className="btn btn-main red-bg" onClick={handleDeleteConfirmation}>
-							{translate('delete-list-and-products-btn')}
+						<button
+							onClick={() => {
+								handleDeleteItem(customProductToDelete);
+							}}
+							className="btn btn-main red-bg"
+						>
+							{translate('delete-btn')}
 						</button>
 					</div>
 				</InnerContainer>
 			</Container>
+			{productBeingRemove && <RemoveProductLoader />}
 		</Background>
 	);
 };
 
-export default DeleteListAndProductOverlay;
+export default DeleteCustomProduct;

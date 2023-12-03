@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import axiosClient from '../axiosClient';
+import axiosClient from '../../axiosClient';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 

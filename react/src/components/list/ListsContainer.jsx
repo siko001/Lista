@@ -51,7 +51,7 @@ const ListContainer = ({
 	return (
 		<Container>
 			{reversedLists.map((list) => (
-				<div className="settingHook">
+				<div key={list.id} className="settingHook">
 					<List
 						key={list.id}
 						darkMode={darkMode}

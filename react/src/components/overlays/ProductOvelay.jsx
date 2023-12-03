@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
-import PopularProducts from '../PopularProducts';
-import axiosClient from '../axiosClient';
+import PopularProducts from '../../PopularProducts';
+import axiosClient from '../../axiosClient';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXmark, faTrashCan } from '@fortawesome/free-solid-svg-icons';
-import { useLanguage } from '../contexts/LanguageContext';
+import { useLanguage } from '../../contexts/LanguageContext';
 import DeleteCustomProduct from './DeleteCustomProduct';
-import ProductEditOverLay from './ProductEditOverlay';
+import GetListLoader from '../loaders/GetListLoader';
+
 const Container = styled.div`
 	z-index: 999;
 	color: #fff;
@@ -323,6 +324,7 @@ const ProductOverlay = ({
 	const [customProductToDelete, setCustomProductToDelete] = useState();
 	const englishNameRef = useRef();
 	const malteseNameRef = useRef();
+	const [customListLoading, setCustomListLoading] = useState(false);
 	const { language, translate, translateProductNames } = useLanguage();
 	const listId = id;
 
@@ -384,9 +386,10 @@ const ProductOverlay = ({
 
 		// Save the updated data back to local storage
 		localStorage.setItem(`shoppingLists`, JSON.stringify(updatedLists));
+		const userId = localStorage.getItem('ACCESS_TOKEN');
 
 		axiosClient
-			.post(`/add-product/${product.name[language]}`, [listId, product])
+			.post(`/add-product/${product.name[language]}/${userId}`, [listId, product])
 			.then((res) => {
 				console.log(res);
 			})
@@ -456,7 +459,7 @@ const ProductOverlay = ({
 				nameEn: '',
 				nameMt: name,
 			};
-
+			setCustomListLoading(true);
 			axiosClient
 				.post(`/create-myProduct/${userId}`, data)
 				.then((res) => {
@@ -468,22 +471,28 @@ const ProductOverlay = ({
 				.catch((err) => {
 					console.log(err);
 				})
-				.finally(() => {});
+				.finally(() => {
+					setCustomListLoading(false);
+				});
 		} else {
 			const data = {
 				nameEn: name,
 				nameMt: '',
 			};
+			setCustomListLoading(true);
 
 			axiosClient
 				.post(`/create-myProduct/${userId}`, data)
 				.then((res) => {
 					console.log(res);
+					getMyProducts();
 				})
 				.catch((err) => {
 					console.log(err);
 				})
-				.finally(() => {});
+				.finally(() => {
+					setCustomListLoading(false);
+				});
 		}
 	};
 
@@ -712,7 +721,7 @@ const ProductOverlay = ({
 									placeholder="Add a new product"
 								/>
 								<button
-									className={customItemNameValid == false ? 'disabled' : 'disabled'}
+									className={!customItemNameValid && 'lightest'}
 									onClick={() => {
 										handleAddEnglishProduct('en');
 									}}
@@ -740,6 +749,7 @@ const ProductOverlay = ({
 											className="top"
 										></div>
 										<ProductCell>
+											{customListLoading && <GetListLoader />}
 											<div className="grp-check custom-item boldest">
 												<input
 													className="radio"

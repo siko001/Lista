@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
-import { useLanguage } from '../contexts/LanguageContext';
-import { useDarkMode } from '../contexts/DarkModeContext';
+import { useLanguage } from '../../contexts/LanguageContext';
+import { useDarkMode } from '../../contexts/DarkModeContext';
 
 const SettingContainer = styled.div`
 	display: flex;
@@ -26,6 +26,9 @@ const SettingContainer = styled.div`
 		justify-content: space-around;
 		flex: 1;
 		padding: 17px 0;
+		&:hover {
+			cursor: pointer;
+		}
 	}
 	.toggle-lang {
 		position: relative;
@@ -39,6 +42,9 @@ const SettingContainer = styled.div`
 		justify-content: space-around;
 		flex: 1;
 		padding: 17px 0;
+		&:hover {
+			cursor: pointer;
+		}
 	}
 
 	.toggle:after,
@@ -118,13 +124,7 @@ const Setting = ({ onChangeDarkMode }) => {
 			<div className="setting-group">
 				<div className="setting-title">{translate('languague')}</div>
 
-				<input
-					type="checkbox"
-					id="langswitch"
-					className="checkbox"
-					onChange={handleSetLang} // Add onChange handler
-					checked={lang === 'mt'}
-				/>
+				<input type="checkbox" id="langswitch" className="checkbox" onChange={handleSetLang} checked={lang === 'mt'} />
 				<label htmlFor="langswitch" className="toggle-lang">
 					<p>En</p>
 					<p>Mt</p>

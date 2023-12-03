@@ -1,12 +1,12 @@
 import React, { useState, useRef, useEffect, useContext } from 'react';
 import styled, { css, keyframes } from 'styled-components';
-import ListSetting from './ListSetting';
+import ListSetting from '../UI/ListSetting';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faGears } from '@fortawesome/free-solid-svg-icons';
-import { useLanguage } from '../contexts/LanguageContext';
-import axiosClient from '../axiosClient';
+import { faGears, faSquarePen } from '@fortawesome/free-solid-svg-icons';
+import { useLanguage } from '../../contexts/LanguageContext';
+import axiosClient from '../../axiosClient';
 import { useNavigate } from 'react-router-dom';
-import { useProductCount } from '../contexts/ProductCountContext';
+import { useProductCount } from '../../contexts/ProductCountContext';
 
 const Container = styled.div`
 	position: relative;
@@ -73,6 +73,13 @@ const Top = styled.div`
 	justify-content: space-between;
 	align-items: center;
 
+	.inputOverlay {
+		display: grid;
+		place-items: center;
+		min-height: 20px;
+		display: flex;
+	}
+
 	.left {
 		font-weight: 700;
 		font-size: 1.2rem;
@@ -82,11 +89,20 @@ const Top = styled.div`
 	}
 
 	input {
-		background-color: gray;
+		background-color: transparent;
 		border: none;
 		outline: none;
+		width: 100%;
+		height: 100%;
 	}
 
+	.inputLength {
+		display: grid;
+		place-items: center;
+		min-width: 25px;
+		max-width: 40px;
+		font-size: 8px;
+	}
 	.right {
 		margin-right: 15px;
 		width: 60px;
@@ -164,13 +180,17 @@ const List = ({
 	setNewListB,
 	setShare,
 }) => {
-	const percentage = (totalReadyProduct / totalProducts) * 100;
+	let percentage = (totalReadyProduct / totalProducts) * 100;
+	percentage = isNaN(percentage) ? 0 : percentage;
 	const [title, setTitle] = useState(name);
 	const [isEditingTitle, setIsEditingTitle] = useState(false);
 	const [settingPageOpen, setSettingPageOpen] = useState(false);
 	const inputRef = useRef(null);
 	const { translate } = useLanguage();
 	const navigate = useNavigate();
+	const [hoverBorderColor, setHoverBorderColor] = useState();
+	const maxNameLength = 20;
+	const [nameLength, setNameLength] = useState('');
 
 	const titleReplacment = 'list' + ' ' + listID;
 
@@ -185,7 +205,7 @@ const List = ({
 	};
 
 	const saveTitle = (e) => {
-		const newTitle = e.target.value.slice(0, 25);
+		const newTitle = e.target.value.slice(0, 20);
 		const id = listID;
 
 		axiosClient
@@ -243,6 +263,17 @@ const List = ({
 		navigate(listUrl);
 	};
 
+	const changeNumber = () => {
+		setNameLength(inputRef.current.value.length);
+	};
+
+	const lightBorderUp = () => {
+		setHoverBorderColor('2px solid blue');
+	};
+	const removeColor = () => {
+		setHoverBorderColor('');
+	};
+
 	return (
 		<>
 			{settingPageOpen && (
@@ -268,32 +299,47 @@ const List = ({
 			<Container
 				style={{
 					backgroundColor: darkMode ? '#161616' : '#fff',
-					border:
-						newListB && newListId == listID ? '2px solid green' : listAboutToDelete && deleteID == listID ? '2px solid red' : '',
+					border: hoverBorderColor
+						? hoverBorderColor
+						: newListB && newListId == listID
+						? '2px solid green'
+						: listAboutToDelete && deleteID == listID
+						? '2px solid red'
+						: '',
 					opacity: listAboutToDelete && deleteID == listID ? '0' : newList && newListId == listID ? '1' : '',
 					transition: 'opacity 1s, top 2s, transform 0.5s ',
 					top: listAboutToDelete && deleteID == listID ? '200px' : newList && newListId == listID ? '-100px' : '0',
 					transitionDelay: listAboutToDelete && deleteID === listID ? '1s' : newList && newListId == listID ? '1s' : '',
 				}}
 			>
-				<div onClick={handleOpenList} className="leftSpace"></div>
+				<div onClick={handleOpenList} onMouseEnter={lightBorderUp} onMouseLeave={removeColor} className="leftSpace"></div>
 				<Content>
-					<div onClick={handleOpenList} className="aboveSpace"></div>
+					<div onClick={handleOpenList} onMouseEnter={lightBorderUp} onMouseLeave={removeColor} className="aboveSpace"></div>
 					<Top>
 						<div className="left">
 							{!isEditingTitle ? (
 								<p onClick={editTitle}>{title || titleReplacment} </p>
 							) : (
-								<input
-									style={{ color: darkMode ? '#fff' : '#000' }}
-									maxLength={20}
-									onBlur={saveTitle}
-									defaultValue={title}
-									ref={inputRef}
-								/>
+								<div
+									className="inputOverlay"
+									style={{
+										backgroundColor: darkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
+									}}
+								>
+									<input
+										style={{ color: darkMode ? '#fff' : '#000' }}
+										maxLength={20}
+										onBlur={saveTitle}
+										defaultValue={title}
+										ref={inputRef}
+										onChange={changeNumber}
+									/>
+									<FontAwesomeIcon style={{ height: '100%', width: '20px' }} icon={faSquarePen} />
+									<p className="inputLength">{nameLength + ' / ' + maxNameLength}</p>
+								</div>
 							)}
 						</div>
-						<div onClick={handleOpenList} className="center"></div>
+						<div onClick={handleOpenList} onMouseEnter={lightBorderUp} onMouseLeave={removeColor} className="center"></div>
 						<div className="right">
 							<div className="quantity">
 								{totalReadyProduct}/{totalProducts}
@@ -304,12 +350,12 @@ const List = ({
 						</div>
 					</Top>
 
-					<Bottom percentage={percentage}>
+					<Bottom onClick={handleOpenList} onMouseEnter={lightBorderUp} onMouseLeave={removeColor} percentage={percentage}>
 						<div className="filler"></div>
 					</Bottom>
-					<div onClick={handleOpenList} className="underbottom"></div>
+					<div onClick={handleOpenList} onMouseEnter={lightBorderUp} onMouseLeave={removeColor} className="underbottom"></div>
 				</Content>
-				<div onClick={handleOpenList} className="rightSpace"></div>
+				<div onClick={handleOpenList} onMouseEnter={lightBorderUp} onMouseLeave={removeColor} className="rightSpace"></div>
 			</Container>
 		</>
 	);

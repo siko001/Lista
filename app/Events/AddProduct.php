@@ -15,10 +15,14 @@ class AddProduct implements ShouldBroadcast {
 
     public $product;
     public $list;
+    public $productId;
+    public $userId;
 
-    public function __construct($product, $list) {
+    public function __construct($productId, $userId, $product, $list) {
         $this->product = $product;
         $this->list = $list;
+        $this->productId = $productId;
+        $this->userId = $userId;
     }
 
     /**

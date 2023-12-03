@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import { useLanguage } from '../contexts/LanguageContext';
+
+import { useLanguage } from '../../contexts/LanguageContext';
 
 const Container = styled.div`
 	position: fixed;
@@ -41,12 +42,12 @@ const Container = styled.div`
 	}
 `;
 
-const EmptyAndDeleteListLoader = () => {
+const RemoveProductLoader = () => {
 	return (
 		<Container>
-			<div className="loader">Removing products and deleting list</div>
+			<div className="loader">Removing Product..</div>
 		</Container>
 	);
 };
 
-export default EmptyAndDeleteListLoader;
+export default RemoveProductLoader;

@@ -1,8 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import { useLanguage } from '../contexts/LanguageContext';
-import { useNavigate } from 'react-router-dom';
-import axiosClient from '../axiosClient';
+import { useLanguage } from '../../contexts/LanguageContext';
+import axiosClient from '../../axiosClient';
 
 const Background = styled.div`
 	display: flex;
@@ -63,49 +62,59 @@ const InnerContainer = styled.div`
 	}
 `;
 
-const DeleteCustomProduct = ({ customProductToDelete, setCustomProductToDelete, getMyProducts }) => {
-	const { translate, language } = useLanguage();
-	const close = () => {
-		setCustomProductToDelete((prev) => !prev);
-	};
+const EmptyListOverlay = ({ title, setOpenEmptyListOverLay, setEmptyList, listId, updateList }) => {
+	const storedLanguage = localStorage.getItem('selectedLanguage');
+	const { translate } = useLanguage();
+	const handleDeleteConfirmation = () => {
+		setEmptyList(true);
+		setOpenEmptyListOverLay((prev) => !prev);
 
-	const handleDeleteItem = (customProductToDelete) => {
-		const { user_id, uniqueKey } = customProductToDelete;
+		const allLists = JSON.parse(localStorage.getItem('shoppingLists'));
 
+		const correctList = allLists.find((list) => list.id == listId);
+		// Update the count
+		correctList.totalProductCount = 0;
+		correctList.totalReadyProducts = 0;
+		localStorage.setItem('shoppingLists', JSON.stringify(allLists));
+
+		// Update the local storage to empty
+		localStorage.setItem(`allProductsInList${listId}`, JSON.stringify(''));
+		localStorage.setItem(`readyProductsInList${listId}`, JSON.stringify(''));
+		localStorage.setItem(`toBuyProductsInList${listId}`, JSON.stringify(''));
+
+		//Empty the Db
 		axiosClient
-			.delete(`/delete-myProduct/${uniqueKey}/${user_id}`)
+			.delete(`empty-list/${listId}`, listId)
 			.then((res) => {
 				console.log(res);
-				setCustomProductToDelete((prev) => !prev);
+				updateList();
 			})
 			.catch((err) => {
 				console.log(err);
 			})
 			.finally(() => {
-				getMyProducts();
+				setEmptyList((prev) => !prev);
 			});
 	};
 
+	const close = () => {
+		setOpenEmptyListOverLay((prev) => !prev);
+	};
 	return (
 		<Background>
 			<Container>
 				<InnerContainer>
 					<h3 className="heading">
-						{translate('delete-custom-item')} <br></br>
-						{customProductToDelete.name[language]}
+						{translate('empty-list-overlay')} <br></br> {title} <br></br>
+						{storedLanguage == 'en' && translate('empty-listP2-overlay')}
 					</h3>
 					<hr></hr>
 					<div className="group">
 						<button className="btn" onClick={close}>
 							{translate('cancel-btn')}
 						</button>
-						<button
-							onClick={() => {
-								handleDeleteItem(customProductToDelete);
-							}}
-							className="btn btn-main red-bg"
-						>
-							{translate('delete-btn')}
+						<button className="btn btn-main red-bg" onClick={handleDeleteConfirmation}>
+							{translate('empty-list-btn')}
 						</button>
 					</div>
 				</InnerContainer>
@@ -114,4 +123,4 @@ const DeleteCustomProduct = ({ customProductToDelete, setCustomProductToDelete, 
 	);
 };
 
-export default DeleteCustomProduct;
+export default EmptyListOverlay;

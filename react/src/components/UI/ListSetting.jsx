@@ -2,8 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPenSquare, faShare, faClipboard, faTrash, faXmark } from '@fortawesome/free-solid-svg-icons';
-import { useLanguage } from '../contexts/LanguageContext';
-import axiosClient from '../axiosClient';
+import { useLanguage } from '../../contexts/LanguageContext';
+import axiosClient from '../../axiosClient';
 
 const Container = styled.div`
 	z-index: 9;

@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import Setting from '../components/Setting';
+import Setting from './Setting';
 
 const Container = styled.div`
 	padding: 0 10px;

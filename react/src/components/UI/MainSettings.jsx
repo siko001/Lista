@@ -2,9 +2,9 @@ import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPenSquare, faShare, faClipboard, faTrash, faXmark, faClipboardCheck, faSquareXmark } from '@fortawesome/free-solid-svg-icons';
-import { useLanguage } from '../contexts/LanguageContext';
-import axiosClient from '../axiosClient';
-import { useDarkMode } from '../contexts/DarkModeContext';
+import { useLanguage } from '../../contexts/LanguageContext';
+import axiosClient from '../../axiosClient';
+import { useDarkMode } from '../../contexts/DarkModeContext';
 import { useNavigate } from 'react-router-dom';
 
 const Container = styled.div`

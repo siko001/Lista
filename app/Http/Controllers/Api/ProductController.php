@@ -66,10 +66,11 @@ class ProductController extends Controller {
     }
 
     // Function to add a product to the to buy list
-    public function addProduct(Request $request) {
+    public function addProduct(Request $request, $productName, $userId) {
         $id = $request[0];
         $product = $request[1];
         $list = ShoppingList::where("id", $id)->first();
+        info($userId);
         $product["list_id"] = $list["id"];
 
         //if The Product is Found
@@ -77,7 +78,7 @@ class ProductController extends Controller {
 
             //if the product is shared
             if ($list->shared == true) {
-                event(new AddProduct($product, $list));
+                event(new AddProduct($product["list_id"], $userId, $product, $list));
             }
 
             $this->addToListTotalproduct($list);
@@ -252,14 +253,7 @@ class ProductController extends Controller {
 
     public function updateProductDetails($listId, $productId, Request  $request) {
         $list = ShoppingList::where("id", $listId)->first();
-        $validateProduct = $request->validate([
-            'nameEN' => 'required',
-            'nameMT' => 'required',
-            'categoryEN' => 'required',
-            'categoryMT' => 'required',
-            'quantity' => 'numeric',
-            'price' => 'numeric',
-        ]);
+        $validateProduct = $request->validate([]);
 
         info($validateProduct);
 
@@ -284,5 +278,4 @@ class ProductController extends Controller {
             $product->update();
         }
     }
-
 }

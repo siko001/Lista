@@ -5,24 +5,34 @@ import axiosClient from '../axiosClient';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useDarkMode } from '../contexts/DarkModeContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faGears, faMagnifyingGlass, faXmark } from '@fortawesome/free-solid-svg-icons';
-import Navbar from '../components/Navbar';
-import Notification from '../components/Notification';
-import Product from '../components/Product';
-import RemoveProductOverlay from '../components/RemoveProductOverlay';
-import ProductOvelay from '../components/ProductOvelay';
-import RemoveProductLoader from '../components/RemoveProductLoader';
-import MainSettings from '../components/MainSettings';
-import EmptyListOverlay from '../components/EmptyListOverlay';
-import ReadyProduct from '../components/ReadyProduct';
-import DeleteListAndProductOverlay from '../components/DeleteListAndProductOverlay';
-import EmptyAndDeleteListLoader from '../components/EmptyAndDeleteListLoader';
-import ProductEditOverlay from '../components/ProductEditOverlay';
+import { faGears, faMagnifyingGlass, faXmark, faSquarePen } from '@fortawesome/free-solid-svg-icons';
+import Navbar from '../components/UI/Navbar';
+import Notification from '../components/UI/Notification';
+import Product from '../components/product/Product';
+import RemoveProductOverlay from '../components/overlays/RemoveProductOverlay';
+import ProductOvelay from '../components/overlays/ProductOvelay';
+import RemoveProductLoader from '../components/loaders/RemoveProductLoader';
+import MainSettings from '../components/UI/MainSettings';
+import EmptyListOverlay from '../components/overlays/EmptyListOverlay';
+import ReadyProduct from '../components/product/ReadyProduct';
+import DeleteListAndProductOverlay from '../components/overlays/DeleteListAndProductOverlay';
+import EmptyAndDeleteListLoader from '../components/loaders/EmptyAndDeleteListLoader';
+import ProductEditOverlay from '../components/overlays/ProductEditOverlay';
 import Pusher from 'pusher-js';
 
 const Container = styled.div`
 	width: 100%;
 	min-height: 100vh;
+
+	.inputLength {
+		display: grid;
+		place-items: center;
+		min-width: 25px;
+		max-width: 40px;
+		font-size: 15px;
+		margin-left: 5px;
+		padding-right: 20px;
+	}
 `;
 
 const Main = styled.div`
@@ -76,7 +86,8 @@ const ListHeader = styled.div`
 			padding-left: 10px;
 			display: flex;
 			align-items: center;
-			height: 20px;
+			height: 30px;
+			justify-content: space-between;
 
 			.title {
 				max-width: 350px;
@@ -84,6 +95,12 @@ const ListHeader = styled.div`
 				@media screen and (max-width: 750px) {
 					max-width: 298px;
 				}
+			}
+			.hidden-grp {
+				display: flex;
+				opacity: 0;
+				height: 100%;
+				align-items: center;
 			}
 		}
 		.left:hover {
@@ -225,6 +242,7 @@ const ShoppingList = ({}) => {
 	const [removeProduct, setRemoveProduct] = useState(null);
 	const [removeProductConfirmation, setRemoveProductConfirmation] = useState(null);
 	const [productOverlay, setProductOverylay] = useState(false);
+	const [hidden, setHidden] = useState(true);
 
 	//state for the 3 types of products array
 	//products to see what products have been marked
@@ -245,8 +263,19 @@ const ShoppingList = ({}) => {
 	const [openEditProduct, setOpenEditProduct] = useState(false);
 	const [productToEdit, setProductToEdit] = useState({});
 
+	const maxNameLength = 20;
+	const [nameLength, setNameLength] = useState('');
+
+	const checkNameLength = () => {
+		setNameLength(inputRef.current.value.length);
+	};
+
 	const handleKeyPress = (e) => {
 		if (e.key === 'Enter') {
+			const listId = id;
+			if (inputRef.current.value == '') {
+				inputRef.current.value = 'list ' + listId;
+			}
 			saveTitle(e);
 		}
 	};
@@ -315,13 +344,27 @@ const ShoppingList = ({}) => {
 			channel.bind('MarkedAsReady', (data) => {
 				const thisUserId = localStorage.getItem('ACCESS_TOKEN');
 				const userThatMarkedId = data.userId;
+				console.log(data);
 
+				console.log('This user', thisUserId);
+				console.log('userMarked', userThatMarkedId);
 				if (thisUserId !== userThatMarkedId) {
 					fetchListData();
 				}
 			});
 
-			channel.bind('ProductAdded', () => {
+			channel.bind('ProductAdded', (data) => {
+				const thisUserId = localStorage.getItem('ACCESS_TOKEN');
+				const userThatMarkedId = data.userId;
+				console.log(data);
+
+				console.log('This user', thisUserId);
+				console.log('userMarked', userThatMarkedId);
+				if (thisUserId !== userThatMarkedId) {
+					fetchListData();
+				}
+			});
+			channel.bind('ProductDeleted', (data) => {
 				const thisUserId = localStorage.getItem('ACCESS_TOKEN');
 				const userThatMarkedId = data.userId;
 
@@ -329,7 +372,7 @@ const ShoppingList = ({}) => {
 					fetchListData();
 				}
 			});
-			channel.bind('ProductDeleted', () => {
+			channel.bind('ProductDeleted', (data) => {
 				const thisUserId = localStorage.getItem('ACCESS_TOKEN');
 				const userThatMarkedId = data.userId;
 
@@ -337,7 +380,7 @@ const ShoppingList = ({}) => {
 					fetchListData();
 				}
 			});
-			channel.bind('ProductDeleted', () => {
+			channel.bind('RemoveAllProducts', (data) => {
 				const thisUserId = localStorage.getItem('ACCESS_TOKEN');
 				const userThatMarkedId = data.userId;
 
@@ -345,15 +388,7 @@ const ShoppingList = ({}) => {
 					fetchListData();
 				}
 			});
-			channel.bind('RemoveAllProducts', () => {
-				const thisUserId = localStorage.getItem('ACCESS_TOKEN');
-				const userThatMarkedId = data.userId;
-
-				if (thisUserId !== userThatMarkedId) {
-					fetchListData();
-				}
-			});
-			channel.bind('MarkAllProductsReady', () => {
+			channel.bind('MarkAllProductsReady', (data) => {
 				const thisUserId = localStorage.getItem('ACCESS_TOKEN');
 				const userThatMarkedId = data.userId;
 
@@ -451,6 +486,12 @@ const ShoppingList = ({}) => {
 		(p) => p.name.mt.toLowerCase().includes(searchTerm.toLowerCase()) || p.name.en.toLowerCase().includes(searchTerm.toLowerCase())
 	);
 
+	const handleOn = () => {
+		setHidden((prev) => !prev);
+	};
+	const handleOff = () => {
+		setHidden((prev) => !prev);
+	};
 	return (
 		<Container className={darkMode ? 'darkMode' : 'lightMode'}>
 			<Navbar />
@@ -475,19 +516,29 @@ const ShoppingList = ({}) => {
 				)}
 				<ListHeader style={{ backgroundColor: darkMode ? 'black' : 'white' }}>
 					<div className="top">
-						<div onClick={editTitle} className="left">
+						<div onMouseEnter={handleOn} onMouseLeave={handleOff} onClick={editTitle} className="left">
 							{!isEditingTitle ? (
-								<p className="title" onClick={editTitle}>
-									{title}{' '}
-								</p>
+								<>
+									<p className="title" onClick={editTitle}>
+										{title}
+									</p>
+									<div className="hidden-grp" style={{ opacity: hidden ? '' : '0.7' }}>
+										<FontAwesomeIcon style={{ height: '80%' }} icon={faSquarePen} />
+									</div>
+								</>
 							) : (
-								<input
-									style={{ color: darkMode ? '#fff' : '#000' }}
-									maxLength={20}
-									onBlur={saveTitle}
-									defaultValue={title}
-									ref={inputRef}
-								/>
+								<>
+									<input
+										style={{ color: darkMode ? '#fff' : '#000' }}
+										maxLength={20}
+										onBlur={saveTitle}
+										defaultValue={title}
+										ref={inputRef}
+										onChange={checkNameLength}
+									/>
+									<FontAwesomeIcon style={{ height: '80%' }} icon={faSquarePen} />
+									<p className="inputLength">{nameLength + '/' + maxNameLength}</p>
+								</>
 							)}
 						</div>
 						<input

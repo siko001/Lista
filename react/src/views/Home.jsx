@@ -1,20 +1,20 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
 import styled from 'styled-components';
-import Overlay from '../components/Overlay';
-import CreateListLoader from '../components/CreateListLoader';
+import Overlay from '../components/overlays/Overlay';
+import CreateListLoader from '../components/loaders/CreateListLoader';
 import Broccoli from '../assets/broccoli-main-page.svg';
 import Veg2 from '../assets/Untitled design 3.png';
-import ListsContainer from '../components/ListsContainer';
-import Footer from '../components/footer';
+import ListsContainer from '../components/list/ListsContainer';
+import Footer from '../components/UI/Footer';
 import { useDarkMode } from '../contexts/DarkModeContext';
-import DeleteOverlay from '../components/deleteOverlay';
-import Notification from '../components/Notification';
-import Navbar from '../components/Navbar';
+import DeleteOverlay from '../components/overlays/DeleteOverlay';
+import Notification from '../components/UI/Notification';
+import Navbar from '../components/UI/Navbar';
 import axiosClient from '../axiosClient';
-import GetListLoader from '../components/GetListLoader';
-import DeleteListLoader from '../components/DeleteListLoader';
-import CopyListLoader from '../components/CopyListLoader';
+import GetListLoader from '../components/loaders/GetListLoader';
+import DeleteListLoader from '../components/loaders/DeleteListLoader';
+import CopyListLoader from '../components/loaders/CopyListLoader';
 import ShoppingList from './ShoppingList';
 import { ProductCountProvider } from '../contexts/ProductCountContext';
 import { useUser } from '../contexts/UserContext';
@@ -178,24 +178,27 @@ const Home = () => {
 		const shouldShowLoader = !storedLists || (Array.isArray(storedLists) && storedLists.length === 0);
 		setLoadingLists(shouldShowLoader);
 
-		axiosClient
-			.get('/get-lists/' + userId)
-			.then((res) => {
-				const apiLists = res.data;
+		userId
+			? axiosClient
+					.get('/get-lists/' + userId)
+					.then((res) => {
+						const apiLists = res.data;
 
-				// Update local storage only if the API response differs from storedLists
-				if (!arraysEqual(storedLists, apiLists)) {
-					localStorage.setItem('shoppingLists', JSON.stringify(apiLists));
-				}
-				setLists(apiLists);
-				setShoppingList(apiLists);
-			})
-			.catch((err) => {
-				console.log(err);
-			})
-			.finally(() => {
-				setLoadingLists(false);
-			});
+						// Update local storage only if the API response differs from storedLists
+						if (!arraysEqual(storedLists, apiLists)) {
+							localStorage.setItem('shoppingLists', JSON.stringify(apiLists));
+						}
+						setLists(apiLists);
+						setShoppingList(apiLists);
+					})
+					.catch((err) => {
+						console.log(err);
+					})
+					.finally(() => {
+						setLoadingLists(false);
+					})
+			: setLoadingLists(false);
+		// Triggeer the play for the guided tour over here
 	};
 
 	// Helper function to compare arrays

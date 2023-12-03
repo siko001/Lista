@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { useDarkMode } from '../contexts/DarkModeContext';
+import { useDarkMode } from '../../contexts/DarkModeContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
-import { useLanguage } from '../contexts/LanguageContext';
-import axiosClient from '../axiosClient';
+import { useLanguage } from '../../contexts/LanguageContext';
+import axiosClient from '../../axiosClient';
 
 const Container = styled.div`
 	width: 100vw;
@@ -212,31 +212,31 @@ const ProductEditOverlay = ({ setOpenEditProduct, productToEdit, item, listId, u
 					<div className="grp">
 						<div className="input-grp">
 							<label>{translate('english')}</label>
-							<input name="nameEN" value={formData.nameEN} onChange={handleChange} />
+							<input name="nameEN" value={formData.nameEN || ''} onChange={handleChange} />
 						</div>
 						<div className="input-grp">
 							<label>{translate('maltese')}</label>
-							<input name="nameMT" value={formData.nameMT} onChange={handleChange} />
+							<input name="nameMT" value={formData.nameMT || ''} onChange={handleChange} />
 						</div>
 					</div>
 					<h2>{translate('category-grp')}</h2>
 					<div className="grp">
 						<div className="input-grp">
 							<label>{translate('english')}</label>
-							<input name="categoryEN" value={formData.categoryEN} onChange={handleChange} />
+							<input name="categoryEN" value={formData.categoryEN || ''} onChange={handleChange} />
 						</div>
 						<div className="input-grp">
 							<label>{translate('maltese')}</label>
-							<input name="categoryMT" value={formData.categoryMT} onChange={handleChange} />
+							<input name="categoryMT" value={formData.categoryMT || ''} onChange={handleChange} />
 						</div>
 					</div>
 					<h2>{translate('unit&quantity-grp')}</h2>
 					<div className="grp">
 						<div className="input-grp">
-							<input name="quantity" value={formData.quantity} onChange={handleChange} />
+							<input name="quantity" value={formData.quantity || ''} onChange={handleChange} />
 						</div>
 						<div className="input-grp">
-							<select name="unit" value={formData.unit} onChange={handleChange}>
+							<select name="unit" value={formData.unit || ''} onChange={handleChange}>
 								<option value="KG">KG</option>
 								<option value="Grams">Grams</option>
 								<option value="L">L</option>
@@ -248,7 +248,7 @@ const ProductEditOverlay = ({ setOpenEditProduct, productToEdit, item, listId, u
 					<h2>{translate('price-grp')}</h2>
 					<div className="grp">
 						<div className="input-grp">
-							<input name="price" value={formData.price} onChange={handleChange} />
+							<input name="price" value={formData.price || ''} onChange={handleChange} />
 						</div>
 					</div>
 					<div className="grp">

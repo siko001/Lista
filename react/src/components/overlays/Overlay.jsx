@@ -1,7 +1,9 @@
 import React, { useRef, useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { useLanguage } from '../contexts/LanguageContext';
-import axiosClient from '../axiosClient';
+import { useLanguage } from '../../contexts/LanguageContext';
+import axiosClient from '../../axiosClient';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSquarePen } from '@fortawesome/free-solid-svg-icons';
 
 const Background = styled.div`
 	display: flex;
@@ -41,14 +43,35 @@ const InnerContainer = styled.div`
 		align-items: center;
 		gap: 20px;
 	}
-	input {
+
+	.inputOverlay {
 		border: 1px solid rgba(10, 107, 222, 0.4);
 		height: 40px;
-		width: 80%;
+		width: 100%;
 		border-radius: 6px;
 		background-color: rgba(0, 0, 0, 0.08);
-		outline: none;
 		padding: 0 10px;
+		width: 80%;
+		max-height: 60px;
+		min-height: 40px;
+		display: flex;
+		align-items: center;
+		color: rgba(0, 0, 0, 0.7);
+	}
+
+	.inputLength {
+		display: grid;
+		place-items: center;
+		min-width: 25px;
+		max-width: 40px;
+		font-size: 15px;
+		margin-left: 5px;
+	}
+	input {
+		background-color: transparent;
+		height: 100%;
+		width: 70%;
+		outline: none;
 	}
 	.group {
 		display: flex;
@@ -73,18 +96,21 @@ const Overlay = ({ closeOverlay, setMessage, setStatus, setLoading, addNewList, 
 	const { translate } = useLanguage();
 	const [notIsValid, setNotIsValid] = useState(null);
 	const [isEmpty, setIsEmpty] = useState(true);
-	const [inputValue, setInputValue] = useState('');
+	const maxNameLength = 20;
+	const [nameLength, setNameLength] = useState('');
 
 	const close = () => {
 		closeOverlay();
 	};
-
 	const validateInput = () => {
 		const inputText = listRef.current.value;
 		const trimmedInput = inputText.trim();
 
+		setNameLength(trimmedInput.length);
+
 		setIsEmpty(trimmedInput === '');
-		if (trimmedInput.length < 3) {
+
+		if (!(trimmedInput.length >= 3 && trimmedInput.length <= 20)) {
 			setNotIsValid(true);
 		} else {
 			setNotIsValid(false);
@@ -165,14 +191,18 @@ const Overlay = ({ closeOverlay, setMessage, setStatus, setLoading, addNewList, 
 						<h3 style={{ color: notIsValid == true ? ' red' : '' }} className="heading">
 							{translate('createListHeading')}
 						</h3>
-						<input
-							placeholder={translate('createListPlaceholder')}
-							type="text"
-							style={{ border: notIsValid ? '1px solid red' : '' }}
-							onChange={validateInput}
-							onKeyDown={handleKeyDown}
-							ref={listRef}
-						/>
+						<div style={{ border: notIsValid ? '1px solid red' : '' }} className="inputOverlay">
+							<input
+								placeholder={translate('createListPlaceholder')}
+								type="text"
+								onChange={validateInput}
+								onKeyDown={handleKeyDown}
+								ref={listRef}
+								maxLength={20}
+							/>
+							<FontAwesomeIcon style={{ height: '80%' }} icon={faSquarePen} />
+							<p className="inputLength">{nameLength + '/' + maxNameLength}</p>
+						</div>
 						<div className="group">
 							<button className="btn" onClick={close}>
 								{translate('cancel-btn')}
