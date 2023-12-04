@@ -179,19 +179,19 @@ const ListSetting = ({
 			{isVisible && (
 				<Container ref={ref} style={{ backgroundColor: darkMode ? '#161616' : '#fff', color: darkMode ? '#fff' : '#000' }}>
 					<ul>
-						<li className="setting-header">
+						<li className="setting-header setting-step-1">
 							<div className="setting-header__group" onClick={handleRename}>
 								<p>
 									<FontAwesomeIcon icon={faPenSquare} />
 								</p>
 								<p> {translate('rename')}</p>
 							</div>
-							<p className="close" onClick={handleCloseSettings}>
+							<p className="close list-exit" onClick={handleCloseSettings}>
 								<FontAwesomeIcon icon={faXmark} />
 							</p>
 						</li>
 						<li>
-							<div className="setting-header__group" onClick={() => handleCopy(listID)}>
+							<div className="setting-header__group setting-step-2" onClick={() => handleCopy(listID)}>
 								<p>
 									<FontAwesomeIcon icon={faClipboard} />
 								</p>
@@ -199,7 +199,7 @@ const ListSetting = ({
 							</div>
 						</li>
 						<li>
-							<div className="setting-header__group" onClick={handleShare}>
+							<div className="setting-header__group setting-step-3" onClick={handleShare}>
 								<p>
 									<FontAwesomeIcon icon={faShare} />
 								</p>
@@ -207,7 +207,7 @@ const ListSetting = ({
 							</div>
 						</li>
 						<li>
-							<div className="setting-header__group red" onClick={() => handleDelete(listID)}>
+							<div className="setting-header__group red setting-step-4" onClick={() => handleDelete(listID)}>
 								<p>
 									<FontAwesomeIcon icon={faTrash} />
 								</p>

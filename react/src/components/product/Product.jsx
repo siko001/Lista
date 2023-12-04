@@ -229,7 +229,7 @@ const Product = ({
 					onChange={() => {
 						handleMoveToReady(productKey, item);
 					}}
-					className="radio"
+					className="radio mark-ready"
 					type="checkbox"
 				/>
 				<div className="product_title bolder">{productName}</div>
@@ -239,7 +239,7 @@ const Product = ({
 				onClick={() => {
 					handleProductSelect(wholeProduct);
 				}}
-				className="center"
+				className="center product-edit"
 				style={{ borderColor: darkMode ? 'rgba(255,255,255,0.2)' : 'rgba(255,255,255,0.4)' }}
 			>
 				{quantity && quantity != 0 && (
@@ -272,7 +272,7 @@ const Product = ({
 					''
 				)}
 			</div>
-			<div onClick={() => handleRemoveProduct(productName, productKey)} className="removeProduct light largest">
+			<div onClick={() => handleRemoveProduct(productName, productKey)} className="removeProduct light largest remove-product-to-buy">
 				<FontAwesomeIcon icon={faXmark} />
 			</div>
 		</Container>

@@ -540,6 +540,7 @@ const ProductOverlay = ({
 	return (
 		<Container style={{ backgroundColor: darkMode ? 'rgb(0,0,0)' : 'rgb(255,255,255)' }}>
 			<SearchInput
+				className="search-product"
 				placeholder={translate('placeholder-example')}
 				style={{
 					backgroundColor: darkMode ? 'rgba(43, 43, 43, 1)' : '#bcbcbc',
@@ -557,7 +558,7 @@ const ProductOverlay = ({
 				}}
 			>
 				<nav>
-					<div className="grp">
+					<div className="grp nav-1">
 						<ProductFilter onChange={handleFilterChange}>
 							<ProductFilterButton value="random" active={selectedFilter.toString(selectedFilter === 'random')}>
 								{translate('random')}
@@ -572,7 +573,7 @@ const ProductOverlay = ({
 					{/* Navigation Between PreSet Items and User Items */}
 					{/* Preassigned */}
 					<div
-						className={`nav-item ${selected === 'Popular Products' ? 'selected' : ''}`}
+						className={`nav-item nav-2 ${selected === 'Popular Products' ? 'selected' : ''}`}
 						onClick={() => handleNavItemClick('Popular Products')}
 					>
 						{translate('popular-products')}
@@ -580,7 +581,7 @@ const ProductOverlay = ({
 
 					{/* User Inputted Items */}
 					<div
-						className={`nav-item ${selected === 'My Products' ? 'selected' : ''}`}
+						className={`nav-item nav-3 ${selected === 'My Products' ? 'selected' : ''}`}
 						onClick={() => handleNavItemClick('My Products')}
 					>
 						{translate('user-products')}
@@ -589,7 +590,7 @@ const ProductOverlay = ({
 
 				{selected === 'Popular Products' && (
 					// Category Is Set At Random
-					<ProductTable>
+					<ProductTable className="product-to-choose ">
 						{selectedFilter === 'random' &&
 							PopularProducts.filter((product) => {
 								const translatedName = product.name[language] || product.name.en;
@@ -599,7 +600,7 @@ const ProductOverlay = ({
 									<ProductCell>
 										<div className="grp-check boldest">
 											<input
-												className="radio"
+												className="radio product-selector  "
 												onChange={() => handleSelect(product)}
 												type="checkbox"
 												checked={selectedProducts.some(
@@ -610,6 +611,7 @@ const ProductOverlay = ({
 										</div>
 										<p className="category lighter">{product.category[language] || product.category.en}</p>
 										<p
+											className="product-deselector"
 											onClick={() => {
 												const sameProduct = toBuyProducts.some((p) => p.uniqueKey === product.uniqueKey);
 
@@ -691,12 +693,12 @@ const ProductOverlay = ({
 				)}
 
 				{selected === 'My Products' && (
-					<ProductTable>
+					<ProductTable className="custom-list">
 						{language == 'mt' && (
-							<div className="custom-grp">
+							<div className="custom-grp add-custom">
 								<input
 									onChange={handleAddMalteseCustomValidity}
-									className="addProduct"
+									className="addProduct "
 									ref={malteseNameRef}
 									placeholder="Zied prodott gdid"
 								/>
@@ -713,7 +715,7 @@ const ProductOverlay = ({
 						)}
 
 						{language == 'en' && (
-							<div className="custom-grp">
+							<div className="custom-grp add-custom">
 								<input
 									onChange={handleAddEnglishCustomValidity}
 									className="addProduct"
@@ -748,11 +750,11 @@ const ProductOverlay = ({
 											}}
 											className="top"
 										></div>
-										<ProductCell>
+										<ProductCell className="custom-edit">
 											{customListLoading && <GetListLoader />}
 											<div className="grp-check custom-item boldest">
 												<input
-													className="radio"
+													className="radio custom-select"
 													onChange={() => handleSelect(product)}
 													type="checkbox"
 													checked={selectedProducts.some(
@@ -772,13 +774,13 @@ const ProductOverlay = ({
 												onClick={() => {
 													handleEditCustomItem(product);
 												}}
-												className="category lighter"
+												className="category lighter "
 											>
 												{product.category == null ? '' : product.category.en}
 											</p>
 											<div className="grp narrow">
 												<p
-													className="trash"
+													className="trash custom-delete"
 													onClick={() => {
 														handleDeleteCustomItem(product, userId);
 													}}
@@ -786,7 +788,7 @@ const ProductOverlay = ({
 													<FontAwesomeIcon icon={faTrashCan} />
 												</p>
 												<p
-													className="remove"
+													className="remove custom-remove"
 													onClick={() => {
 														const sameProduct = toBuyProducts.some((p) => p.uniqueKey === product.uniqueKey);
 

@@ -70,5 +70,8 @@
 	"removed-product": "Prodott imnehhi",
 	"addANewProduct": "Zied prodott gdid",
 	"delete-custom-item": "Ha thassar il-prodott tieghek ",
-	"placeholder-example": "Fittex prodott"
+	"placeholder-example": "Fittex prodott",
+	"tutorial-play": "Ibda it-tutorja",
+	"register": "Ir-resgistra kont",
+	"login": "Ithol fil-kont"
 }

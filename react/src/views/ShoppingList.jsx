@@ -493,7 +493,7 @@ const ShoppingList = ({}) => {
 		setHidden((prev) => !prev);
 	};
 	return (
-		<Container className={darkMode ? 'darkMode' : 'lightMode'}>
+		<Container className={darkMode ? 'darkMode final' : 'lightMode final'}>
 			<Navbar />
 			<Main>
 				{openSettings && (
@@ -544,14 +544,14 @@ const ShoppingList = ({}) => {
 						<input
 							ref={searchRef}
 							style={{ color: darkMode ? '#fff' : '#000', display: searching ? 'block' : 'none' }}
-							className="search-input"
+							className="search-input "
 							placeholder="Search products..."
 							value={searchTerm}
 							onChange={(e) => setSearchTerm(e.target.value)}
 						/>
 						<div className="right">
 							{!searching && (
-								<div onClick={handleOpenSearch} className="search large">
+								<div onClick={handleOpenSearch} className="search large search-inList">
 									<FontAwesomeIcon icon={faMagnifyingGlass} />
 								</div>
 							)}
@@ -560,7 +560,7 @@ const ShoppingList = ({}) => {
 									<FontAwesomeIcon icon={faXmark} />
 								</div>
 							)}
-							<div onClick={handleOpenSettings} className="settings larger">
+							<div onClick={handleOpenSettings} className="settings larger settings-products">
 								<FontAwesomeIcon icon={faGears} />
 							</div>
 						</div>
@@ -569,7 +569,7 @@ const ShoppingList = ({}) => {
 					<div className="bottom"></div>
 				</ListHeader>
 
-				<ProductsContainer>
+				<ProductsContainer className="product-container">
 					{toBuyProducts.length > 0 ? (
 						toBuyProducts.length == 1 ? (
 							<h2 className="header blue">{translate('to-buy')}</h2>
@@ -719,7 +719,7 @@ const ShoppingList = ({}) => {
 					<div className="background" style={{ backgroundColor: darkMode ? '#1C1C1D' : '#f5f5f5' }}>
 						<Addbutton
 							onClick={handleAddProduct}
-							className="btn"
+							className="btn add-products-button"
 							style={{ color: darkMode ? 'white' : 'black', borderColor: darkMode ? 'white' : 'black' }}
 						>
 							{translate('product-add-btn')}
@@ -729,7 +729,7 @@ const ShoppingList = ({}) => {
 				{productOverlay && (
 					<Closebutton
 						onClick={handleCloseProductOverlay}
-						className="btn"
+						className="btn close-btn"
 						style={{ color: darkMode ? 'white' : 'black', borderColor: darkMode ? 'red' : 'red' }}
 					>
 						{translate('product-close-btn')}

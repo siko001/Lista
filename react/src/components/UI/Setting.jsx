@@ -2,12 +2,33 @@ import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { useDarkMode } from '../../contexts/DarkModeContext';
+import { Link } from 'react-router-dom';
+import { useTour } from '@reactour/tour';
 
 const SettingContainer = styled.div`
 	display: flex;
-	flex-direction: column;
+	justify-content: space-between;
 	gap: 10px;
 	padding: 10px;
+	@media screen and (max-width: 650px) {
+		flex-direction: column-reverse;
+	}
+
+	.half-setting {
+		gap: 10px;
+		display: flex;
+		flex-direction: column;
+	}
+	.right-group {
+		align-items: center;
+		@media screen and (max-width: 650px) {
+			flex-direction: column-reverse;
+			align-items: flex-start;
+		}
+	}
+	.link {
+		font-size: 1.4rem;
+	}
 	p {
 		font-family: Arial, Helvetica, sans-serif;
 		font-weight: bold;
@@ -100,12 +121,12 @@ const SettingContainer = styled.div`
 	}
 `;
 
-const Setting = ({ onChangeDarkMode }) => {
+const Setting = ({ onChangeDarkMode, steps }) => {
 	const { translate, changeLanguage } = useLanguage();
 	const { darkMode, setDarkMode } = useDarkMode();
 	const lang = useLanguage().language;
 	const isDarkMode = useDarkMode().darkMode;
-
+	const { setIsOpen } = useTour();
 	const handleSetLang = () => {
 		changeLanguage((language) => (language === 'en' ? 'mt' : 'en'));
 	};
@@ -121,36 +142,52 @@ const Setting = ({ onChangeDarkMode }) => {
 
 	return (
 		<SettingContainer>
-			<div className="setting-group">
-				<div className="setting-title">{translate('languague')}</div>
+			<div className="half-setting">
+				<div className="setting-group">
+					<div className="setting-title">{translate('languague')}</div>
 
-				<input type="checkbox" id="langswitch" className="checkbox" onChange={handleSetLang} checked={lang === 'mt'} />
-				<label htmlFor="langswitch" className="toggle-lang">
-					<p>En</p>
-					<p>Mt</p>
-				</label>
+					<input type="checkbox" id="langswitch" className="checkbox " onChange={handleSetLang} checked={lang === 'mt'} />
+					<label htmlFor="langswitch" className="toggle-lang second-step">
+						<p>En</p>
+						<p>Mt</p>
+					</label>
+				</div>
+				<div className="setting-group ">
+					<div className="setting-title ">{translate('darkMode')}</div>
+					<input
+						type="checkbox"
+						id="switch"
+						className="checkbox"
+						onChange={handleSetDarkMode} // Add onChange handler
+						checked={isDarkMode}
+					/>
+					<label htmlFor="switch" className="toggle  third-step">
+						<p>{translate('off')}</p>
+						<p>{translate('on')}</p>
+					</label>
+				</div>
+				<p style={{ color: darkMode ? 'white' : 'black' }}>
+					Verion 1.0 || Developer :
+					<a className="myLink" href="https://neilmallia.com" target="_blank">
+						Neil Mallia
+					</a>
+				</p>
 			</div>
-			<div className="setting-group">
-				<div className="setting-title">{translate('darkMode')}</div>
-				<input
-					type="checkbox"
-					id="switch"
-					className="checkbox"
-					onChange={handleSetDarkMode} // Add onChange handler
-					checked={isDarkMode}
-				/>
-
-				<label htmlFor="switch" className="toggle">
-					<p>{translate('off')}</p>
-					<p>{translate('on')}</p>
-				</label>
+			<div className="half-setting right-group fifth-step">
+				<button
+					className="btn tutorial-btn forth-step"
+					style={{ backgroundColor: 'green', fontWeight: 600 }}
+					onClick={() => setIsOpen(true)}
+				>
+					{translate('tutorial-play')}
+				</button>
+				<Link to="/register" className="link">
+					{translate('register')}
+				</Link>
+				<Link to="/login" className="link">
+					{translate('login')}
+				</Link>
 			</div>
-			<p style={{ color: darkMode ? 'white' : 'black' }}>
-				Verion 1.0 || Developer :{' '}
-				<a className="myLink" href="https://neilmallia.com" target="_blank">
-					Neil Mallia
-				</a>
-			</p>
 		</SettingContainer>
 	);
 };

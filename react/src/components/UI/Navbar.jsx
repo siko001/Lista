@@ -29,7 +29,7 @@ const Menu = styled.div`
 	cursor: pointer;
 `;
 
-const Navbar = () => {
+const Navbar = ({ steps }) => {
 	const [navbar, setNavbar] = useState(false);
 	const [click, setClick] = useState(false);
 
@@ -49,10 +49,10 @@ const Navbar = () => {
 					</Link>
 				</Lista>
 				<Menu className="largest">
-					<FontAwesomeIcon icon={faBars} onClick={handleOpenNav} />
+					<FontAwesomeIcon className="first-step" icon={faBars} onClick={handleOpenNav} />
 				</Menu>
 			</Nav>
-			{navbar && <NavMenu click={click} />}
+			{navbar && <NavMenu steps={steps} click={click} />}
 		</>
 	);
 };

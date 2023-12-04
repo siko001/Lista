@@ -89,6 +89,11 @@ const InnerContainer = styled.div`
 		font-size: 1.5rem;
 		color: #333;
 	}
+
+	.fifth-step {
+		position: absolute;
+		z-index: 0;
+	}
 `;
 
 const Overlay = ({ closeOverlay, setMessage, setStatus, setLoading, addNewList, fetchLists, setNewList, setNewListB }) => {
@@ -185,13 +190,13 @@ const Overlay = ({ closeOverlay, setMessage, setStatus, setLoading, addNewList, 
 
 	return (
 		<Background>
-			<Container>
+			<Container className="create-step">
 				<InnerContainer>
 					<form>
 						<h3 style={{ color: notIsValid == true ? ' red' : '' }} className="heading">
 							{translate('createListHeading')}
 						</h3>
-						<div style={{ border: notIsValid ? '1px solid red' : '' }} className="inputOverlay">
+						<div style={{ border: notIsValid ? '1px solid red' : '' }} className="inputOverlay ">
 							<input
 								placeholder={translate('createListPlaceholder')}
 								type="text"

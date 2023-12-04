@@ -7,6 +7,7 @@ import { useLanguage } from '../../contexts/LanguageContext';
 import axiosClient from '../../axiosClient';
 import { useNavigate } from 'react-router-dom';
 import { useProductCount } from '../../contexts/ProductCountContext';
+import { useTour } from '@reactour/tour';
 
 const Container = styled.div`
 	position: relative;
@@ -339,18 +340,29 @@ const List = ({
 								</div>
 							)}
 						</div>
-						<div onClick={handleOpenList} onMouseEnter={lightBorderUp} onMouseLeave={removeColor} className="center"></div>
+						<div
+							onClick={handleOpenList}
+							onMouseEnter={lightBorderUp}
+							onMouseLeave={removeColor}
+							className="center to-product-page"
+						></div>
 						<div className="right">
-							<div className="quantity">
+							<div className="quantity sixth-step-1">
 								{totalReadyProduct}/{totalProducts}
 							</div>
-							<div className="settings">
+							<div className="settings setting-step">
 								<FontAwesomeIcon icon={faGears} onClick={handelOpenSettingPage} />
 							</div>
 						</div>
 					</Top>
 
-					<Bottom onClick={handleOpenList} onMouseEnter={lightBorderUp} onMouseLeave={removeColor} percentage={percentage}>
+					<Bottom
+						className="sixth-step-2"
+						onClick={handleOpenList}
+						onMouseEnter={lightBorderUp}
+						onMouseLeave={removeColor}
+						percentage={percentage}
+					>
 						<div className="filler"></div>
 					</Bottom>
 					<div onClick={handleOpenList} onMouseEnter={lightBorderUp} onMouseLeave={removeColor} className="underbottom"></div>

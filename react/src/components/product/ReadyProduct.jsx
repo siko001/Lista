@@ -152,7 +152,7 @@ const ReadyProduct = ({ item, setRemoveProduct, setProductToRemove, setProductID
 					''
 				)}
 			</div>
-			<div onClick={() => handleRemoveProduct(item, item.uniqueKey)} className="removeProduct light largest">
+			<div onClick={() => handleRemoveProduct(item, item.uniqueKey)} className="removeProduct light largest remove-product-ready">
 				<FontAwesomeIcon icon={faXmark} />
 			</div>
 		</Container>

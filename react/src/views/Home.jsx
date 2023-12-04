@@ -18,6 +18,7 @@ import CopyListLoader from '../components/loaders/CopyListLoader';
 import ShoppingList from './ShoppingList';
 import { ProductCountProvider } from '../contexts/ProductCountContext';
 import { useUser } from '../contexts/UserContext';
+import { useTour } from '@reactour/tour';
 
 const Container = styled.div`
 	min-height: 100vh;
@@ -144,8 +145,13 @@ const Home = () => {
 	const [newListB, setNewListB] = useState(false);
 	const [newListId, setnewListId] = useState();
 	const [listAboutToDelete, setListAboutToDelete] = useState();
-
+	const { setIsOpen } = useTour();
 	useEffect(() => {
+		const returningUser = localStorage.getItem('ACCESS_TOKEN');
+		if (!returningUser) {
+			setIsOpen(true);
+		}
+
 		fetchLists();
 		startImageInterval();
 		return () => {
@@ -230,12 +236,13 @@ const Home = () => {
 	const updateList = () => {
 		fetchLists();
 	};
+	const steps = [];
 
 	return (
 		<ProductCountProvider>
 			<Container className={`${darkMode ? 'darkMode' : 'lightMode'} `}>
 				{/* NavBar Component */}
-				<Navbar />
+				<Navbar steps={steps} className="first-step" />
 
 				{/* Delete Components */}
 				{deleteOverlay && (
@@ -251,7 +258,6 @@ const Home = () => {
 					/>
 				)}
 				{deleteLoader && <DeleteListLoader />}
-
 				{/* Create List Components */}
 				{overlayOpen && (
 					<Overlay
@@ -263,10 +269,10 @@ const Home = () => {
 						fetchLists={fetchLists}
 						setNewList={setNewList}
 						setNewListB={setNewListB}
+						steps={steps}
 					/>
 				)}
 				{loading && <CreateListLoader />}
-
 				{/* Header | Dynamically change the heading dynamically according to number of lists*/}
 				<Header className="goDownSlow" style={{ justifyContent: shoppingList.length == 0 ? 'center' : '' }}>
 					{shoppingList.length != 0 ? (
@@ -274,15 +280,14 @@ const Home = () => {
 					) : (
 						''
 					)}
-					<button className="type1 " style={{ color: darkMode ? 'white' : 'black' }} onClick={handleOpenOverlay}>
+					<button className="type1 sixth-step" style={{ color: darkMode ? 'white' : 'black' }} onClick={handleOpenOverlay}>
 						{translate('addBtn')}
 					</button>
 				</Header>
-
 				{/* Main Content For Lists */}
-				<Main>
+				<Main className="generatedList-step">
 					{shoppingList.length === 0 ? (
-						<ImageContainer>
+						<ImageContainer className="primary-target">
 							<img src={images[currentImage]} alt="Random Vegetable" />
 						</ImageContainer>
 					) : (
@@ -317,7 +322,6 @@ const Home = () => {
 					{loadingLists && <GetListLoader />}
 					{copyLoader && <CopyListLoader />}
 				</Main>
-
 				{/* Footer / Sponsers | Components */}
 				<Footer />
 				{hiddenComp && <ShoppingList />}

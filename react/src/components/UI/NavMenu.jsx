@@ -9,13 +9,13 @@ const Container = styled.div`
 	border-bottom: 1px solid white;
 `;
 
-const NavMenu = ({ click }) => {
+const NavMenu = ({ click, steps }) => {
 	const handleDarkModeChange = (darkModeValue) => {
 		setDarkMode(darkModeValue);
 	};
 	return (
 		<Container className={`${click ? 'goSlowDown' : 'goSlowUp'}`}>
-			<Setting onChangeDarkMode={handleDarkModeChange} />
+			<Setting steps={steps} onChangeDarkMode={handleDarkModeChange} />
 		</Container>
 	);
 };

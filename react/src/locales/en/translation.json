@@ -71,5 +71,8 @@
 	"removed-product": "Product removed",
 	"addANewProduct": "Add a new product",
 	"delete-custom-item": "You're about to delete your product ",
-	"placeholder-example": "Search for a product"
+	"placeholder-example": "Search for a product",
+	"tutorial-play":"Play tutorial",
+	"register":"Register",
+	"login":"Login"
 }

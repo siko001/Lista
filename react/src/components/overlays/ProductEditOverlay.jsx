@@ -200,7 +200,7 @@ const ProductEditOverlay = ({ setOpenEditProduct, productToEdit, item, listId, u
 	};
 
 	return (
-		<Container style={{ backgroundColor: darkMode ? 'white' : 'black' }}>
+		<Container className="product-edit" style={{ backgroundColor: darkMode ? 'white' : 'black' }}>
 			<ContentContainer style={{ backgroundColor: darkMode ? 'black' : 'white' }}>
 				<span onClick={handleClose}>
 					<FontAwesomeIcon icon={faXmark} />
