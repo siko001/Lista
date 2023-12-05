@@ -3,8 +3,20 @@ import { useLanguage } from '../contexts/LanguageContext';
 import styled from 'styled-components';
 import Overlay from '../components/overlays/Overlay';
 import CreateListLoader from '../components/loaders/CreateListLoader';
-import Broccoli from '../assets/broccoli-main-page.svg';
 import Veg2 from '../assets/Untitled design 3.png';
+import Des7 from '../assets/des7.svg';
+import Des8 from '../assets/des8.svg';
+import Des9 from '../assets/des9.svg';
+import Des10 from '../assets/des10.svg';
+import Des1 from '../assets/des1.svg';
+import Des2 from '../assets/des2.svg';
+import Des3 from '../assets/des3.svg';
+import Des4 from '../assets/des4.svg';
+import Des5 from '../assets/des5.svg';
+import Des6 from '../assets/des6.svg';
+import Des11 from '../assets/des11.svg';
+import Des12 from '../assets/des12.svg';
+import Des13 from '../assets/des13.svg';
 import ListsContainer from '../components/list/ListsContainer';
 import Footer from '../components/UI/Footer';
 import { useDarkMode } from '../contexts/DarkModeContext';
@@ -109,7 +121,7 @@ const ImageContainer = styled.div`
 		max-height: 300px;
 	}
 `;
-const images = [Broccoli, Veg2];
+const images = [Veg2, Des7, Des8, Des9, Des10];
 const Home = () => {
 	// Settings/Gerneral state/Context
 	const { user, loginUser, logoutUser, registerUser } = useUser();
@@ -285,9 +297,9 @@ const Home = () => {
 					</button>
 				</Header>
 				{/* Main Content For Lists */}
-				<Main className="generatedList-step">
+				<Main className="generatedList-step primary-target">
 					{shoppingList.length === 0 ? (
-						<ImageContainer className="primary-target">
+						<ImageContainer>
 							<img src={images[currentImage]} alt="Random Vegetable" />
 						</ImageContainer>
 					) : (

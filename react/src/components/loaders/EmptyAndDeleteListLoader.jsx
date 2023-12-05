@@ -42,9 +42,10 @@ const Container = styled.div`
 `;
 
 const EmptyAndDeleteListLoader = () => {
+	const { language } = useLanguage();
 	return (
 		<Container>
-			<div className="loader">Removing products and deleting list</div>
+			<div className="loader">{translate('remove-and-delete-loader')}</div>
 		</Container>
 	);
 };

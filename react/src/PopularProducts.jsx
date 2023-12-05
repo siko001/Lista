@@ -2,8 +2,8 @@ const PopularProducts = [
 	{
 		uniqueKey: '1',
 		name: {
-			en: 'chicken nuggest',
-			mt: 'Imbarraz tat-tigieg',
+			en: 'chicken nuggets',
+			mt: 'nuggets tat-tigieg',
 		},
 		category: {
 			en: 'Poultry',
@@ -92,8 +92,8 @@ const PopularProducts = [
 	{
 		uniqueKey: '11',
 		name: {
-			en: 'chicken nuggest',
-			mt: 'Imbarraz tat-tigieg',
+			en: 'chicken nuggets',
+			mt: 'nuggets tat-tigieg',
 		},
 		category: {
 			en: 'Poultry',
@@ -182,8 +182,8 @@ const PopularProducts = [
 	{
 		uniqueKey: '12',
 		name: {
-			en: 'chicken nuggest',
-			mt: 'Imbarraz tat-tigieg',
+			en: 'chicken nuggets',
+			mt: 'nuggets tat-tigieg',
 		},
 		category: {
 			en: 'Poultry',
@@ -270,6 +270,5 @@ const PopularProducts = [
 		status: 'to buy',
 	},
 ];
-
 
 export default PopularProducts;

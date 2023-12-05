@@ -10,7 +10,7 @@ import { TourProvider } from '@reactour/tour';
 import englishSteps from './tutorials/englishSteps.jsx';
 import malteseSteps from './tutorials/malteseSteps.jsx';
 
-const lang = localStorage.getItem('selectedLanguage');
+const lang = localStorage.getItem('selectedLanguage') || 'en';
 if (lang == 'en') {
 	const steps = englishSteps;
 	ReactDOM.createRoot(document.getElementById('root')).render(

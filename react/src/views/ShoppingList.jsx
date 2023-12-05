@@ -19,6 +19,10 @@ import DeleteListAndProductOverlay from '../components/overlays/DeleteListAndPro
 import EmptyAndDeleteListLoader from '../components/loaders/EmptyAndDeleteListLoader';
 import ProductEditOverlay from '../components/overlays/ProductEditOverlay';
 import Pusher from 'pusher-js';
+import Des1 from '../assets/des1.svg';
+import Des3 from '../assets/des3.svg';
+import Des4 from '../assets/des4.svg';
+import Des5 from '../assets/des5.svg';
 
 const Container = styled.div`
 	width: 100%;
@@ -50,6 +54,18 @@ const Main = styled.div`
 		display: flex;
 		align-items: center;
 		justify-content: center;
+	}
+`;
+
+const ImageContainer = styled.div`
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+	z-index: 0;
+	img {
+		min-height: 300px;
+		max-height: 300px;
 	}
 `;
 
@@ -215,6 +231,8 @@ const ShoppingList = ({}) => {
 	//params for fast loading
 	const navigate = useNavigate();
 	const { id, listName } = useParams();
+	const intervalIdRef = useRef(null);
+
 	//theme
 	const { darkMode } = useDarkMode();
 	const { language, translate, translateProductNames } = useLanguage();
@@ -265,6 +283,17 @@ const ShoppingList = ({}) => {
 
 	const maxNameLength = 20;
 	const [nameLength, setNameLength] = useState('');
+	const [currentImage, setCurrentImage] = useState(0);
+
+	const images = [Des1, Des4, Des3, Des5];
+
+	const startImageInterval = () => {
+		const newIntervalId = setInterval(() => {
+			const newIndex = Math.floor(Math.random() * images.length);
+			setCurrentImage(newIndex);
+		}, 3000);
+		intervalIdRef.current = newIntervalId;
+	};
 
 	const checkNameLength = () => {
 		setNameLength(inputRef.current.value.length);
@@ -397,7 +426,6 @@ const ShoppingList = ({}) => {
 				}
 			});
 		}
-
 		const inputElement = inputRef.current;
 		if (isEditingTitle && inputElement) {
 			inputElement.focus();
@@ -408,6 +436,14 @@ const ShoppingList = ({}) => {
 		}
 		// Call updateList only when needed (e.g., when component mounts)
 		fetchListData();
+		startImageInterval();
+
+		return () => {
+			// Clear the interval when the component is unmounted
+			if (intervalIdRef.current) {
+				clearInterval(intervalIdRef.current);
+			}
+		};
 	}, [isEditingTitle]);
 
 	const editTitle = () => {
@@ -579,39 +615,44 @@ const ShoppingList = ({}) => {
 					) : (
 						''
 					)}
-					{toBuyProducts.length === 0 && readyProducts.length <= 0
-						? translate('please-add-product')
-						: toBuyProducts
-								.filter(
-									(p) =>
-										p.name.mt.toLowerCase().includes(searchTerm.toLowerCase()) ||
-										p.name.en.toLowerCase().includes(searchTerm.toLowerCase())
-								)
-								.map((p) => (
-									<Product
-										key={p.uniqueKey}
-										wholeProduct={p}
-										darkMode={darkMode}
-										productKey={p.uniqueKey}
-										setRemoveProduct={setRemoveProduct}
-										setProductToRemove={setProductToRemove}
-										productName={p.name[language]}
-										price={p.price}
-										quantity={p.quantity}
-										unit={p.unit}
-										setProductIDRemove={setProductIDRemove}
-										item={product}
-										listId={id}
-										handleRemoveFromToBuy={handleRemoveFromToBuy}
-										setReadyProducts={setReadyProducts}
-										setProduct={setProduct}
-										setToBuyProducts={setToBuyProducts}
-										setSelectedProducts={setSelectedProducts}
-										setOpenEditProduct={setOpenEditProduct}
-										setProductToEdit={setProductToEdit}
-										fetchListData={fetchListData}
-									/>
-								))}
+					{toBuyProducts.length === 0 && readyProducts.length <= 0 ? (
+						<ImageContainer>
+							<img src={images[currentImage]} alt="Random Vegetable" />
+							<h2 className="add-product bolder">{translate('please-add-product')}</h2>
+						</ImageContainer>
+					) : (
+						toBuyProducts
+							.filter(
+								(p) =>
+									p.name.mt.toLowerCase().includes(searchTerm.toLowerCase()) ||
+									p.name.en.toLowerCase().includes(searchTerm.toLowerCase())
+							)
+							.map((p) => (
+								<Product
+									key={p.uniqueKey}
+									wholeProduct={p}
+									darkMode={darkMode}
+									productKey={p.uniqueKey}
+									setRemoveProduct={setRemoveProduct}
+									setProductToRemove={setProductToRemove}
+									productName={p.name[language]}
+									price={p.price}
+									quantity={p.quantity}
+									unit={p.unit}
+									setProductIDRemove={setProductIDRemove}
+									item={product}
+									listId={id}
+									handleRemoveFromToBuy={handleRemoveFromToBuy}
+									setReadyProducts={setReadyProducts}
+									setProduct={setProduct}
+									setToBuyProducts={setToBuyProducts}
+									setSelectedProducts={setSelectedProducts}
+									setOpenEditProduct={setOpenEditProduct}
+									setProductToEdit={setProductToEdit}
+									fetchListData={fetchListData}
+								/>
+							))
+					)}
 					{searchTerm.trim() !== '' && toBuyProducts.length > 0 && matchToBuyProducts == 0 && (
 						<p>{translate('no-products-found-to-buy')}</p>
 					)}

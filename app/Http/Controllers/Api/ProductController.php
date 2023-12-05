@@ -253,9 +253,7 @@ class ProductController extends Controller {
 
     public function updateProductDetails($listId, $productId, Request  $request) {
         $list = ShoppingList::where("id", $listId)->first();
-        $validateProduct = $request->validate([]);
 
-        info($validateProduct);
 
         $product = Product::where("uniqueKey", $productId)->where("list_id", $listId)->first();
 

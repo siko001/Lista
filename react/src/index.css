@@ -129,6 +129,17 @@ h4 {
 	opacity: 0.5;
 }
 
+.btn-hover:hover {
+	opacity: 0.8;
+}
+.cancel-btn:hover {
+	border: 1px solid;
+	border-color: red;
+}
+.proceed-btn:hover {
+	border: 1px solid rgba(10, 107, 222, 1);
+}
+
 @keyframes mela {
 	from {
 		top: -150px;

@@ -7,6 +7,22 @@ import { faXmark, faTrashCan } from '@fortawesome/free-solid-svg-icons';
 import { useLanguage } from '../../contexts/LanguageContext';
 import DeleteCustomProduct from './DeleteCustomProduct';
 import GetListLoader from '../loaders/GetListLoader';
+import Des2 from '../../assets/des2.svg';
+import Des6 from '../../assets/des6.svg';
+import Des11 from '../../assets/des11.svg';
+import Des12 from '../../assets/des12.svg';
+
+const ImageContainer = styled.div`
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+	z-index: 0;
+	img {
+		min-height: 250px;
+		max-height: 250px;
+	}
+`;
 
 const Container = styled.div`
 	z-index: 999;
@@ -51,7 +67,7 @@ const Container = styled.div`
 	}
 
 	.center-div {
-		min-height: 370px;
+		min-height: 350px;
 		display: flex;
 		align-items: center;
 		justify-content: center;
@@ -328,14 +344,32 @@ const ProductOverlay = ({
 	const { language, translate, translateProductNames } = useLanguage();
 	const listId = id;
 
+	const intervalIdRef = useRef(null);
+	const [currentImage, setCurrentImage] = useState(0);
+
+	const images = [Des2, Des11, Des6, Des12];
+
+	const startImageInterval = () => {
+		const newIntervalId = setInterval(() => {
+			const newIndex = Math.floor(Math.random() * images.length);
+			setCurrentImage(newIndex);
+		}, 3000);
+		intervalIdRef.current = newIntervalId;
+	};
+
 	useEffect(() => {
 		// Load the list of selected products from local storage
 		// console.log(toBuyProducts);
 		// const storedProducts = JSON.parse(localStorage.getItem(`allProductsInList` + id)) || [];
 		setSelectedProducts(selectedProducts);
 		getMyProducts();
+		startImageInterval();
+
 		document.body.style.overflow = 'hidden';
 		return () => {
+			if (intervalIdRef.current) {
+				clearInterval(intervalIdRef.current);
+			}
 			document.body.style.overflow = 'unset';
 		};
 	}, []);
@@ -735,7 +769,15 @@ const ProductOverlay = ({
 						)}
 
 						{/* Continue over here */}
-						{customProducts.length == 0 && <div className="center-div">No custom Products</div>}
+						{customProducts.length == 0 && (
+							<div className="center-div">
+								<ImageContainer>
+									<img src={images[currentImage]} alt="Random Vegetable" />
+									<h2 className="add-product bolder">{translate('please-add-custom-product')}</h2>
+								</ImageContainer>
+								;
+							</div>
+						)}
 						{customProducts.length > 0 &&
 							customProducts
 								.filter((product) => {

@@ -72,7 +72,10 @@
 	"addANewProduct": "Add a new product",
 	"delete-custom-item": "You're about to delete your product ",
 	"placeholder-example": "Search for a product",
-	"tutorial-play":"Play tutorial",
-	"register":"Register",
-	"login":"Login"
+	"tutorial-play": "Play tutorial",
+	"register": "Register",
+	"login": "Login",
+	"remove-and-delete-loader": "Remove all products and deleting the list",
+	"copied-to-clipboared": "copied to clip-board",
+	"please-add-custom-product": "No custom products found"
 }

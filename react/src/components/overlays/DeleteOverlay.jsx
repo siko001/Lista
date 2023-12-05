@@ -121,10 +121,10 @@ const DeleteOverlay = ({ closeOverlay, setMessage, deleteID, setDeleteLoader, se
 					</h3>
 					<hr></hr>
 					<div className="group">
-						<button className="btn" onClick={close}>
+						<button className="btn proceed-btn btn-hover" onClick={close}>
 							{translate('cancel-btn')}
 						</button>
-						<button className="btn btn-main red-bg" onClick={handleDeleteConfirmation}>
+						<button className="btn btn-main red-bg cancel-btn btn-hover" onClick={handleDeleteConfirmation}>
 							{translate('delete-btn')}
 						</button>
 					</div>

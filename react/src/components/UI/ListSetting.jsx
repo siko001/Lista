@@ -162,7 +162,7 @@ const ListSetting = ({
 
 	const copyToClipBoard = (link) => {
 		navigator.clipboard.writeText(link).then(() => {
-			setMessage(`Copied to Clipboard ${link}`);
+			setMessage(`${translate("copied-to-clipboared")} ${link}`);
 		});
 	};
 

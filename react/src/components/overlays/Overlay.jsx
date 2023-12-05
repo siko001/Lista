@@ -56,6 +56,7 @@ const InnerContainer = styled.div`
 		min-height: 40px;
 		display: flex;
 		align-items: center;
+		justify-content: space-between;
 		color: rgba(0, 0, 0, 0.7);
 	}
 
@@ -70,7 +71,7 @@ const InnerContainer = styled.div`
 	input {
 		background-color: transparent;
 		height: 100%;
-		width: 70%;
+		width: 100%;
 		outline: none;
 	}
 	.group {
@@ -94,6 +95,7 @@ const InnerContainer = styled.div`
 		position: absolute;
 		z-index: 0;
 	}
+
 `;
 
 const Overlay = ({ closeOverlay, setMessage, setStatus, setLoading, addNewList, fetchLists, setNewList, setNewListB }) => {
@@ -209,11 +211,11 @@ const Overlay = ({ closeOverlay, setMessage, setStatus, setLoading, addNewList, 
 							<p className="inputLength">{nameLength + '/' + maxNameLength}</p>
 						</div>
 						<div className="group">
-							<button className="btn" onClick={close}>
+							<button className="btn btn-hover cancel-btn" onClick={close}>
 								{translate('cancel-btn')}
 							</button>
 							<button
-								className={notIsValid ? 'btn btn-main lightest' : 'btn btn-main'}
+								className={notIsValid ? 'btn btn-main lightest' : 'btn btn-main btn-hover proceed-btn'}
 								disabled={notIsValid}
 								onClick={handleCreateList}
 							>

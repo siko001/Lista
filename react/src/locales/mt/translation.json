@@ -73,5 +73,8 @@
 	"placeholder-example": "Fittex prodott",
 	"tutorial-play": "Ibda it-tutorja",
 	"register": "Ir-resgistra kont",
-	"login": "Ithol fil-kont"
+	"login": "Ithol fil-kont",
+	"remove-and-delete-loader": "Qed inhassru il-prodotti u il-lista",
+	"copied-to-clipboared": "kkupjata fil klipboard",
+	"please-add-custom-product": "Ikrea prodott min tieghek"
 }

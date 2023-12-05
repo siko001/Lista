@@ -151,6 +151,7 @@ const Product = ({
 	const { translate } = useLanguage();
 	const { darkMode, setDarkMode } = useDarkMode();
 
+
 	const handleRemoveProduct = (product, id) => {
 		setProductToRemove(product);
 		setProductIDRemove(id);
