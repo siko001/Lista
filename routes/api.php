@@ -10,7 +10,7 @@ use App\Http\Controllers\Api\CustomProductController;
 
 
 
-//Route to edit the custom product in the custom product table
+//Route to edit the custom product in the custom product tableeeeee
 Route::put("/update-custom-product/{productId}/{userId}", [CustomProductController::class, "UpdateTheCustomProduct"]);
 
 //Custom Products Routes
