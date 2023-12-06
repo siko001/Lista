@@ -32,7 +32,6 @@ class CustomProductController extends Controller {
     }
 
     private function checkForCustomProduct($productId) {
-        info($productId);
         $customProduct = CustomProduct::where("uniqueKey", $productId)->first();
         if (!$customProduct) {
             return response(["message" => "No Product Was Found"], 404);
@@ -56,8 +55,7 @@ class CustomProductController extends Controller {
         $newproduct =  $request;
         if ($newproduct) {
             if ($request->input("nameMt")) {
-                info("creating maltese");
-                info($newproduct);
+
                 CustomProduct::create([
                     "name" => ["en" => "", "mt" => $newproduct["nameMt"]],
                     "category" => ["en" => "", "mt" => ""],
@@ -66,8 +64,8 @@ class CustomProductController extends Controller {
                 ]);
                 return response(["message" => "product created"], 200);
             } else {
-                info("creating english");
-                info($request);
+
+
                 CustomProduct::create([
                     "name" => ["en" => $newproduct["nameEn"], "mt" => ""],
                     "category" => ["en" => "", "mt" => ""],
@@ -85,7 +83,8 @@ class CustomProductController extends Controller {
         $this->checkForUser($userId);
         //if a product is found the return of this function will the product
         $customProductToDelete = $this->checkForCustomProduct($productId);
-        info($customProductToDelete);
+
+
         $customProductToDelete->delete();
         return response(["message" => "Custom Product Was Deleted Successfully"], 200);
     }
@@ -93,27 +92,38 @@ class CustomProductController extends Controller {
 
 
     //continue this function over here 
-    public function updateCustomProduct($productId, $userId, Request $request) {
+    public function updateTheCustomProduct($productId, $userId, Request $request) {
         $this->checkForUser($userId);
         $productToUpdate = $this->checkForCustomProduct($productId);
-        if ($request->input("nameEn")) {
-            $updatedProduct =   $request->validate([]);
-            if ($updatedProduct) {
-                $productToUpdate->update([]);
-            } else {
-                return response(["message" => "Fields Missing"], 422);
-            }
-        } else if ($request->input("nameMt")) {
-            $updatedProduct =   $request->validate([]);
-            if ($updatedProduct) {
-                $productToUpdate->update([]);
-            } else {
-                return response(["message" => "Fields Missing"], 422);
-            }
-        } else {
-            return response(["message" => "Name for Product is required"], 422);
+        if ($request["nameMT"] || $request["nameEN"]) {
+            $updatedProduct =   $productToUpdate->name = [
+                'en' => $request["nameEN"],
+                'mt' => $request["nameMT"],
+            ];
+            $productToUpdate->update(["name" => $updatedProduct]);
+        }
+        if ($request["categoryMT"] || $request["categoryEN"]) {
+            $updatedProduct =   $productToUpdate->category = [
+                'en' => $request["categoryEN"],
+                'mt' => $request["categoryMT"],
+            ];
+            $productToUpdate->update(["category" => $updatedProduct]);
+        }
+
+        if ($request["quantity"]) {
+            $productToUpdate->quantity  = $request["quantity"];
+            $productToUpdate->update();
+        }
+        if ($request["unit"]) {
+            $productToUpdate->unit  = $request["unit"];
+            $productToUpdate->update();
+        }
+        if ($request["price"]) {
+            $productToUpdate->price  = $request["price"];
+            $productToUpdate->update();
         }
     }
+
 
 
 

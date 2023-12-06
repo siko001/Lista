@@ -25,6 +25,7 @@ const Container = styled.div`
 		font-family: Arial, Helvetica, sans-serif;
 		font-weight: 400;
 		position: relative;
+		text-align: center;
 	}
 	.loader:after {
 		content: '';

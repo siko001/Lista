@@ -108,9 +108,8 @@ const ContentContainer = styled.div`
 	}
 `;
 
-const ProductEditOverlay = ({ setOpenEditProduct, productToEdit, item, listId, updateList }) => {
+const ProductEditOverlay = ({ setOpenEditProduct, productToEdit, item, listId, updateList, }) => {
 	const product = productToEdit;
-	console.log(product);
 	const [formData, setFormData] = useState({
 		nameEN: product.name['en'],
 		nameMT: product.name['mt'],
@@ -137,7 +136,9 @@ const ProductEditOverlay = ({ setOpenEditProduct, productToEdit, item, listId, u
 	};
 
 	const handleSubmit = (e) => {
+		const userId = localStorage.getItem('ACCESS_TOKEN');
 		e.preventDefault();
+
 		{
 			// Retrieve the existing product from localStorage
 			const allProductsList = JSON.parse(localStorage.getItem('allProductsInList' + listId));
@@ -171,7 +172,6 @@ const ProductEditOverlay = ({ setOpenEditProduct, productToEdit, item, listId, u
 				const updatedProduct = { ...allProductsList[productIndex] };
 
 				// Update specific details with the form data
-				// Update specific details with the form data
 				updatedProduct.name['en'] = formData.nameEN || updatedProduct.nameEN;
 				updatedProduct.name['mt'] = formData.nameMT || updatedProduct.nameMT;
 				updatedProduct.category['en'] = formData.categoryEN || updatedProduct.categoryEN;
@@ -190,12 +190,25 @@ const ProductEditOverlay = ({ setOpenEditProduct, productToEdit, item, listId, u
 			}
 			setOpenEditProduct((prev) => !prev);
 			updateList();
-			axiosClient
-				.put(`/update-product/${listId}/${product.uniqueKey}`, formData)
-				.then((res) => {})
-				.catch((err) => {
-					console.log(err);
-				});
+			if (product.custom) {
+				axiosClient
+					.put(`/update-custom-product/${product.uniqueKey}/${userId}`, formData)
+					.then((res) => {
+						console.log(res);
+					})
+					.catch((err) => {
+						console.log(err);
+					});
+			} else {
+				axiosClient
+					.put(`/update-product/${listId}/${product.uniqueKey}`, formData)
+					.then((res) => {
+						console.log(res);
+					})
+					.catch((err) => {
+						console.log(err);
+					});
+			}
 		}
 	};
 

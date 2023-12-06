@@ -61,6 +61,7 @@ const ImageContainer = styled.div`
 	position: relative;
 	display: flex;
 	flex-direction: column;
+	text-align: center;
 	gap: 20px;
 	z-index: 0;
 	img {
@@ -515,11 +516,15 @@ const ShoppingList = ({}) => {
 	};
 
 	const matchingReadyProducts = readyProducts.filter(
-		(p) => p.name.mt.toLowerCase().includes(searchTerm.toLowerCase()) || p.name.en.toLowerCase().includes(searchTerm.toLowerCase())
+		(p) =>
+			(p.name && p.name.mt && p.name.mt.toLowerCase().includes(searchTerm.toLowerCase())) ||
+			(p.name && p.name.en && p.name.en.toLowerCase().includes(searchTerm.toLowerCase()))
 	);
 
 	const matchToBuyProducts = toBuyProducts.filter(
-		(p) => p.name.mt.toLowerCase().includes(searchTerm.toLowerCase()) || p.name.en.toLowerCase().includes(searchTerm.toLowerCase())
+		(p) =>
+			(p.name && p.name.mt && p.name.mt.toLowerCase().includes(searchTerm.toLowerCase())) ||
+			(p.name && p.name.en && p.name.en.toLowerCase().includes(searchTerm.toLowerCase()))
 	);
 
 	const handleOn = () => {
@@ -624,8 +629,8 @@ const ShoppingList = ({}) => {
 						toBuyProducts
 							.filter(
 								(p) =>
-									p.name.mt.toLowerCase().includes(searchTerm.toLowerCase()) ||
-									p.name.en.toLowerCase().includes(searchTerm.toLowerCase())
+									(p.name && p.name.mt && p.name.mt.toLowerCase().includes(searchTerm.toLowerCase())) ||
+									(p.name && p.name.en && p.name.en.toLowerCase().includes(searchTerm.toLowerCase()))
 							)
 							.map((p) => (
 								<Product

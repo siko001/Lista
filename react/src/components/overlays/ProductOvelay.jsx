@@ -36,17 +36,35 @@ const Container = styled.div`
 
 	.top {
 		height: 20px;
+		margin: 0 auto;
+		width: 60%;
 		position: absolute;
-		width: 85%;
+		left: 20%;
+		transform: translateX(-10%);
+		overflow: none;
 		&:hover {
 			cursor: pointer;
+		}
+		@media screen and (max-width: 650px) {
+			transform: translateX(-20%);
+		}
+
+		@media screen and (max-width: 950px) {
+			transform: translateX(-20%);
 		}
 	}
 	.bottom {
 		position: absolute;
 		margin-top: -20px;
-		width: 85%;
+		left: 20%;
+		transform: translateX(-10%);
+		overflow: none;
+		width: 60%;
 		height: 20px;
+		@media screen and (max-width: 950px) {
+			transform: translateX(-20%);
+		}
+
 		&:hover {
 			cursor: pointer;
 		}
@@ -108,9 +126,8 @@ const Container = styled.div`
 		}
 	}
 
-	.category {
-		font-size: 0.8rem;
-		min-width: 70px;
+	.name-custom {
+		font-size: 1.2rem;
 	}
 
 	.grp {
@@ -119,13 +136,24 @@ const Container = styled.div`
 		width: 100px;
 		padding-bottom: 6px;
 	}
+
+	.grp-narrow {
+		display: flex;
+		align-items: center;
+		width: 100px;
+		padding-bottom: 6px;
+	}
 	.narrow {
-		justify-content: end;
 		gap: 20px;
-		align-items: end;
+
 		font-size: 1.2rem;
 	}
 	.trash {
+		border: 1px solid;
+		display: grid;
+		@media screen and (max-width: 950px) {
+			font-size: 1.7rem;
+		}
 	}
 	.trash:hover {
 		color: red;
@@ -137,10 +165,22 @@ const Container = styled.div`
 		width: 25px;
 		height: 25px;
 		border-radius: 50%;
+		@media screen and (max-width: 950px) {
+			font-size: 1.7rem;
+			width: 35px;
+			height: 35px;
+		}
 	}
 	.remove:hover {
 		color: yellow;
 		border: 1px solid yellow;
+	}
+
+	.custom-select {
+		@media screen and (max-width: 950px) {
+			width: 35px;
+			height: 35px;
+		}
 	}
 
 	nav {
@@ -259,8 +299,7 @@ const ProductTable = styled.div`
 
 const ProductRow = styled.div`
 	min-width: 100%;
-	border-radius: 10px;
-
+	position: relative;
 	.categoryRow {
 		background-color: rgba(0, 0, 0, 0.3);
 		border-radius: 18px;
@@ -294,8 +333,8 @@ const ProductCell = styled.div`
 	}
 
 	.radio {
-		height: 20px;
-		width: 20px;
+		min-height: 30px;
+		min-width: 25px;
 
 		&:hover {
 			cursor: pointer;
@@ -384,6 +423,10 @@ const ProductOverlay = ({
 	};
 
 	const handleSelect = (product) => {
+		if (product.custom) {
+			product.custom = false;
+		}
+
 		const productId = product.uniqueKey;
 		// Check if the product is already selected
 		if (selectedProducts.some((selectedProduct) => selectedProduct.uniqueKey == productId)) {
@@ -450,6 +493,7 @@ const ProductOverlay = ({
 	};
 
 	const handleUnselectProduct = (productId, listId) => {
+		console.log('unselect');
 		// // Update local storage
 		const allLists = JSON.parse(localStorage.getItem(`shoppingLists`)) || [];
 
@@ -549,7 +593,6 @@ const ProductOverlay = ({
 	};
 
 	const handleAddEnglishCustomValidity = () => {
-		console.log(englishNameRef);
 		if (englishNameRef.current.value.length >= 3) {
 			setCustomItemNameValid(true);
 		} else {
@@ -566,7 +609,6 @@ const ProductOverlay = ({
 	};
 
 	const handleEditCustomItem = (item) => {
-		console.log(item.name);
 		setOpenEditProduct((prev) => !prev);
 		setProductToEdit(item);
 	};
@@ -647,8 +689,8 @@ const ProductOverlay = ({
 										<p
 											className="product-deselector"
 											onClick={() => {
-												const sameProduct = toBuyProducts.some((p) => p.uniqueKey === product.uniqueKey);
-
+												const sameProduct = toBuyProducts.some((p) => p.uniqueKey == product.uniqueKey);
+												console.log(sameProduct);
 												if (sameProduct) {
 													handleUnselectProduct(product.uniqueKey, listId);
 												} else {
@@ -704,6 +746,7 @@ const ProductOverlay = ({
 																	const sameProduct = toBuyProducts.some(
 																		(p) => p.uniqueKey === product.uniqueKey
 																	);
+																	console.log(sameProduct);
 
 																	if (sameProduct) {
 																		handleUnselectProduct(product.uniqueKey, listId);
@@ -807,7 +850,7 @@ const ProductOverlay = ({
 													onClick={() => {
 														handleEditCustomItem(product);
 													}}
-													className="name large"
+													className="name name-custom large"
 												>
 													{product.name[language] || product.name.en}
 												</p>
@@ -820,7 +863,7 @@ const ProductOverlay = ({
 											>
 												{product.category == null ? '' : product.category.en}
 											</p>
-											<div className="grp narrow">
+											<div className="grp-narrow narrow">
 												<p
 													className="trash custom-delete"
 													onClick={() => {
@@ -833,6 +876,7 @@ const ProductOverlay = ({
 													className="remove custom-remove"
 													onClick={() => {
 														const sameProduct = toBuyProducts.some((p) => p.uniqueKey === product.uniqueKey);
+														console.log(sameProduct);
 
 														if (sameProduct) {
 															handleUnselectProduct(product.uniqueKey, listId);

@@ -42,7 +42,7 @@ const Container = styled.div`
 `;
 
 const EmptyAndDeleteListLoader = () => {
-	const { language } = useLanguage();
+	const { translate } = useLanguage();
 	return (
 		<Container>
 			<div className="loader">{translate('remove-and-delete-loader')}</div>
