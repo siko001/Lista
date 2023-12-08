@@ -23,7 +23,7 @@ const Container = styled.div`
 	max-width: 350px;
 	text-align: center;
 	min-height: 100px;
-	z-index: 2;
+	z-index: 9999;
 	color: rgba(0, 0, 0, 0.73);
 	font-weight: 600;
 	padding: 20px 30px;

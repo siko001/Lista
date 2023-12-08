@@ -210,10 +210,8 @@ const Product = ({
 		axiosClient
 			.put(`/update/product${id}/${listId}/${userId}`, [id, listId])
 			.then((res) => {
-				// console.log(res);
 			})
 			.catch((err) => {
-				console.log(err);
 			})
 			.finally(() => {});
 	};

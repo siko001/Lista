@@ -106,11 +106,10 @@ const RemoveProductOverlay = ({
 		axiosClient
 			.delete(`remove-product/${productIDRemove}/${listId}`)
 			.then((res) => {
-				console.log(res);
+		
 				setMessage(translate('removed-product'));
 			})
 			.catch((err) => {
-				console.log(err);
 				setMessage(translate('removed-product-fail'));
 				setStatus(400);
 			})

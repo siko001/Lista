@@ -234,9 +234,7 @@ const List = ({
 					setMessage(null);
 				}, 1600);
 			})
-			.catch((err) => {
-				console.log(err);
-			})
+			.catch((err) => {})
 			.finally(() => {});
 	};
 

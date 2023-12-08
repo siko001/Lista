@@ -64,7 +64,7 @@ const InnerContainer = styled.div`
 	}
 `;
 
-const DeleteCustomProduct = ({ customProductToDelete, setCustomProductToDelete, getMyProducts }) => {
+const DeleteCustomProduct = ({ customProductToDelete, setCustomProductToDelete, getMyProducts, setMessage }) => {
 	const { translate, language } = useLanguage();
 	const [productBeingRemove, setSroductBeingRemove] = useState(false);
 	const close = () => {
@@ -73,19 +73,33 @@ const DeleteCustomProduct = ({ customProductToDelete, setCustomProductToDelete, 
 
 	const handleDeleteItem = (customProductToDelete) => {
 		const { user_id, uniqueKey } = customProductToDelete;
+		if (!customProductToDelete.uniqueKey) {
+	
+			const customProducts = JSON.parse(localStorage.getItem('customItemsUser' + user_id));
+			const indexToDelete = customProducts.findIndex(
+				(p) => p.name.en === customProductToDelete.name.en || p.name.mt === customProductToDelete.name.mt
+			);
+			if (indexToDelete !== -1) {
+				customProducts.splice(indexToDelete, 1);
+
+				localStorage.setItem('customItemsUser' + user_id, JSON.stringify(customProducts));
+			}
+		}
 		setSroductBeingRemove(true);
 		axiosClient
 			.delete(`/delete-myProduct/${uniqueKey}/${user_id}`)
 			.then((res) => {
-				console.log(res);
-				setCustomProductToDelete((prev) => !prev);
+							setMessage('ProductDeleted');
 			})
 			.catch((err) => {
-				console.log(err);
+			
 			})
 			.finally(() => {
-				setSroductBeingRemove(false);
 				getMyProducts();
+				setCustomProductToDelete((prev) => !prev);
+				return setTimeout(() => {
+					setMessage(null);
+				}, 1600);
 			});
 	};
 
@@ -95,7 +109,7 @@ const DeleteCustomProduct = ({ customProductToDelete, setCustomProductToDelete, 
 				<InnerContainer>
 					<h3 className="heading">
 						{translate('delete-custom-item')} <br></br>
-						{customProductToDelete.name[language]}
+						{customProductToDelete.name.en || customProductToDelete.name.mt || ''}
 					</h3>
 					<hr></hr>
 					<div className="group">

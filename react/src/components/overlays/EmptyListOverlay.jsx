@@ -86,11 +86,11 @@ const EmptyListOverlay = ({ title, setOpenEmptyListOverLay, setEmptyList, listId
 		axiosClient
 			.delete(`empty-list/${listId}`, listId)
 			.then((res) => {
-				console.log(res);
+				
 				updateList();
 			})
 			.catch((err) => {
-				console.log(err);
+			
 			})
 			.finally(() => {
 				setEmptyList((prev) => !prev);

@@ -1,6 +1,6 @@
 const PopularProducts = [
 	{
-		uniqueKey: '1',
+		uniqueKey: 1,
 		name: {
 			en: 'Chicken nuggets',
 			mt: 'nuggets tat-tiġieġ',
@@ -15,7 +15,7 @@ const PopularProducts = [
 		status: 'to buy',
 	},
 	{
-		uniqueKey: '2',
+		uniqueKey: 2,
 		name: {
 			en: 'Salmon',
 			mt: 'Salamun',
@@ -30,7 +30,7 @@ const PopularProducts = [
 		status: 'to buy',
 	},
 	{
-		uniqueKey: '3',
+		uniqueKey: 3,
 		name: {
 			en: 'Ribeye',
 			mt: 'Kuberoll',
@@ -45,7 +45,7 @@ const PopularProducts = [
 		status: 'to buy',
 	},
 	{
-		uniqueKey: '4',
+		uniqueKey: 4,
 		name: {
 			en: 'Tomatoes',
 			mt: 'Tadam',
@@ -60,7 +60,7 @@ const PopularProducts = [
 		status: 'to buy',
 	},
 	{
-		uniqueKey: '5',
+		uniqueKey: 5,
 		name: {
 			en: 'Fillet',
 			mt: 'Filet',
@@ -75,7 +75,7 @@ const PopularProducts = [
 		status: 'to buy',
 	},
 	{
-		uniqueKey: '6',
+		uniqueKey: 6,
 		name: {
 			en: 'Meagre',
 			mt: 'Gurbell',
@@ -90,7 +90,7 @@ const PopularProducts = [
 		status: 'to buy',
 	},
 	{
-		uniqueKey: '7',
+		uniqueKey: 7,
 		name: {
 			en: 'Tomato polpa',
 			mt: 'Polpa tat-tadam',
@@ -105,7 +105,7 @@ const PopularProducts = [
 		status: 'to buy',
 	},
 	{
-		uniqueKey: '8',
+		uniqueKey: 8,
 		name: {
 			en: 'Tomatoe sauce',
 			mt: 'Żalża tat-tadam',
@@ -120,7 +120,7 @@ const PopularProducts = [
 		status: 'to buy',
 	},
 	{
-		uniqueKey: '9',
+		uniqueKey: 9,
 		name: {
 			en: 'White wine vinegar',
 			mt: 'Hall tal-inbid abjad',
@@ -135,7 +135,7 @@ const PopularProducts = [
 		status: 'to buy',
 	},
 	{
-		uniqueKey: '10',
+		uniqueKey: 10,
 		name: {
 			en: 'Red wine vinegar',
 			mt: 'Hall tal-inbid ahmar',
@@ -150,7 +150,7 @@ const PopularProducts = [
 		status: 'to buy',
 	},
 	{
-		uniqueKey: '11',
+		uniqueKey: 11,
 		name: {
 			en: 'Apple cider vinegar',
 			mt: 'Hall magħmul mit-tuffieħ',
@@ -165,7 +165,7 @@ const PopularProducts = [
 		status: 'to buy',
 	},
 	{
-		uniqueKey: '12',
+		uniqueKey: 12,
 		name: {
 			en: 'Frozen peas',
 			mt: 'Pizelli tal friza',
@@ -180,7 +180,7 @@ const PopularProducts = [
 		status: 'to buy',
 	},
 	{
-		uniqueKey: '13',
+		uniqueKey: 13,
 		name: {
 			en: 'Prawns',
 			mt: 'Gabli',
@@ -195,7 +195,7 @@ const PopularProducts = [
 		status: 'to buy',
 	},
 	{
-		uniqueKey: '14',
+		uniqueKey: 14,
 		name: {
 			en: 'Mussels',
 			mt: 'Musselli',
@@ -210,7 +210,7 @@ const PopularProducts = [
 		status: 'to buy',
 	},
 	{
-		uniqueKey: '15',
+		uniqueKey: 15,
 		name: {
 			en: 'Clams',
 			mt: 'Gandoffli',
@@ -225,7 +225,7 @@ const PopularProducts = [
 		status: 'to buy',
 	},
 	{
-		uniqueKey: '16',
+		uniqueKey: 16,
 		name: {
 			en: 'Oysters',
 			mt: 'Gajdri',
@@ -240,7 +240,7 @@ const PopularProducts = [
 		status: 'to buy',
 	},
 	{
-		uniqueKey: '17',
+		uniqueKey: 17,
 		name: {
 			en: 'Scallops',
 			mt: 'Arzell',
@@ -255,7 +255,7 @@ const PopularProducts = [
 		status: 'to buy',
 	},
 	{
-		uniqueKey: '18',
+		uniqueKey: 18,
 		name: {
 			en: 'Lobster',
 			mt: 'Awwista',
@@ -270,7 +270,7 @@ const PopularProducts = [
 		status: 'to buy',
 	},
 	{
-		uniqueKey: '19',
+		uniqueKey: 19,
 		name: {
 			en: 'Octopus',
 			mt: 'Qarnit',
@@ -285,7 +285,7 @@ const PopularProducts = [
 		status: 'to buy',
 	},
 	{
-		uniqueKey: '20',
+		uniqueKey: 20,
 		name: {
 			en: 'Crab',
 			mt: 'Granċ',
@@ -300,7 +300,7 @@ const PopularProducts = [
 		status: 'to buy',
 	},
 	{
-		uniqueKey: '21',
+		uniqueKey: 211111111111,
 		name: {
 			en: 'Seabream',
 			mt: 'Awrat',
@@ -315,7 +315,7 @@ const PopularProducts = [
 		status: 'to buy',
 	},
 	{
-		uniqueKey: '22',
+		uniqueKey: 21,
 		name: {
 			en: 'Anchovy',
 			mt: 'Incova',
@@ -330,7 +330,7 @@ const PopularProducts = [
 		status: 'to buy',
 	},
 	{
-		uniqueKey: '23',
+		uniqueKey: 22,
 		name: {
 			en: 'Barracuda',
 			mt: 'Lizz',
@@ -345,7 +345,7 @@ const PopularProducts = [
 		status: 'to buy',
 	},
 	{
-		uniqueKey: '24',
+		uniqueKey: 23,
 		name: {
 			en: 'Bronze Bream',
 			mt: 'Bazuga',
@@ -360,7 +360,7 @@ const PopularProducts = [
 		status: 'to buy',
 	},
 	{
-		uniqueKey: '25',
+		uniqueKey: 24,
 		name: {
 			en: 'Common Seabream',
 			mt: 'Pagru',
@@ -375,7 +375,7 @@ const PopularProducts = [
 		status: 'to buy',
 	},
 	{
-		uniqueKey: '26',
+		uniqueKey: 25,
 		name: {
 			en: 'CuttleFish',
 			mt: 'Siċċ',
@@ -390,7 +390,7 @@ const PopularProducts = [
 		status: 'to buy',
 	},
 	{
-		uniqueKey: '27',
+		uniqueKey: 26,
 		name: {
 			en: 'Dentex',
 			mt: 'Dentiċi',
@@ -405,7 +405,7 @@ const PopularProducts = [
 		status: 'to buy',
 	},
 	{
-		uniqueKey: '28',
+		uniqueKey: 27,
 		name: {
 			en: 'Dolphin Fish',
 			mt: 'Lampuka',
@@ -421,7 +421,7 @@ const PopularProducts = [
 	},
 
 	{
-		uniqueKey: '29',
+		uniqueKey: 28,
 		name: {
 			en: 'Scorpion-Fish',
 			mt: 'Skorfnott',
@@ -436,7 +436,7 @@ const PopularProducts = [
 		status: 'to buy',
 	},
 	{
-		uniqueKey: '30',
+		uniqueKey: 29,
 		name: {
 			en: 'SwordFish',
 			mt: 'Pixxispad',
@@ -451,7 +451,7 @@ const PopularProducts = [
 		status: 'to buy',
 	},
 	{
-		uniqueKey: '31',
+		uniqueKey: 30,
 		name: {
 			en: 'White Bream',
 			mt: 'Sargu',
@@ -466,7 +466,7 @@ const PopularProducts = [
 		status: 'to buy',
 	},
 	{
-		uniqueKey: '32',
+		uniqueKey: 31,
 		name: {
 			en: 'Amberjack',
 			mt: 'Cervjola',
@@ -481,7 +481,7 @@ const PopularProducts = [
 		status: 'to buy',
 	},
 	{
-		uniqueKey: '33',
+		uniqueKey: 32,
 		name: {
 			en: 'Calamari',
 			mt: 'Kalamari',
@@ -496,7 +496,7 @@ const PopularProducts = [
 		status: 'to buy',
 	},
 	{
-		uniqueKey: '34',
+		uniqueKey: 33,
 		name: {
 			en: 'Langoustine',
 			mt: 'Langostina',
@@ -511,7 +511,7 @@ const PopularProducts = [
 		status: 'to buy',
 	},
 	{
-		uniqueKey: '35',
+		uniqueKey: 34,
 		name: {
 			en: 'Tuna',
 			mt: 'Tonn',
@@ -526,7 +526,7 @@ const PopularProducts = [
 		status: 'to buy',
 	},
 	{
-		uniqueKey: '36',
+		uniqueKey: 35,
 		name: {
 			en: 'Smoked Salmon',
 			mt: 'Salamun affumikat',
@@ -541,7 +541,7 @@ const PopularProducts = [
 		status: 'to buy',
 	},
 	{
-		uniqueKey: '37',
+		uniqueKey: 36,
 		name: {
 			en: 'Smoked Swordfish',
 			mt: 'Pixxispad affumikat',
@@ -556,7 +556,7 @@ const PopularProducts = [
 		status: 'to buy',
 	},
 	{
-		uniqueKey: '38',
+		uniqueKey: 37,
 		name: {
 			en: 'Smoked Tuna',
 			mt: 'Tonn affumikat',
@@ -571,7 +571,7 @@ const PopularProducts = [
 		status: 'to buy',
 	},
 	{
-		uniqueKey: '39',
+		uniqueKey: 38,
 		name: {
 			en: 'Minced beef',
 			mt: 'Kapuljat Ċanga',
@@ -586,7 +586,7 @@ const PopularProducts = [
 		status: 'to buy',
 	},
 	{
-		uniqueKey: '40',
+		uniqueKey: 39,
 		name: {
 			en: 'Sirloin',
 			mt: 'Flett',
@@ -601,7 +601,7 @@ const PopularProducts = [
 		status: 'to buy',
 	},
 	{
-		uniqueKey: '41',
+		uniqueKey: 40,
 		name: {
 			en: 'Veal chop',
 			mt: 'Kubroll tal-vitella',
@@ -616,7 +616,7 @@ const PopularProducts = [
 		status: 'to buy',
 	},
 	{
-		uniqueKey: '42',
+		uniqueKey: 41,
 		name: {
 			en: 'Chicken breast',
 			mt: 'Sider tat-tiġieġ',
@@ -631,7 +631,7 @@ const PopularProducts = [
 		status: 'to buy',
 	},
 	{
-		uniqueKey: '43',
+		uniqueKey: 42,
 		name: {
 			en: 'Chicken legs',
 			mt: 'Koxxox tat-tiġieġ',
@@ -646,7 +646,7 @@ const PopularProducts = [
 		status: 'to buy',
 	},
 	{
-		uniqueKey: '44',
+		uniqueKey: 43,
 		name: {
 			en: 'Whole chicken',
 			mt: 'Tiġieġ shih',
@@ -661,7 +661,7 @@ const PopularProducts = [
 		status: 'to buy',
 	},
 	{
-		uniqueKey: '45',
+		uniqueKey: 44,
 		name: {
 			en: 'Lamb shanks',
 			mt: 'zokk tal-ħaruf',
@@ -676,7 +676,7 @@ const PopularProducts = [
 		status: 'to buy',
 	},
 	{
-		uniqueKey: '46',
+		uniqueKey: 45,
 		name: {
 			en: 'Lamb shoulder',
 			mt: 'Spalla tal-haruf',
@@ -691,7 +691,7 @@ const PopularProducts = [
 		status: 'to buy',
 	},
 	{
-		uniqueKey: '47',
+		uniqueKey: 46,
 		name: {
 			en: 'Lamb shoulder',
 			mt: 'Spalla tal-haruf',
@@ -706,7 +706,7 @@ const PopularProducts = [
 		status: 'to buy',
 	},
 	{
-		uniqueKey: '48',
+		uniqueKey: 47,
 		name: {
 			en: 'Lamb minced',
 			mt: 'Kapuljat tal-haruf',
@@ -721,7 +721,7 @@ const PopularProducts = [
 		status: 'to buy',
 	},
 	{
-		uniqueKey: '49',
+		uniqueKey: 48,
 		name: {
 			en: 'Lamb fillets',
 			mt: 'Filet tal-haruf',
@@ -736,7 +736,7 @@ const PopularProducts = [
 		status: 'to buy',
 	},
 	{
-		uniqueKey: '50',
+		uniqueKey: 49,
 		name: {
 			en: 'Lamb cutlet',
 			mt: 'Cutlet tal-haruf',
@@ -751,7 +751,7 @@ const PopularProducts = [
 		status: 'to buy',
 	},
 	{
-		uniqueKey: '51',
+		uniqueKey: 50,
 		name: {
 			en: 'Pork belly',
 			mt: 'Zaqq tal-majjal',
@@ -766,7 +766,7 @@ const PopularProducts = [
 		status: 'to buy',
 	},
 	{
-		uniqueKey: '52',
+		uniqueKey: 51,
 		name: {
 			en: 'Pork Ribs',
 			mt: 'kustilji tal-majjal',
@@ -781,7 +781,7 @@ const PopularProducts = [
 		status: 'to buy',
 	},
 	{
-		uniqueKey: '53',
+		uniqueKey: 52,
 		name: {
 			en: 'Pork cheeks',
 			mt: 'Haddejn tal-majjal',
@@ -796,7 +796,7 @@ const PopularProducts = [
 		status: 'to buy',
 	},
 	{
-		uniqueKey: '54',
+		uniqueKey: 53,
 		name: {
 			en: 'Pork loin',
 			mt: 'Flett tal-majjal',
@@ -811,7 +811,7 @@ const PopularProducts = [
 		status: 'to buy',
 	},
 	{
-		uniqueKey: '55',
+		uniqueKey: 54,
 		name: {
 			en: 'Bacon',
 			mt: 'Bejken',
@@ -826,7 +826,7 @@ const PopularProducts = [
 		status: 'to buy',
 	},
 	{
-		uniqueKey: '56',
+		uniqueKey: 55,
 		name: {
 			en: 'Duck breast',
 			mt: 'Sider tal-papra',
@@ -841,7 +841,7 @@ const PopularProducts = [
 		status: 'to buy',
 	},
 	{
-		uniqueKey: '57',
+		uniqueKey: 56,
 		name: {
 			en: 'Duck legs',
 			mt: 'Sider tal-papra',
@@ -856,7 +856,7 @@ const PopularProducts = [
 		status: 'to buy',
 	},
 	{
-		uniqueKey: '58',
+		uniqueKey: 57,
 		name: {
 			en: 'Whole duck',
 			mt: 'Papra shiha',
@@ -871,7 +871,7 @@ const PopularProducts = [
 		status: 'to buy',
 	},
 	{
-		uniqueKey: '59',
+		uniqueKey: 58,
 		name: {
 			en: 'Quail',
 			mt: 'Summien',
@@ -886,7 +886,7 @@ const PopularProducts = [
 		status: 'to buy',
 	},
 	{
-		uniqueKey: '60',
+		uniqueKey: 59,
 		name: {
 			en: 'Milk',
 			mt: 'Halib',
@@ -901,7 +901,7 @@ const PopularProducts = [
 		status: 'to buy',
 	},
 	{
-		uniqueKey: '61',
+		uniqueKey: 60,
 		name: {
 			en: 'yogurt',
 			mt: 'jogurt',
@@ -916,7 +916,7 @@ const PopularProducts = [
 		status: 'to buy',
 	},
 	{
-		uniqueKey: '62',
+		uniqueKey: 61,
 		name: {
 			en: 'Butter',
 			mt: 'Butir',
@@ -931,7 +931,7 @@ const PopularProducts = [
 		status: 'to buy',
 	},
 	{
-		uniqueKey: '63',
+		uniqueKey: 62,
 		name: {
 			en: 'Cheddar',
 			mt: 'Ċheddar',
@@ -946,7 +946,7 @@ const PopularProducts = [
 		status: 'to buy',
 	},
 	{
-		uniqueKey: '64',
+		uniqueKey: 63,
 		name: {
 			en: 'Parmesian',
 			mt: 'Parmegian',
@@ -961,7 +961,7 @@ const PopularProducts = [
 		status: 'to buy',
 	},
 	{
-		uniqueKey: '65',
+		uniqueKey: 64,
 		name: {
 			en: 'Feta Cheese',
 			mt: 'Ġobon tal-feta',
@@ -976,7 +976,7 @@ const PopularProducts = [
 		status: 'to buy',
 	},
 	{
-		uniqueKey: '66',
+		uniqueKey: 65,
 		name: {
 			en: 'Ricotta',
 			mt: 'Irkotta',
@@ -991,7 +991,7 @@ const PopularProducts = [
 		status: 'to buy',
 	},
 	{
-		uniqueKey: '67',
+		uniqueKey: 66,
 		name: {
 			en: 'Cream',
 			mt: 'Krema',
@@ -1006,7 +1006,7 @@ const PopularProducts = [
 		status: 'to buy',
 	},
 	{
-		uniqueKey: '68',
+		uniqueKey: 67,
 		name: {
 			en: 'Mascarpone',
 			mt: 'Mascarpone',
@@ -1021,7 +1021,7 @@ const PopularProducts = [
 		status: 'to buy',
 	},
 	{
-		uniqueKey: '69',
+		uniqueKey: 68,
 		name: {
 			en: 'Chickpeas cans',
 			mt: 'Mascarpone ',

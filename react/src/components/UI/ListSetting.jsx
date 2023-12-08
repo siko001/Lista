@@ -145,7 +145,6 @@ const ListSetting = ({
 		axiosClient
 			.post('/share-list', data)
 			.then((res) => {
-				console.log(res);
 				copyToClipBoard(res.data.link);
 				setShare(true);
 			})
@@ -162,7 +161,7 @@ const ListSetting = ({
 
 	const copyToClipBoard = (link) => {
 		navigator.clipboard.writeText(link).then(() => {
-			setMessage(`${translate("copied-to-clipboared")} ${link}`);
+			setMessage(`${translate('copied-to-clipboared')} ${link}`);
 		});
 	};
 

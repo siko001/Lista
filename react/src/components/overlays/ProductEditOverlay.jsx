@@ -108,10 +108,10 @@ const ContentContainer = styled.div`
 	}
 `;
 
-const ProductEditOverlay = ({ setOpenEditProduct, productToEdit, item, listId, updateList, }) => {
+const ProductEditOverlay = ({ setOpenEditProduct, productToEdit, item, listId, updateList, getMyProducts }) => {
 	const product = productToEdit;
 	const [formData, setFormData] = useState({
-		nameEN: product.name['en'],
+		nameEN: product.name['en'] || product.nameEn || product.name.en, //not this
 		nameMT: product.name['mt'],
 		categoryEN: product.category['en'],
 		categoryMT: product.category['mt'],
@@ -143,7 +143,9 @@ const ProductEditOverlay = ({ setOpenEditProduct, productToEdit, item, listId, u
 			// Retrieve the existing product from localStorage
 			const allProductsList = JSON.parse(localStorage.getItem('allProductsInList' + listId));
 			const toBuyList = JSON.parse(localStorage.getItem('toBuyProductsInList' + listId));
+			const customProduct = JSON.parse(localStorage.getItem('customItemsUser' + userId));
 
+			const customProductIndex = customProduct.findIndex((p) => p.uniqueKey === productToEdit.uniqueKey);
 			const productIndex = allProductsList.findIndex((p) => p.uniqueKey === productToEdit.uniqueKey);
 			const productIndexToBuy = toBuyList.findIndex((p) => p.uniqueKey === productToEdit.uniqueKey);
 
@@ -162,7 +164,6 @@ const ProductEditOverlay = ({ setOpenEditProduct, productToEdit, item, listId, u
 
 				// Update the product in the allProductsList array
 				toBuyList[productIndexToBuy] = updatedProduct;
-				console.log(toBuyList);
 				// Save the updated allProductsList back to localStorage
 				localStorage.setItem('toBuyProductsInList' + listId, JSON.stringify(toBuyList));
 			}
@@ -184,9 +185,27 @@ const ProductEditOverlay = ({ setOpenEditProduct, productToEdit, item, listId, u
 				allProductsList[productIndex] = updatedProduct;
 
 				// Save the updated allProductsList back to localStorage
-				localStorage.setItem('allProductsInList52', JSON.stringify(allProductsList));
+				localStorage.setItem('allProductsInList' + listId, JSON.stringify(allProductsList));
+			}
 
-				console.log('Updated Product:', updatedProduct);
+			if (customProductIndex !== -1) {
+				// Clone the existing product to avoid mutating the original array
+				const updatedProduct = { ...customProduct[customProductIndex] };
+
+				// Update specific details with the form data
+				updatedProduct.name['en'] = formData.nameEN || updatedProduct.nameEN;
+				updatedProduct.name['mt'] = formData.nameMT || updatedProduct.nameMT;
+				updatedProduct.category['en'] = formData.categoryEN || updatedProduct.categoryEN;
+				updatedProduct.category['mt'] = formData.categoryMT || updatedProduct.categoryMT;
+				updatedProduct.quantity = formData.quantity || updatedProduct.quantity;
+				updatedProduct.unit = formData.unit || updatedProduct.unit;
+				updatedProduct.price = formData.price || updatedProduct.price;
+
+				// Update the product in the allProductsList array
+				customProduct[customProductIndex] = updatedProduct;
+
+				// Save the updated allProductsList back to localStorage
+				localStorage.setItem('customItemsUser' + userId, JSON.stringify(customProduct));
 			}
 			setOpenEditProduct((prev) => !prev);
 			updateList();
@@ -194,26 +213,26 @@ const ProductEditOverlay = ({ setOpenEditProduct, productToEdit, item, listId, u
 				axiosClient
 					.put(`/update-custom-product/${product.uniqueKey}/${userId}`, formData)
 					.then((res) => {
-						console.log(res);
+						getMyProducts();
 					})
 					.catch((err) => {
-						console.log(err);
+				
 					});
 			} else {
 				axiosClient
 					.put(`/update-product/${listId}/${product.uniqueKey}`, formData)
 					.then((res) => {
-						console.log(res);
+				
 					})
 					.catch((err) => {
-						console.log(err);
+				
 					});
 			}
 		}
 	};
 
 	return (
-		<Container className="product-edit" style={{ backgroundColor: darkMode ? 'white' : 'black' }}>
+		<Container key={product.uniqueKey} className="product-edit" style={{ backgroundColor: darkMode ? 'white' : 'black' }}>
 			<ContentContainer style={{ backgroundColor: darkMode ? 'black' : 'white' }}>
 				<span onClick={handleClose}>
 					<FontAwesomeIcon icon={faXmark} />

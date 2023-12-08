@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router-dom';
 
 const Container = styled.div`
 	z-index: 999;
-	position: absolute;
+	position: fixed;
 	border: 1px solid rgba(114, 109, 109, 0.548);
 	left: 50%;
 	transform: translate(100%);
@@ -35,7 +35,6 @@ const Container = styled.div`
 	.setting-header {
 		display: flex;
 		justify-content: space-between;
-		text-align: center;
 
 		&__group {
 			display: flex;

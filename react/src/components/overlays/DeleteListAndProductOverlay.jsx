@@ -83,7 +83,7 @@ const DeleteListAndProductOverlay = ({ title, setOpenEmptyAndDeleteListOverlay, 
 				navigate(homeUrl);
 			})
 			.then((err) => {
-				console.log(err.message);
+				
 			})
 			.finally(() => {
 				setEmptyAndDeleteList(false);

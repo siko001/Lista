@@ -11,6 +11,7 @@ import Des2 from '../../assets/des2.svg';
 import Des6 from '../../assets/des6.svg';
 import Des11 from '../../assets/des11.svg';
 import Des12 from '../../assets/des12.svg';
+import Notification from '../UI/Notification';
 
 const ImageContainer = styled.div`
 	position: relative;
@@ -33,6 +34,11 @@ const Container = styled.div`
 	width: 100%;
 	max-width: 100vw;
 	position: fixed;
+
+	.category {
+		height: 20px;
+		width: 200px;
+	}
 
 	.top {
 		height: 20px;
@@ -149,7 +155,6 @@ const Container = styled.div`
 		font-size: 1.2rem;
 	}
 	.trash {
-		border: 1px solid;
 		display: grid;
 		@media screen and (max-width: 950px) {
 			font-size: 1.7rem;
@@ -369,13 +374,15 @@ const ProductOverlay = ({
 	toBuyProducts,
 	setOpenEditProduct,
 	setProductToEdit,
+	setMessage,
+	customProducts,
+	setCustomProducts,
 }) => {
 	const [selected, setSelected] = useState('Popular Products');
 	const [selectedFilter, setSelectedFilter] = useState('random');
 	const [customItemNameValid, setCustomItemNameValid] = useState(false);
 	const [searchTerm, setSearchTerm] = useState('');
 	const userId = localStorage.getItem('ACCESS_TOKEN');
-	const [customProducts, setCustomProducts] = useState([]);
 	const [customProductToDelete, setCustomProductToDelete] = useState();
 	const englishNameRef = useRef();
 	const malteseNameRef = useRef();
@@ -397,9 +404,6 @@ const ProductOverlay = ({
 	};
 
 	useEffect(() => {
-		// Load the list of selected products from local storage
-		// console.log(toBuyProducts);
-		// const storedProducts = JSON.parse(localStorage.getItem(`allProductsInList` + id)) || [];
 		setSelectedProducts(selectedProducts);
 		getMyProducts();
 		startImageInterval();
@@ -467,12 +471,8 @@ const ProductOverlay = ({
 
 		axiosClient
 			.post(`/add-product/${product.name[language]}/${userId}`, [listId, product])
-			.then((res) => {
-				console.log(res);
-			})
-			.catch((err) => {
-				console.log(err);
-			})
+			.then((res) => {})
+			.catch((err) => {})
 			.finally(() => {});
 
 		setProduct((prevProducts) => [...prevProducts, product]);
@@ -481,19 +481,21 @@ const ProductOverlay = ({
 
 	const getMyProducts = () => {
 		const userId = localStorage.getItem('ACCESS_TOKEN');
+		const localCustomProduct = JSON.parse(localStorage.getItem('customItemsUser' + userId)) || [];
+
+		setCustomProducts(localCustomProduct);
+
 		axiosClient
 			.get(`/custom-products/${userId}`)
 			.then((res) => {
+				const properCustom = localStorage.setItem('customItemsUser' + userId, JSON.stringify(res.data));
 				setCustomProducts(res.data);
 			})
-			.catch((err) => {
-				console.log(err);
-			})
+			.catch((err) => {})
 			.finally(() => {});
 	};
 
 	const handleUnselectProduct = (productId, listId) => {
-		console.log('unselect');
 		// // Update local storage
 		const allLists = JSON.parse(localStorage.getItem(`shoppingLists`)) || [];
 
@@ -521,34 +523,51 @@ const ProductOverlay = ({
 		axiosClient
 			.delete(`remove-product/${productId}/${listId}`)
 			.then((res) => {
-				console.log(res);
 				updateList();
 			})
-			.catch((err) => {
-				console.log(err);
-			})
+			.catch((err) => {})
 			.finally(() => {});
 	};
 
-	//continue down here
 	const addProductRequest = (userId, name, lang) => {
+		const id = Math.floor(Math.random() * 1000000000) + 1;
 		if (lang == 'mt') {
 			const data = {
 				nameEn: '',
 				nameMt: name,
+				uniqueKey: id,
+				custom: true,
 			};
-			setCustomListLoading(true);
+			const localData = {
+				category: { en: '', mt: '' },
+				name: { en: '', mt: name },
+				user_id: localStorage.getItem('ACCESS_TOKEN'),
+				uniqueKey: id,
+				custom: true,
+			};
+
+			const localCustomProduct = JSON.parse(localStorage.getItem('customItemsUser' + userId)) || [];
+			// Add the new product to the list
+			localCustomProduct.push(localData);
+			// Save the updated list back to local storage
+			localStorage.setItem('customItemsUser' + userId, JSON.stringify(localCustomProduct));
+			// setCustomListLoading(true);
+			setCustomProducts(localCustomProduct);
 			axiosClient
 				.post(`/create-myProduct/${userId}`, data)
 				.then((res) => {
-					console.log(res);
+					const localCustomProduct = JSON.parse(localStorage.getItem('customItemsUser' + userId)) || [];
+					const productToUpdate = localCustomProduct.find((p) => p.name.mt === res.data[0].name.mt);
 
-					// update the local storage
-					getMyProducts();
+					const indexToDelete = localCustomProduct.indexOf(productToUpdate);
+
+					if (indexToDelete !== -1) {
+						localCustomProduct.splice(indexToDelete, 1);
+					}
+					localCustomProduct.push(res.data[0]);
+					localStorage.setItem('customItemsUser' + userId, JSON.stringify(localCustomProduct));
 				})
-				.catch((err) => {
-					console.log(err);
-				})
+				.catch((err) => {})
 				.finally(() => {
 					setCustomListLoading(false);
 				});
@@ -556,18 +575,27 @@ const ProductOverlay = ({
 			const data = {
 				nameEn: name,
 				nameMt: '',
+				uniqueKey: id,
+				custom: true,
 			};
-			setCustomListLoading(true);
-
+			const localData = {
+				category: { en: '', mt: '' },
+				name: { en: name, mt: '' },
+				user_id: localStorage.getItem('ACCESS_TOKEN'),
+				uniqueKey: id,
+				custom: true,
+			};
+			// setCustomListLoading(true);
+			const localCustomProduct = JSON.parse(localStorage.getItem('customItemsUser' + userId)) || [];
+			// Add the new product to the list
+			localCustomProduct.push(localData);
+			// Save the updated list back to local storage
+			localStorage.setItem('customItemsUser' + userId, JSON.stringify(localCustomProduct));
+			setCustomProducts(localCustomProduct);
 			axiosClient
 				.post(`/create-myProduct/${userId}`, data)
-				.then((res) => {
-					console.log(res);
-					getMyProducts();
-				})
-				.catch((err) => {
-					console.log(err);
-				})
+				.then((res) => {})
+				.catch((err) => {})
 				.finally(() => {
 					setCustomListLoading(false);
 				});
@@ -669,8 +697,8 @@ const ProductOverlay = ({
 					<ProductTable className="product-to-choose ">
 						{selectedFilter === 'random' &&
 							PopularProducts.filter((product) => {
-								const translatedName = product.name[language] || product.name.en;
-								return translatedName.toLowerCase().includes(searchTerm.toLowerCase());
+								const translatedName = product.name[language] || product.name.en || product.name.mt;
+								return translatedName && translatedName.toLowerCase().includes(searchTerm.toLowerCase());
 							}).map((product) => (
 								<ProductRow key={product.uniqueKey}>
 									<ProductCell>
@@ -690,7 +718,7 @@ const ProductOverlay = ({
 											className="product-deselector"
 											onClick={() => {
 												const sameProduct = toBuyProducts.some((p) => p.uniqueKey == product.uniqueKey);
-												console.log(sameProduct);
+
 												if (sameProduct) {
 													handleUnselectProduct(product.uniqueKey, listId);
 												} else {
@@ -709,7 +737,7 @@ const ProductOverlay = ({
 							Array.from(new Set([...PopularProducts].map((product) => product.category[language]))).map(
 								(category, categoryIndex) => (
 									<React.Fragment key={categoryIndex}>
-										<ProductRow className="categoryRow">
+										<ProductRow key={category} className="categoryRow">
 											<ProductCell
 												style={{
 													fontWeight: 'bold',
@@ -729,7 +757,7 @@ const ProductOverlay = ({
 											) {
 												return (
 													<ProductRow key={product.uniqueKey}>
-														<ProductCell>
+														<ProductCell key={product.uniqueKey}>
 															<div className="grp-check boldest">
 																<input
 																	className="radio"
@@ -746,7 +774,6 @@ const ProductOverlay = ({
 																	const sameProduct = toBuyProducts.some(
 																		(p) => p.uniqueKey === product.uniqueKey
 																	);
-																	console.log(sameProduct);
 
 																	if (sameProduct) {
 																		handleUnselectProduct(product.uniqueKey, listId);
@@ -818,13 +845,13 @@ const ProductOverlay = ({
 									<img src={images[currentImage]} alt="Random Vegetable" />
 									<h2 className="add-product bolder">{translate('please-add-custom-product')}</h2>
 								</ImageContainer>
-								;
 							</div>
 						)}
 						{customProducts.length > 0 &&
 							customProducts
 								.filter((product) => {
-									const translatedName = product.name[language] || product.name.en;
+									const translatedName = product.nameEn || product.nameMt || product.name.en || product.name.mt;
+
 									return translatedName.toLowerCase().includes(searchTerm.toLowerCase());
 								})
 								.map((product) => (
@@ -852,7 +879,9 @@ const ProductOverlay = ({
 													}}
 													className="name name-custom large"
 												>
-													{product.name[language] || product.name.en}
+													{language == 'mt'
+														? product.nameMt || product.name.mt || ''
+														: product.nameEn || product.name.en || ''}
 												</p>
 											</div>
 											<p
@@ -861,7 +890,9 @@ const ProductOverlay = ({
 												}}
 												className="category lighter "
 											>
-												{product.category == null ? '' : product.category.en}
+												{language == 'mt'
+													? product.categoryMt || product.category.mt || ''
+													: product.categoryEn || product.category.en || ''}
 											</p>
 											<div className="grp-narrow narrow">
 												<p
@@ -876,7 +907,6 @@ const ProductOverlay = ({
 													className="remove custom-remove"
 													onClick={() => {
 														const sameProduct = toBuyProducts.some((p) => p.uniqueKey === product.uniqueKey);
-														console.log(sameProduct);
 
 														if (sameProduct) {
 															handleUnselectProduct(product.uniqueKey, listId);
@@ -905,6 +935,7 @@ const ProductOverlay = ({
 					setCustomProductToDelete={setCustomProductToDelete}
 					customProductToDelete={customProductToDelete}
 					getMyProducts={getMyProducts}
+					setMessage={setMessage}
 				/>
 			)}
 		</Container>

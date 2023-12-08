@@ -254,6 +254,7 @@ const ShoppingList = ({}) => {
 
 	//search State
 	const [searching, setSearching] = useState(null);
+	const [customProducts, setCustomProducts] = useState([]);
 
 	//product Delete States
 	const [productToRemove, setProductToRemove] = useState(null);
@@ -374,10 +375,6 @@ const ShoppingList = ({}) => {
 			channel.bind('MarkedAsReady', (data) => {
 				const thisUserId = localStorage.getItem('ACCESS_TOKEN');
 				const userThatMarkedId = data.userId;
-				console.log(data);
-
-				console.log('This user', thisUserId);
-				console.log('userMarked', userThatMarkedId);
 				if (thisUserId !== userThatMarkedId) {
 					fetchListData();
 				}
@@ -386,10 +383,6 @@ const ShoppingList = ({}) => {
 			channel.bind('ProductAdded', (data) => {
 				const thisUserId = localStorage.getItem('ACCESS_TOKEN');
 				const userThatMarkedId = data.userId;
-				console.log(data);
-
-				console.log('This user', thisUserId);
-				console.log('userMarked', userThatMarkedId);
 				if (thisUserId !== userThatMarkedId) {
 					fetchListData();
 				}
@@ -397,7 +390,6 @@ const ShoppingList = ({}) => {
 			channel.bind('ProductDeleted', (data) => {
 				const thisUserId = localStorage.getItem('ACCESS_TOKEN');
 				const userThatMarkedId = data.userId;
-
 				if (thisUserId !== userThatMarkedId) {
 					fetchListData();
 				}
@@ -532,6 +524,24 @@ const ShoppingList = ({}) => {
 	};
 	const handleOff = () => {
 		setHidden((prev) => !prev);
+	};
+
+	const getMyProducts = () => {
+		const userId = localStorage.getItem('ACCESS_TOKEN');
+		const localCustomProduct = JSON.parse(localStorage.getItem('customItemsUser' + userId)) || [];
+
+		setCustomProducts(localCustomProduct);
+
+		axiosClient
+			.get(`/custom-products/${userId}`)
+			.then((res) => {
+				const properCustom = localStorage.setItem('customItemsUser' + userId, JSON.stringify(res.data));
+				setCustomProducts(res.data);
+			})
+			.catch((err) => {
+				console.log(err);
+			})
+			.finally(() => {});
 	};
 	return (
 		<Container className={darkMode ? 'darkMode final' : 'lightMode final'}>
@@ -705,6 +715,9 @@ const ShoppingList = ({}) => {
 						setReadyProducts={setReadyProducts}
 						setOpenEditProduct={setOpenEditProduct}
 						setProductToEdit={setProductToEdit}
+						setMessage={setMessage}
+						customProducts={customProducts}
+						setCustomProducts={setCustomProducts}
 					/>
 				)}
 
@@ -716,6 +729,7 @@ const ShoppingList = ({}) => {
 						item={product}
 						listId={id}
 						updateList={updateList}
+						getMyProducts={getMyProducts}
 					/>
 				)}
 

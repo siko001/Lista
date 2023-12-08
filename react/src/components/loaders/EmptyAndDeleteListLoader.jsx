@@ -16,7 +16,7 @@ const Container = styled.div`
 	flex-direction: column;
 	gap: 20px;
 	color: #fff;
-
+	text-align: center;
 	.loader {
 		font-size: 48px;
 		color: #fff;
