@@ -51,28 +51,28 @@ class CustomProductController extends Controller {
 
     public function createCustomProduct($userId, Request $request) {
         $this->checkForUser($userId);
-        $randomID = rand(100000, 999999);
         $newproduct =  $request;
         if ($newproduct) {
             if ($request->input("nameMt")) {
 
-                CustomProduct::create([
+                $product =     CustomProduct::create([
                     "name" => ["en" => "", "mt" => $newproduct["nameMt"]],
                     "category" => ["en" => "", "mt" => ""],
-                    "uniqueKey" => $randomID,
+                    "uniqueKey" => $newproduct['uniqueKey'],
                     "user_id" => $userId,
+
                 ]);
-                return response(["message" => "product created"], 200);
+                return response(["message" => "product created", $product], 200);
             } else {
 
 
-                CustomProduct::create([
+                $product =        CustomProduct::create([
                     "name" => ["en" => $newproduct["nameEn"], "mt" => ""],
                     "category" => ["en" => "", "mt" => ""],
-                    "uniqueKey" => $randomID,
+                    "uniqueKey" => $newproduct['uniqueKey'],
                     "user_id" => $userId,
                 ]);
-                return response(["message" => "product created in english"], 200);
+                return response(["message" => "product created in english", $product], 200);
             }
         } else {
             return response(["message" => "Error creating product"], 404);
@@ -95,8 +95,13 @@ class CustomProductController extends Controller {
     public function updateTheCustomProduct($productId, $userId, Request $request) {
         $this->checkForUser($userId);
         $productToUpdate = $this->checkForCustomProduct($productId);
+        $updatedFields = [];
         if ($request["nameMT"] || $request["nameEN"]) {
             $updatedProduct =   $productToUpdate->name = [
+                'en' => $request["nameEN"],
+                'mt' => $request["nameMT"],
+            ];
+            $updatedFields['name'] = [
                 'en' => $request["nameEN"],
                 'mt' => $request["nameMT"],
             ];
@@ -107,21 +112,29 @@ class CustomProductController extends Controller {
                 'en' => $request["categoryEN"],
                 'mt' => $request["categoryMT"],
             ];
+            $updatedFields['category'] = [
+                'en' => $request["categoryEN"],
+                'mt' => $request["categoryMT"],
+            ];
             $productToUpdate->update(["category" => $updatedProduct]);
         }
 
         if ($request["quantity"]) {
+            $updatedFields['quantity'] = $request["quantity"];
             $productToUpdate->quantity  = $request["quantity"];
             $productToUpdate->update();
         }
         if ($request["unit"]) {
+            $updatedFields['unit'] = $request["unit"];
             $productToUpdate->unit  = $request["unit"];
             $productToUpdate->update();
         }
         if ($request["price"]) {
+            $updatedFields['price'] = $request["price"];
             $productToUpdate->price  = $request["price"];
             $productToUpdate->update();
         }
+        return $productToUpdate;
     }
 
 

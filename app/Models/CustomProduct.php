@@ -16,7 +16,8 @@ class CustomProduct extends Model {
         'price',
         "status",
         "user_id",
-        "guest_id"
+        "guest_id",
+        "custom"
     ];
 
 
