@@ -22,6 +22,7 @@ import ShoppingList from './ShoppingList';
 import { ProductCountProvider } from '../contexts/ProductCountContext';
 import { useTour } from '@reactour/tour';
 import { useUser } from '../contexts/UserContext';
+import { useLocation } from 'react-router-dom';
 
 const Container = styled.div`
 	min-height: 100vh;
@@ -148,11 +149,18 @@ const Home = () => {
 	const [newListId, setnewListId] = useState();
 	const [listAboutToDelete, setListAboutToDelete] = useState();
 	const { user } = useUser();
+	const location = useLocation();
 	const { setIsOpen } = useTour();
 	useEffect(() => {
 		const returningUser = localStorage.getItem('ACCESS_TOKEN');
 		if (!returningUser) {
 			setIsOpen(true);
+		}
+		const fromRegistration = location.state?.fromRegistration;
+
+		if (fromRegistration) {
+			// Execute your function here
+			setMessage('Registration Succefull');
 		}
 
 		fetchLists();
@@ -163,7 +171,7 @@ const Home = () => {
 				clearInterval(intervalIdRef.current);
 			}
 		};
-	}, [share]);
+	}, [share, location.state]);
 
 	//Create New List Overlay
 	const handleOpenOverlay = () => {

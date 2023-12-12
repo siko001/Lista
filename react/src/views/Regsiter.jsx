@@ -6,6 +6,7 @@ import { useUser } from '../contexts/UserContext';
 import Loader from '../components/loaders/GetListLoader';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
+import Notification from '../components/UI/Notification';
 
 const Container = styled.div`
 	height: 100vh;
@@ -96,6 +97,7 @@ const Register = () => {
 	const [errors, setErrors] = useState([]);
 	const [formIsValid, setFormIsValid] = useState(false);
 	const { translate } = useLanguage();
+	const [message, setMessage] = useState('');
 
 	const [nameMessage, setNameMessage] = useState('');
 	const [nameIsValid, setNameIsValid] = useState(null);
@@ -141,14 +143,12 @@ const Register = () => {
 				.then((res) => {
 					setUser(res.data[0]);
 					setMainMessage(res.data.message);
+					navigate('/', { state: { fromRegistration: true } });
 				})
 				.catch((err) => {
 					if (err.response.status === 422) {
 						const message = <p className="red boldest">{err.response.data.message}</p>;
 						setMainMessage(message);
-						return setTimout(() => {
-							navigate('/');
-						}, 1000);
 					}
 				})
 				.finally(() => {
@@ -436,7 +436,7 @@ const Register = () => {
 						</button>
 					</div>
 				</form>
-				{loading && <Loader />}
+				{loading && <Loader />} <Notification message={message} />
 			</RegisterBox>
 		</Container>
 	);
