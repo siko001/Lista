@@ -141,7 +141,7 @@ const MainSettings = ({
 				copyToClipBoard(res.data.link);
 			})
 			.catch((err) => {
-				console.log(err);
+		
 			})
 			.finally(() => {
 				setTimeout(() => {}, 1600);
@@ -184,11 +184,10 @@ const MainSettings = ({
 		axiosClient
 			.put('update/all-ready/' + id, id)
 			.then((res) => {
-				console.log(res.data.message);
 				updateList();
 			})
 			.catch((err) => {
-				console.log(err);
+	
 			})
 			.finally(() => {});
 	};
@@ -224,7 +223,7 @@ const MainSettings = ({
 			.put('update/all-to_buy/' + id, id)
 			.then((res) => {})
 			.catch((err) => {
-				console.log(err);
+			
 			})
 			.finally(() => {});
 	};
@@ -261,7 +260,7 @@ const MainSettings = ({
 				updateList();
 			})
 			.catch((err) => {
-				console.log(err);
+		
 			})
 			.finally(() => {});
 	};

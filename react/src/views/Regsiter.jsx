@@ -143,7 +143,8 @@ const Register = () => {
 				.then((res) => {
 					setUser(res.data[0]);
 					setMainMessage(res.data.message);
-					navigate('/', { state: { fromRegistration: true } });
+					localStorage.setItem('registration', 'true');
+					navigate('/');
 				})
 				.catch((err) => {
 					if (err.response.status === 422) {

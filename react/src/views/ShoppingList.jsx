@@ -538,9 +538,7 @@ const ShoppingList = ({}) => {
 				const properCustom = localStorage.setItem('customItemsUser' + userId, JSON.stringify(res.data));
 				setCustomProducts(res.data);
 			})
-			.catch((err) => {
-				console.log(err);
-			})
+			.catch((err) => {})
 			.finally(() => {});
 	};
 	return (

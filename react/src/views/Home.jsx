@@ -117,12 +117,12 @@ const images = [Veg2, Des7, Des8, Des9, Des10];
 const Home = () => {
 	// Settings/Gerneral state/Context
 	const [currentImage, setCurrentImage] = useState(0);
-	const { darkMode, setDarkMode } = useDarkMode();
+	const { darkMode } = useDarkMode();
 	const { translate } = useLanguage();
-	const [totalProducts, setTotalProducts] = useState(0);
-	const [totalReadyProduct, setTotalReadyProducts] = useState(0);
+	const [totalProducts] = useState(0);
+	const [totalReadyProduct] = useState(0);
 
-	const [hiddenComp, setHiddenComp] = useState(null);
+	const [hiddenComp] = useState(null);
 	//Lists state
 	const [shoppingList, setShoppingList] = useState([]);
 	const [lists, setLists] = useState([]);
@@ -148,19 +148,23 @@ const Home = () => {
 	const [newListB, setNewListB] = useState(false);
 	const [newListId, setnewListId] = useState();
 	const [listAboutToDelete, setListAboutToDelete] = useState();
-	const { user } = useUser();
-	const location = useLocation();
+
 	const { setIsOpen } = useTour();
 	useEffect(() => {
 		const returningUser = localStorage.getItem('ACCESS_TOKEN');
 		if (!returningUser) {
 			setIsOpen(true);
 		}
-		const fromRegistration = location.state?.fromRegistration;
+		const fromRegistration = localStorage.getItem('registration');
+		if (fromRegistration == 'true') {
+			setMessage(translate('Registration Successful'));
+			localStorage.removeItem('registration');
+		}
 
-		if (fromRegistration) {
-			// Execute your function here
-			setMessage('Registration Succefull');
+		const fromLogin = localStorage.getItem('login');
+		if (fromLogin == 'true') {
+			setMessage('Login Successful');
+			localStorage.removeItem('login');
 		}
 
 		fetchLists();
@@ -171,7 +175,7 @@ const Home = () => {
 				clearInterval(intervalIdRef.current);
 			}
 		};
-	}, [share, location.state]);
+	}, [share]);
 
 	//Create New List Overlay
 	const handleOpenOverlay = () => {
@@ -209,7 +213,7 @@ const Home = () => {
 						setShoppingList(apiLists);
 					})
 					.catch((err) => {
-						console.log(err);
+					
 					})
 					.finally(() => {
 						setLoadingLists(false);

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useUser } from '../contexts/UserContext';
 import Loader from '../components/loaders/GetListLoader';
 import styled from 'styled-components';
-import {useLanguage} from "../contexts/LanguageContext"
+import { useLanguage } from '../contexts/LanguageContext';
 
 const Text = styled.div`
 	z-index: 999;
@@ -13,10 +13,11 @@ const Text = styled.div`
 	place-items: center;
 	font-size: 2rem;
 	font-weight: 700;
+	text-align: center;
 `;
 
 const Logout = () => {
-	const { translate } = useLanguage()
+	const { translate } = useLanguage();
 	const { setToken } = useUser();
 	const navigate = useNavigate();
 
@@ -42,7 +43,7 @@ const Logout = () => {
 
 	return (
 		<>
-			<Text>{translate("Log-out")}</Text>
+			<Text>{translate('Log-out')}</Text>
 			<Loader></Loader>
 		</>
 	);

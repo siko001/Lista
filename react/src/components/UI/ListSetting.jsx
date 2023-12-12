@@ -148,9 +148,7 @@ const ListSetting = ({
 				copyToClipBoard(res.data.link);
 				setShare(true);
 			})
-			.catch((err) => {
-				console.log(err);
-			})
+			.catch((err) => {})
 			.finally(() => {
 				setTimeout(() => {
 					setMessage(null);

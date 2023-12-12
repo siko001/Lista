@@ -176,11 +176,12 @@ const Login = () => {
 				.then((res) => {
 					localStorage.removeItem('ACCESS_TOKEN');
 					localStorage.setItem('ACCESS_TOKEN', res.data.user.id);
+					localStorage.setItem('login', 'true');
 					setUser(res.data.user);
 					navigate('/');
 				})
 				.catch((err) => {
-					console.log(err);
+				
 				});
 		}
 	};

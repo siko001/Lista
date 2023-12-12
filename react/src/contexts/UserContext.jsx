@@ -50,14 +50,12 @@ const UserProvider = ({ children }) => {
 		}
 	};
 	useEffect(() => {
-		console.log('getting user');
 		const initializeToken = async () => {
 			const token = localStorage.getItem('ACCESS_TOKEN') || getRandomInt().toString();
 			localStorage.setItem('ACCESS_TOKEN', token);
 			if (token) {
 				try {
 					const response = await axiosClient.get('/user/' + token);
-					console.log(response);
 					// Access user info here
 					const userInfo = response.data.user;
 					setUser(userInfo);

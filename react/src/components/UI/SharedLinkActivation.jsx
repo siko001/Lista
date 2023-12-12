@@ -89,7 +89,7 @@ const Container = styled.div`
 	}
 
 	.loaderRedirect {
-		width: 255px;
+		width: 175px;
 		height: 200px;
 		display: block;
 		margin: auto;
@@ -105,7 +105,7 @@ const Container = styled.div`
 	}
 	.loaderRedirect::after {
 		content: '';
-		left: -80px;
+		left: -10px;
 		right: 0;
 		margin: auto;
 		top: 30px;
@@ -122,7 +122,7 @@ const Container = styled.div`
 	.txt2 {
 		position: relative;
 		top: 100px;
-		left: -160px;
+		left: -80px;
 		font-size: 1.2rem;
 		font-weight: 600;
 		text-align: center;

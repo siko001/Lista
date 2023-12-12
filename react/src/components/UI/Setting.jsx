@@ -159,7 +159,6 @@ const Setting = ({ onChangeDarkMode, steps }) => {
 	};
 
 	useEffect(() => {
-		console.log(user);
 		localStorage.setItem('theme', darkMode);
 	}, [darkMode, user]);
 

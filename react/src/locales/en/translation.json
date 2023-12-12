@@ -102,5 +102,7 @@
 	"Don't have an account?": "Don't have an account?",
 	"Create one here": " Create one here!",
 	"Forgot password": "Forgot password",
-	"Login":"Login"
+	"Login":"Login",
+	"Registration Successful":"Registration Successful",
+	"Login Successful":"Login Successful"
 }
