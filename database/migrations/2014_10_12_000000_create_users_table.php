@@ -13,7 +13,7 @@ return new class extends Migration {
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
-            $table->boolean('is_guest')->default(true);
+            $table->enum("is_guest", ['true', 'false'])->default('true');
             $table->timestamps();
         });
     }

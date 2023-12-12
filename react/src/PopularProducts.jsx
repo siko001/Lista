@@ -51,8 +51,8 @@ const PopularProducts = [
 			mt: 'Tadam',
 		},
 		category: {
-			en: 'Vegetable',
-			mt: 'Haxix',
+			en: 'Vegetables',
+			mt: 'Ħxejjex',
 		},
 		price: '',
 		unit: '',
@@ -108,7 +108,7 @@ const PopularProducts = [
 		uniqueKey: 8,
 		name: {
 			en: 'Tomatoe sauce',
-			mt: 'Żalża tat-tadam',
+			mt: 'zalza tat-tadam',
 		},
 		category: {
 			en: 'Sauce',
@@ -1023,6 +1023,21 @@ const PopularProducts = [
 	{
 		uniqueKey: 68,
 		name: {
+			en: 'Lychee',
+			mt: 'Liċċi',
+		},
+		category: {
+			en: 'Fruit',
+			mt: 'Frott',
+		},
+		price: '',
+		unit: 'kg',
+		quantity: '1',
+		status: 'to buy',
+	},
+	{
+		uniqueKey: 69,
+		name: {
 			en: 'Chickpeas cans',
 			mt: 'Mascarpone ',
 		},
@@ -1035,7 +1050,1090 @@ const PopularProducts = [
 		quantity: '1',
 		status: 'to buy',
 	},
-];
+	{
+		uniqueKey: 70,
+		name: {
+			en: 'Lime',
+			mt: 'Lumiċell',
+		},
+		category: {
+			en: 'Dairy',
+			mt: 'Halib',
+		},
+		price: '',
+		unit: 'kg',
+		quantity: '1',
+		status: 'to buy',
+	},
+	{
+		uniqueKey: 71,
+		name: {
+			en: 'Lemon',
+			mt: 'Lumi',
+		},
+		category: {
+			en: 'Fruit',
+			mt: 'Frott',
+		},
+		price: '',
+		unit: 'kg',
+		quantity: '1',
+		status: 'to buy',
+	},
+	{
+		uniqueKey: 72,
+		name: {
+			en: 'Gooseberries',
+			mt: 'ċawsli',
+		},
+		category: {
+			en: 'Fruit',
+			mt: 'Frott',
+		},
+		price: '',
+		unit: 'kg',
+		quantity: '1',
+		status: 'to buy',
+	},
+	{
+		uniqueKey: 73,
+		name: {
+			en: 'Figs',
+			mt: 'Tin',
+		},
+		category: {
+			en: 'Fruit',
+			mt: 'Frott',
+		},
+		price: '',
+		unit: 'kg',
+		quantity: '1',
+		status: 'to buy',
+	},
+	{
+		uniqueKey: 74,
+		name: {
+			en: 'Coconuts',
+			mt: "ġewża ta' l-Indi",
+		},
+		category: {
+			en: 'Fruit',
+			mt: 'Frott',
+		},
+		price: '',
+		unit: 'pc',
+		quantity: '1',
+		status: 'to buy',
+	},
+	{
+		uniqueKey: 75,
+		name: {
+			en: 'Apricot',
+			mt: 'Berquq',
+		},
+		category: {
+			en: 'Fruit',
+			mt: 'Frott',
+		},
+		price: '',
+		unit: 'kg',
+		quantity: '1',
+		status: 'to buy',
+	},
+	{
+		uniqueKey: 7666666,
+		name: {
+			en: 'Raspberries',
+			mt: 'Lampun',
+		},
+		category: {
+			en: 'Fruit',
+			mt: 'Frott',
+		},
+		price: '',
+		unit: 'kg',
+		quantity: '1',
+		status: 'to buy',
+	},
+	{
+		uniqueKey: 76,
+		name: {
+			en: 'Cherries',
+			mt: 'Ċirasa',
+		},
+		category: {
+			en: 'Fruit',
+			mt: 'Frott',
+		},
+		price: '',
+		unit: 'kg',
+		quantity: '1',
+		status: 'to buy',
+	},
+	{
+		uniqueKey: 77,
+		name: {
+			en: 'BlackBerries',
+			mt: 'Tut',
+		},
+		category: {
+			en: 'Fruit',
+			mt: 'Frott',
+		},
+		price: '',
+		unit: 'kg',
+		quantity: '1',
+		status: 'to buy',
+	},
+	{
+		uniqueKey: 78,
+		name: {
+			en: 'Strawberries',
+			mt: 'Frawli',
+		},
+		category: {
+			en: 'Fruit',
+			mt: 'Frott',
+		},
+		price: '',
+		unit: 'kg',
+		quantity: '1',
+		status: 'to buy',
+	},
+	{
+		uniqueKey: 79,
+		name: {
+			en: 'Watermelon',
+			mt: 'dulliegħa',
+		},
+		category: {
+			en: 'Fruit',
+			mt: 'Frott',
+		},
+		price: '',
+		unit: 'pc',
+		quantity: '1',
+		status: 'to buy',
+	},
+	{
+		uniqueKey: 80,
+		name: {
+			en: 'Avocado',
+			mt: 'Avokado',
+		},
+		category: {
+			en: 'Dairy',
+			mt: 'Halib',
+		},
+		price: '',
+		unit: 'pc',
+		quantity: '1',
+		status: 'to buy',
+	},
+	{
+		uniqueKey: 81,
+		name: {
+			en: 'Papaya',
+			mt: 'Papajja',
+		},
+		category: {
+			en: 'Fruit',
+			mt: 'Frott',
+		},
+		price: '',
+		unit: 'pc',
+		quantity: '1',
+		status: 'to buy',
+	},
+	{
+		uniqueKey: 82,
+		name: {
+			en: 'Pineapple',
+			mt: 'Ananas',
+		},
+		category: {
+			en: 'Fruit',
+			mt: 'Frott',
+		},
+		price: '',
+		unit: 'pc',
+		quantity: '1',
+		status: 'to buy',
+	},
 
+	{
+		uniqueKey: 83,
+		name: {
+			en: 'Mango',
+			mt: 'Mango',
+		},
+		category: {
+			en: 'Fruit',
+			mt: 'Frott',
+		},
+		price: '',
+		unit: 'pc',
+		quantity: '1',
+		status: 'to buy',
+	},
+	{
+		uniqueKey: 84,
+		name: {
+			en: 'Grape',
+			mt: 'Għeneb',
+		},
+		category: {
+			en: 'Fruit',
+			mt: 'Frott',
+		},
+		price: '',
+		unit: 'kg',
+		quantity: '0.5',
+		status: 'to buy',
+	},
+	{
+		uniqueKey: 85,
+		name: {
+			en: 'Passion fruit',
+			mt: 'Frott tal-passjoni',
+		},
+		category: {
+			en: 'Fruit',
+			mt: 'Frott',
+		},
+		price: '',
+		unit: 'kg',
+		quantity: '0.5',
+		status: 'to buy',
+	},
+	{
+		uniqueKey: 86,
+		name: {
+			en: 'Orange',
+			mt: 'Laring',
+		},
+		category: {
+			en: 'Fruit',
+			mt: 'Frott',
+		},
+		price: '',
+		unit: 'kg',
+		quantity: '1',
+		status: 'to buy',
+	},
+	{
+		uniqueKey: 87,
+		name: {
+			en: 'Banana',
+			mt: 'Banana',
+		},
+		category: {
+			en: 'Fruit',
+			mt: 'Frott',
+		},
+		price: '',
+		unit: 'kg',
+		quantity: '1',
+		status: 'to buy',
+	},
+	{
+		uniqueKey: 88,
+		name: {
+			en: 'Apple',
+			mt: 'Tuffieħa',
+		},
+		category: {
+			en: 'Fruit',
+			mt: 'Frott',
+		},
+		price: '',
+		unit: 'kg',
+		quantity: '1',
+		status: 'to buy',
+	},
+	{
+		uniqueKey: 89,
+		name: {
+			en: 'Melon',
+			mt: 'Bettieħ',
+		},
+		category: {
+			en: 'Fruit',
+			mt: 'Frott',
+		},
+		price: '',
+		unit: 'kg',
+		quantity: '1',
+		status: 'to buy',
+	},
+	{
+		uniqueKey: 90,
+		name: {
+			en: 'Peaches',
+			mt: 'Ħawħ',
+		},
+		category: {
+			en: 'Fruit',
+			mt: 'Frott',
+		},
+		price: '',
+		unit: 'kg',
+		quantity: '1',
+		status: 'to buy',
+	},
+	{
+		uniqueKey: 900000000000,
+		name: {
+			en: 'Tangerines',
+			mt: 'Tangarini',
+		},
+		category: {
+			en: 'Fruit',
+			mt: 'Frott',
+		},
+		price: '',
+		unit: 'kg',
+		quantity: '1',
+		status: 'to buy',
+	},
+	{
+		uniqueKey: 92,
+		name: {
+			en: 'Pears',
+			mt: 'Langas',
+		},
+		category: {
+			en: 'Fruit',
+			mt: 'Frott',
+		},
+		price: '',
+		unit: 'kg',
+		quantity: '1',
+		status: 'to buy',
+	},
+	{
+		uniqueKey: 93,
+		name: {
+			en: 'Pomegrantes',
+			mt: 'Rummien',
+		},
+		category: {
+			en: 'Fruit',
+			mt: 'Frott',
+		},
+		price: '',
+		unit: 'kg',
+		quantity: '1',
+		status: 'to buy',
+	},
+	{
+		uniqueKey: 94,
+		name: {
+			en: 'Prickly pears',
+			mt: 'Bajtar',
+		},
+		category: {
+			en: 'Fruit',
+			mt: 'Frott',
+		},
+		price: '',
+		unit: 'kg',
+		quantity: '1',
+		status: 'to buy',
+	},
+	{
+		uniqueKey: 95,
+		name: {
+			en: 'Nectarines',
+			mt: 'Nattarini',
+		},
+		category: {
+			en: 'Fruit',
+			mt: 'Frott',
+		},
+		price: '',
+		unit: 'kg',
+		quantity: '1',
+		status: 'to buy',
+	},
+	{
+		uniqueKey: 96,
+		name: {
+			en: 'Clementine',
+			mt: 'Klementina',
+		},
+		category: {
+			en: 'Fruit',
+			mt: 'Frott',
+		},
+		price: '',
+		unit: 'kg',
+		quantity: '1',
+		status: 'to buy',
+	},
+	{
+		uniqueKey: 97,
+		name: {
+			en: 'Kiwi',
+			mt: 'Kiwi',
+		},
+		category: {
+			en: 'Fruit',
+			mt: 'Frott',
+		},
+		price: '',
+		unit: 'kg',
+		quantity: '1',
+		status: 'to buy',
+	},
+	{
+		uniqueKey: 98,
+		name: {
+			en: 'Olives',
+			mt: 'Żebbuġ',
+		},
+		category: {
+			en: 'Fruit',
+			mt: 'Frott',
+		},
+		price: '',
+		unit: 'kg',
+		quantity: '1',
+		status: 'to buy',
+	},
+	{
+		uniqueKey: 99,
+		name: {
+			en: 'Mandarins',
+			mt: 'Mandolin',
+		},
+		category: {
+			en: 'Fruit',
+			mt: 'Frott',
+		},
+		price: '',
+		unit: 'kg',
+		quantity: '1',
+		status: 'to buy',
+	},
+
+	{
+		uniqueKey: 100,
+		name: {
+			en: 'Potato',
+			mt: 'Patata',
+		},
+		category: {
+			en: 'Vegetables',
+			mt: 'Ħxejjex',
+		},
+		price: '',
+		unit: 'kg',
+		quantity: '1',
+		status: 'to buy',
+	},
+	{
+		uniqueKey: 101,
+		name: {
+			en: 'Carrots',
+			mt: 'Karroti',
+		},
+		category: {
+			en: 'Vegetables',
+			mt: 'Ħxejjex',
+		},
+		price: '',
+		unit: 'kg',
+		quantity: '1',
+		status: 'to buy',
+	},
+	{
+		uniqueKey: 102,
+		name: {
+			en: 'Onion',
+			mt: 'Basal',
+		},
+		category: {
+			en: 'Vegetables',
+			mt: 'Ħxejjex',
+		},
+		price: '',
+		unit: 'kg',
+		quantity: '1',
+		status: 'to buy',
+	},
+	{
+		uniqueKey: 103,
+		name: {
+			en: 'Garlic',
+			mt: 'Tewm',
+		},
+		category: {
+			en: 'Vegetables',
+			mt: 'Ħxejjex',
+		},
+		price: '',
+		unit: 'kg',
+		quantity: '1',
+		status: 'to buy',
+	},
+	{
+		uniqueKey: 104,
+		name: {
+			en: 'Cucumber',
+			mt: 'Hjar',
+		},
+		category: {
+			en: 'Vegetables',
+			mt: 'Ħxejjex',
+		},
+		price: '',
+		unit: 'kg',
+		quantity: '1',
+		status: 'to buy',
+	},
+	{
+		uniqueKey: 105,
+		name: {
+			en: 'Bell Peppers',
+			mt: 'Bżar tal-kulur',
+		},
+		category: {
+			en: 'Vegetables',
+			mt: 'Ħxejjex',
+		},
+		price: '',
+		unit: 'kg',
+		quantity: '1',
+		status: 'to buy',
+	},
+	{
+		uniqueKey: 106,
+		name: {
+			en: 'Lettuce',
+			mt: 'Hass',
+		},
+		category: {
+			en: 'Vegetables',
+			mt: 'Ħxejjex',
+		},
+		price: '',
+		unit: 'kg',
+		quantity: '1',
+		status: 'to buy',
+	},
+	{
+		uniqueKey: 107,
+		name: {
+			en: 'Spinach',
+			mt: 'Spinaċi',
+		},
+		category: {
+			en: 'Vegetables',
+			mt: 'Ħxejjex',
+		},
+		price: '',
+		unit: 'kg',
+		quantity: '1',
+		status: 'to buy',
+	},
+	{
+		uniqueKey: 108,
+		name: {
+			en: 'Broccoli',
+			mt: 'Brokkoli',
+		},
+		category: {
+			en: 'Vegetables',
+			mt: 'Ħxejjex',
+		},
+		price: '',
+		unit: 'kg',
+		quantity: '1',
+		status: 'to buy',
+	},
+	{
+		uniqueKey: 109,
+		name: {
+			en: 'Cauliflower',
+			mt: 'Pastard',
+		},
+		category: {
+			en: 'Vegetables',
+			mt: 'Ħxejjex',
+		},
+		price: '',
+		unit: 'kg',
+		quantity: '1',
+		status: 'to buy',
+	},
+	{
+		uniqueKey: 110,
+		name: {
+			en: 'Aubergine',
+			mt: 'Brunġiel',
+		},
+		category: {
+			en: 'Vegetables',
+			mt: 'Ħxejjex',
+		},
+		price: '',
+		unit: 'kg',
+		quantity: '1',
+		status: 'to buy',
+	},
+	{
+		uniqueKey: 111,
+		name: {
+			en: 'Marrows',
+			mt: 'Qarabghali',
+		},
+		category: {
+			en: 'Vegetables',
+			mt: 'Ħxejjex',
+		},
+		price: '',
+		unit: 'kg',
+		quantity: '1',
+		status: 'to buy',
+	},
+	{
+		uniqueKey: 112,
+		name: {
+			en: 'Zucchini',
+			mt: 'Zucchini',
+		},
+		category: {
+			en: 'Vegetables',
+			mt: 'Ħxejjex',
+		},
+		price: '',
+		unit: 'kg',
+		quantity: '1',
+		status: 'to buy',
+	},
+	{
+		uniqueKey: 113,
+		name: {
+			en: 'Pumpkin',
+			mt: 'Qargħa ħamra',
+		},
+		category: {
+			en: 'Vegetables',
+			mt: 'Ħxejjex',
+		},
+		price: '',
+		unit: 'kg',
+		quantity: '1',
+		status: 'to buy',
+	},
+	{
+		uniqueKey: 114,
+		name: {
+			en: 'Beans',
+			mt: 'Fazola',
+		},
+		category: {
+			en: 'Vegetables',
+			mt: 'Ħxejjex',
+		},
+		price: '',
+		unit: 'kg',
+		quantity: '1',
+		status: 'to buy',
+	},
+	{
+		uniqueKey: 115,
+		name: {
+			en: 'Mushrooms',
+			mt: 'Faqqiegħ',
+		},
+		category: {
+			en: 'Vegetables',
+			mt: 'Ħxejjex',
+		},
+		price: '',
+		unit: 'kg',
+		quantity: '1',
+		status: 'to buy',
+	},
+	{
+		uniqueKey: 116,
+		name: {
+			en: 'Peas',
+			mt: 'Piżelli',
+		},
+		category: {
+			en: 'Vegetables',
+			mt: 'Ħxejjex',
+		},
+		price: '',
+		unit: 'kg',
+		quantity: '1',
+		status: 'to buy',
+	},
+	{
+		uniqueKey: 117,
+		name: {
+			en: 'Asparagus',
+			mt: 'Spraġ',
+		},
+		category: {
+			en: 'Vegetables',
+			mt: 'Ħxejjex',
+		},
+		price: '',
+		unit: 'kg',
+		quantity: '1',
+		status: 'to buy',
+	},
+	{
+		uniqueKey: 122,
+		name: {
+			en: 'Beetroot',
+			mt: 'Pitravi',
+		},
+		category: {
+			en: 'Vegetables',
+			mt: 'Ħxejjex',
+		},
+		price: '',
+		unit: 'kg',
+		quantity: '1',
+		status: 'to buy',
+	},
+	{
+		uniqueKey: 118,
+		name: {
+			en: 'Broad Beans',
+			mt: 'Ful',
+		},
+		category: {
+			en: 'Vegetables',
+			mt: 'Ħxejjex',
+		},
+		price: '',
+		unit: 'kg',
+		quantity: '1',
+		status: 'to buy',
+	},
+	{
+		uniqueKey: 119,
+		name: {
+			en: 'Cabbage',
+			mt: 'Kabboċċa',
+		},
+		category: {
+			en: 'Vegetables',
+			mt: 'Ħxejjex',
+		},
+		price: '',
+		unit: 'kg',
+		quantity: '1',
+		status: 'to buy',
+	},
+	{
+		uniqueKey: 120,
+		name: {
+			en: 'Leeks',
+			mt: 'Kurraatt',
+		},
+		category: {
+			en: 'Vegetables',
+			mt: 'Ħxejjex',
+		},
+		price: '',
+		unit: 'kg',
+		quantity: '1',
+		status: 'to buy',
+	},
+	{
+		uniqueKey: 121,
+		name: {
+			en: 'Sweet potato',
+			mt: 'Patata ħelwa',
+		},
+		category: {
+			en: 'Vegetables',
+			mt: 'Ħxejjex',
+		},
+		price: '',
+		unit: 'kg',
+		quantity: '1',
+		status: 'to buy',
+	},
+	{
+		uniqueKey: 123,
+		name: {
+			en: 'Kale',
+			mt: 'Kejl',
+		},
+		category: {
+			en: 'Vegetables',
+			mt: 'Ħxejjex',
+		},
+		price: '',
+		unit: 'kg',
+		quantity: '1',
+		status: 'to buy',
+	},
+	{
+		uniqueKey: 124,
+		name: {
+			en: 'Artichokes',
+			mt: 'Qaqoċċ',
+		},
+		category: {
+			en: 'Vegetables',
+			mt: 'Ħxejjex',
+		},
+		price: '',
+		unit: 'kg',
+		quantity: '1',
+		status: 'to buy',
+	},
+	{
+		uniqueKey: 125,
+		name: {
+			en: 'Chives',
+			mt: 'kurrat Salvaġġ',
+		},
+		category: {
+			en: 'Herbs',
+			mt: 'Ħwawar',
+		},
+		price: '',
+		unit: 'kg',
+		quantity: '1',
+		status: 'to buy',
+	},
+	{
+		uniqueKey: 126,
+		name: {
+			en: 'Basil',
+			mt: 'Ħabaq',
+		},
+		category: {
+			en: 'Herbs',
+			mt: 'Ħwawar',
+		},
+		price: '',
+		unit: 'kg',
+		quantity: '1',
+		status: 'to buy',
+	},
+	{
+		uniqueKey: 127,
+		name: {
+			en: 'Bay leaves',
+			mt: 'Werqa Rand',
+		},
+		category: {
+			en: 'Herbs',
+			mt: 'Ħwawar',
+		},
+		price: '',
+		unit: 'kg',
+		quantity: '1',
+		status: 'to buy',
+	},
+	{
+		uniqueKey: 128,
+		name: {
+			en: 'Fennel',
+			mt: 'Bużbież',
+		},
+		category: {
+			en: 'Herbs',
+			mt: 'Ħwawar',
+		},
+		price: '',
+		unit: 'kg',
+		quantity: '1',
+		status: 'to buy',
+	},
+	{
+		uniqueKey: 129,
+		name: {
+			en: 'Mint',
+			mt: 'Nagħniegħ',
+		},
+		category: {
+			en: 'Herbs',
+			mt: 'Ħwawar',
+		},
+		price: '',
+		unit: 'kg',
+		quantity: '1',
+		status: 'to buy',
+	},
+	{
+		uniqueKey: 130,
+		name: {
+			en: 'Parsley',
+			mt: 'Tursin',
+		},
+		category: {
+			en: 'Herbs',
+			mt: 'Ħwawar',
+		},
+		price: '',
+		unit: 'kg',
+		quantity: '1',
+		status: 'to buy',
+	},
+	{
+		uniqueKey: 131,
+		name: {
+			en: 'Celery',
+			mt: 'Karfus',
+		},
+		category: {
+			en: 'Herbs',
+			mt: 'Ħwawar',
+		},
+		price: '',
+		unit: 'kg',
+		quantity: '1',
+		status: 'to buy',
+	},
+	{
+		uniqueKey: 132,
+		name: {
+			en: 'Thyme',
+			mt: 'Sagħtar ',
+		},
+		category: {
+			en: 'Herbs',
+			mt: 'Ħwawar',
+		},
+		price: '',
+		unit: 'kg',
+		quantity: '1',
+		status: 'to buy',
+	},
+	{
+		uniqueKey: 133,
+		name: {
+			en: 'Sage',
+			mt: 'Salvja',
+		},
+		category: {
+			en: 'Herbs',
+			mt: 'Ħwawar',
+		},
+		price: '',
+		unit: 'kg',
+		quantity: '1',
+		status: 'to buy',
+	},
+	{
+		uniqueKey: 134,
+		name: {
+			en: 'Marjoram',
+			mt: 'Merqtux',
+		},
+		category: {
+			en: 'Herbs',
+			mt: 'Ħwawar',
+		},
+		price: '',
+		unit: 'kg',
+		quantity: '1',
+		status: 'to buy',
+	},
+	{
+		uniqueKey: 135,
+		name: {
+			en: 'Oregano',
+			mt: 'Riegnu',
+		},
+		category: {
+			en: 'Herbs',
+			mt: 'Ħwawar',
+		},
+		price: '',
+		unit: 'kg',
+		quantity: '1',
+		status: 'to buy',
+	},
+	{
+		uniqueKey: 136,
+		name: {
+			en: 'Rosemary',
+			mt: 'Klin',
+		},
+		category: {
+			en: 'Herbs',
+			mt: 'Ħwawar',
+		},
+		price: '',
+		unit: 'kg',
+		quantity: '1',
+		status: 'to buy',
+	},
+	{
+		uniqueKey: 137,
+		name: {
+			en: 'Dill',
+			mt: 'Xibt',
+		},
+		category: {
+			en: 'Herbs',
+			mt: 'Ħwawar',
+		},
+		price: '',
+		unit: 'kg',
+		quantity: '1',
+		status: 'to buy',
+	},
+
+	{
+		uniqueKey: 138,
+		name: {
+			en: 'Taragon',
+			mt: 'Stragun',
+		},
+		category: {
+			en: 'Herbs',
+			mt: 'Ħwawar',
+		},
+		price: '',
+		unit: 'kg',
+		quantity: '1',
+		status: 'to buy',
+	},
+	{
+		uniqueKey: 140,
+		name: {
+			en: 'Ginger',
+			mt: 'Ġiġer',
+		},
+		category: {
+			en: 'Vegetables',
+			mt: 'Ħxejjex',
+		},
+		price: '',
+		unit: 'kg',
+		quantity: '1',
+		status: 'to buy',
+	},
+
+	{
+		uniqueKey: 139,
+		name: {
+			en: 'Rucola',
+			mt: 'Rukola',
+		},
+		category: {
+			en: 'Vegetables',
+			mt: 'Ħxejjex',
+		},
+		price: '',
+		unit: 'kg',
+		quantity: '1',
+		status: 'to buy',
+	},
+];
 export default PopularProducts;
 // Ċċ  Ġġ Għgħ  Ħħ Żż

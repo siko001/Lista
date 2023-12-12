@@ -4,6 +4,8 @@ import { useLanguage } from '../../contexts/LanguageContext';
 import { useDarkMode } from '../../contexts/DarkModeContext';
 import { Link } from 'react-router-dom';
 import { useTour } from '@reactour/tour';
+import { useUser } from '../../contexts/UserContext';
+import { useNavigate } from 'react-router-dom';
 
 const SettingContainer = styled.div`
 	display: flex;
@@ -50,6 +52,12 @@ const SettingContainer = styled.div`
 		&:hover {
 			cursor: pointer;
 		}
+	}
+
+	.tutorial-btn {
+		font-weight: 600;
+		font-size: 0.8rem;
+		color: white;
 	}
 	.toggle-lang {
 		position: relative;
@@ -119,6 +127,17 @@ const SettingContainer = styled.div`
 			opacity: 0.5;
 		}
 	}
+
+	.user {
+		font-weight: 600;
+		margin: 10px 0;
+	}
+	.logout-btn {
+		background-color: red;
+		color: white;
+		font-weight: 600;
+		font-size: 0.9rem;
+	}
 `;
 
 const Setting = ({ onChangeDarkMode, steps }) => {
@@ -127,6 +146,9 @@ const Setting = ({ onChangeDarkMode, steps }) => {
 	const lang = useLanguage().language;
 	const isDarkMode = useDarkMode().darkMode;
 	const { setIsOpen } = useTour();
+	const { user, setUser } = useUser();
+	const navigate = useNavigate();
+
 	const handleSetLang = () => {
 		changeLanguage((language) => (language === 'en' ? 'mt' : 'en'));
 	};
@@ -137,8 +159,21 @@ const Setting = ({ onChangeDarkMode, steps }) => {
 	};
 
 	useEffect(() => {
+		console.log(user);
 		localStorage.setItem('theme', darkMode);
-	}, [darkMode]);
+	}, [darkMode, user]);
+
+	const handleLogout = () => {
+		localStorage.removeItem('ACCESS_TOKEN');
+		localStorage.removeItem('shoppingLists');
+		localStorage.setItem('shoppingLists', '[]');
+		setUser({
+			name: null,
+			email: null,
+			is_guest: 'true',
+		});
+		navigate('/logout');
+	};
 
 	return (
 		<SettingContainer>
@@ -154,13 +189,7 @@ const Setting = ({ onChangeDarkMode, steps }) => {
 				</div>
 				<div className="setting-group ">
 					<div className="setting-title ">{translate('darkMode')}</div>
-					<input
-						type="checkbox"
-						id="switch"
-						className="checkbox"
-						onChange={handleSetDarkMode} // Add onChange handler
-						checked={isDarkMode}
-					/>
+					<input type="checkbox" id="switch" className="checkbox" onChange={handleSetDarkMode} checked={isDarkMode} />
 					<label htmlFor="switch" className="toggle  third-step">
 						<p>{translate('off')}</p>
 						<p>{translate('on')}</p>
@@ -181,12 +210,25 @@ const Setting = ({ onChangeDarkMode, steps }) => {
 				>
 					{translate('tutorial-play')}
 				</button>
-				<Link to="/register" className="link">
-					{translate('register')}
-				</Link>
-				<Link to="/login" className="link">
-					{translate('login')}
-				</Link>
+				{user && user.is_guest === 'true' ? (
+					<React.Fragment>
+						<Link to="/register" className="link">
+							{translate('register')}
+						</Link>
+						<Link to="/login" className="link">
+							{translate('login')}
+						</Link>
+					</React.Fragment>
+				) : (
+					user && (
+						<React.Fragment>
+							<h3 className="user">Welcome {user.name}</h3>
+							<button onClick={handleLogout} className="btn logout-btn">
+								Logout
+							</button>
+						</React.Fragment>
+					)
+				)}
 			</div>
 		</SettingContainer>
 	);

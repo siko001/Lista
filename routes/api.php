@@ -10,18 +10,17 @@ use App\Http\Controllers\Api\CustomProductController;
 
 
 
+
+
+
+
 //Route to edit the custom product in the custom product table
 Route::put("/update-custom-product/{productId}/{userId}", [CustomProductController::class, "UpdateTheCustomProduct"]);
-
 //Custom Products Routes
 Route::get("/custom-products/{userId}", [CustomProductController::class, "getAllUserCustomProducts"]);
-
 Route::delete("/delete-myProduct/{productId}/{userId}", [CustomProductController::class, "deleteCustomProduct"]);
-
 // Route::put("/update-myProduct/{productId/{userId}", [CustomProductController::class, "updateCustomProduct"]);
 Route::post("/create-myProduct/{userId}", [CustomProductController::class, "createCustomProduct"]);
-
-
 
 
 
@@ -32,9 +31,11 @@ Route::post("/share-list", [SharedLinkController::class, "generateShareableLink"
 Route::get('/shared-links/{token}/{id}', [SharedLinkController::class, 'activateLink']);
 
 
-//User Related Rourtes
+//User Related Routes
 Route::get("/user/{id}", [UserController::class, "getUser"]);
-
+Route::post("/check-email", [UserController::class, "checkEmailAvaliabilty"]);
+Route::put("/register-user/{userId}", [UserController::class, "registerUser"]);
+Route::post("/login-user", [UserController::class, "loginUser"]);
 
 
 // CRUD for the lists Routes

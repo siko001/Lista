@@ -367,7 +367,7 @@ const ShoppingList = ({}) => {
 	useEffect(() => {
 		const allLists = JSON.parse(localStorage.getItem('shoppingLists'));
 		const sharedList = allLists.find((p) => p.id == id);
-		if (sharedList.shared == true && sharedList.link_url != null) {
+		if (sharedList && sharedList.shared == true && sharedList.link_url != null) {
 			var pusher = new Pusher('9d3825eb76271a0fd1f7', {
 				cluster: 'eu',
 			});

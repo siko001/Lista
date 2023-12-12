@@ -13,7 +13,9 @@ const UserProvider = ({ children }) => {
 	const [user, setUser] = useState({
 		name: '',
 		email: '',
+		is_guest: '',
 	});
+
 	const [token, _setToken] = useState(localStorage.getItem('ACCESS_TOKEN'));
 
 	const setToken = (token) => {
@@ -36,22 +38,6 @@ const UserProvider = ({ children }) => {
 		}
 	};
 
-	const logoutUser = () => {
-		localStorage.removeItem('ACCESS_TOKEN');
-		setUser(null);
-	};
-
-	const registerUser = async (userData) => {
-		try {
-			const response = await axiosClient.post('/register', userData);
-			const newUser = response.data;
-			localStorage.setItem('ACCESS_TOKEN', newUser.token);
-			setUser(newUser.user);
-		} catch (error) {
-			console.error('Registration failed:', error);
-		}
-	};
-
 	const getRandomInt = () => {
 		try {
 			const array = new Uint32Array(1);
@@ -63,31 +49,30 @@ const UserProvider = ({ children }) => {
 			return Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);
 		}
 	};
-
 	useEffect(() => {
-		const initializeToken = () => {
+		console.log('getting user');
+		const initializeToken = async () => {
 			const token = localStorage.getItem('ACCESS_TOKEN') || getRandomInt().toString();
 			localStorage.setItem('ACCESS_TOKEN', token);
 			if (token) {
-				const fetchUser = () => {
-					try {
-						const response = axiosClient.get('/user/' + token);
-					} catch (error) {
-					} finally {
-					}
-				};
-				fetchUser();
+				try {
+					const response = await axiosClient.get('/user/' + token);
+					console.log(response);
+					// Access user info here
+					const userInfo = response.data.user;
+					setUser(userInfo);
+				} catch (error) {
+					// Handle error if needed
+					console.error('Error fetching user:', error);
+				} finally {
+					// Any cleanup or additional logic
+				}
 			}
 		};
-
 		initializeToken();
-	}, []);
+	}, [token]);
 
-	return (
-		<UserContext.Provider value={{ user, setUser, token, setToken, loginUser, logoutUser, registerUser }}>
-			{children}
-		</UserContext.Provider>
-	);
+	return <UserContext.Provider value={{ user, setUser, token, setToken, loginUser }}>{children}</UserContext.Provider>;
 };
 
 const useUser = () => {

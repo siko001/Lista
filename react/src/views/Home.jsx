@@ -8,15 +8,6 @@ import Des7 from '../assets/des7.svg';
 import Des8 from '../assets/des8.svg';
 import Des9 from '../assets/des9.svg';
 import Des10 from '../assets/des10.svg';
-import Des1 from '../assets/des1.svg';
-import Des2 from '../assets/des2.svg';
-import Des3 from '../assets/des3.svg';
-import Des4 from '../assets/des4.svg';
-import Des5 from '../assets/des5.svg';
-import Des6 from '../assets/des6.svg';
-import Des11 from '../assets/des11.svg';
-import Des12 from '../assets/des12.svg';
-import Des13 from '../assets/des13.svg';
 import ListsContainer from '../components/list/ListsContainer';
 import Footer from '../components/UI/Footer';
 import { useDarkMode } from '../contexts/DarkModeContext';
@@ -29,8 +20,8 @@ import DeleteListLoader from '../components/loaders/DeleteListLoader';
 import CopyListLoader from '../components/loaders/CopyListLoader';
 import ShoppingList from './ShoppingList';
 import { ProductCountProvider } from '../contexts/ProductCountContext';
-import { useUser } from '../contexts/UserContext';
 import { useTour } from '@reactour/tour';
+import { useUser } from '../contexts/UserContext';
 
 const Container = styled.div`
 	min-height: 100vh;
@@ -124,7 +115,6 @@ const ImageContainer = styled.div`
 const images = [Veg2, Des7, Des8, Des9, Des10];
 const Home = () => {
 	// Settings/Gerneral state/Context
-	const { user, loginUser, logoutUser, registerUser } = useUser();
 	const [currentImage, setCurrentImage] = useState(0);
 	const { darkMode, setDarkMode } = useDarkMode();
 	const { translate } = useLanguage();
@@ -157,6 +147,7 @@ const Home = () => {
 	const [newListB, setNewListB] = useState(false);
 	const [newListId, setnewListId] = useState();
 	const [listAboutToDelete, setListAboutToDelete] = useState();
+	const { user } = useUser();
 	const { setIsOpen } = useTour();
 	useEffect(() => {
 		const returningUser = localStorage.getItem('ACCESS_TOKEN');
