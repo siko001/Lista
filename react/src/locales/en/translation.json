@@ -61,7 +61,7 @@
 	"random": "Random",
 	"by-category": "By Category",
 	"save": "Save",
-	"price-grp": "Price",
+	"price-grp": "Price in ",
 	"category-grp": "Category",
 	"name-grp": "Name",
 	"maltese": "Maltese",
@@ -102,7 +102,11 @@
 	"Don't have an account?": "Don't have an account?",
 	"Create one here": " Create one here!",
 	"Forgot password": "Forgot password",
-	"Login":"Login",
-	"Registration Successful":"Registration Successful",
-	"Login Successful":"Login Successful"
+	"Login": "Login",
+	"Registration Successful": "Registration Successful",
+	"Login Successful": "Login Successful",
+	"Grams": "Gram",
+	"Pack": "Pack",
+	"input-only-text":"No numbers allowed in the name please"
+
 }

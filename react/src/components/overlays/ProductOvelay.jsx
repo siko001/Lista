@@ -125,10 +125,10 @@ const Container = styled.div`
 		overflow: hidden;
 
 		@media screen and (max-width: 750px) {
-			min-width: 170px;
-			wdith: 160px;
-			max-width: 160px;
-			font-size: 0.9rem;
+			min-width: 147px;
+			width: 147px;
+			max-width: 147px;
+			font-size: 1.2rem;
 		}
 	}
 

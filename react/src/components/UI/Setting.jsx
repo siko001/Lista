@@ -195,7 +195,7 @@ const Setting = ({ onChangeDarkMode, steps }) => {
 					</label>
 				</div>
 				<p style={{ color: darkMode ? 'white' : 'black' }}>
-					Verion 1.0 || Developer :
+					Verion 1.01 || Developer :
 					<a className="myLink" href="https://neilmallia.com" target="_blank">
 						Neil Mallia
 					</a>

@@ -22,6 +22,18 @@
 	}
 }
 
+/* Hide the up and down arrows for number input */
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+	-webkit-appearance: none;
+	margin: 0;
+}
+
+/* Firefox */
+input[type='number'] {
+	-moz-appearance: textfield;
+}
+
 body {
 	font-family: 'Roboto', sans-serif; /* For normal text */
 }

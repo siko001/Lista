@@ -261,6 +261,7 @@ class ProductController extends Controller {
             event(new MarkAllProductReady($list));
         }
         if ($product) {
+
             // Update the product fields
             $product->name = [
                 'en' => $request->input('nameEN'),
@@ -273,6 +274,8 @@ class ProductController extends Controller {
 
             $product->quantity = $request->input('quantity');
             $product->price = $request->input('price');
+            $new =     $product->unit = $request->input("unit");
+            info($new);
             $product->update();
         }
     }

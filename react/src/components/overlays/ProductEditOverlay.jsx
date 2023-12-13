@@ -161,7 +161,6 @@ const ProductEditOverlay = ({ setOpenEditProduct, productToEdit, item, listId, u
 				updatedProduct.quantity = formData.quantity || updatedProduct.quantity;
 				updatedProduct.unit = formData.unit || updatedProduct.unit;
 				updatedProduct.price = formData.price || updatedProduct.price;
-
 				// Update the product in the allProductsList array
 				toBuyList[productIndexToBuy] = updatedProduct;
 				// Save the updated allProductsList back to localStorage
@@ -215,22 +214,21 @@ const ProductEditOverlay = ({ setOpenEditProduct, productToEdit, item, listId, u
 					.then((res) => {
 						getMyProducts();
 					})
-					.catch((err) => {
-				
-					});
+					.catch((err) => {});
 			} else {
+				console.log(formData);
 				axiosClient
 					.put(`/update-product/${listId}/${product.uniqueKey}`, formData)
 					.then((res) => {
-				
+						console.log(res);
 					})
 					.catch((err) => {
-				
+						console.log(err);
 					});
 			}
 		}
 	};
-
+	console.log(formData);
 	return (
 		<Container key={product.uniqueKey} className="product-edit" style={{ backgroundColor: darkMode ? 'white' : 'black' }}>
 			<ContentContainer style={{ backgroundColor: darkMode ? 'black' : 'white' }}>
@@ -244,43 +242,80 @@ const ProductEditOverlay = ({ setOpenEditProduct, productToEdit, item, listId, u
 					<div className="grp">
 						<div className="input-grp">
 							<label>{translate('english')}</label>
-							<input name="nameEN" value={formData.nameEN || ''} onChange={handleChange} />
+							<input
+								type="text"
+								name="nameEN"
+								value={formData.nameEN || ''}
+								onChange={handleChange}
+								pattern="[^\d]+"
+								onInvalid={(e) => e.target.setCustomValidity(translate('input-only-text'))}
+								onInput={(e) => e.target.setCustomValidity('')} // Reset the validity on valid input
+							/>
 						</div>
 						<div className="input-grp">
 							<label>{translate('maltese')}</label>
-							<input name="nameMT" value={formData.nameMT || ''} onChange={handleChange} />
+							<input
+								type="text"
+								name="nameMT"
+								onInvalid={(e) => e.target.setCustomValidity(translate('input-only-text'))}
+								onInput={(e) => e.target.setCustomValidity('')}
+								value={formData.nameMT || ''}
+								onChange={handleChange}
+								pattern="[^\d]+"
+							/>
 						</div>
 					</div>
 					<h2>{translate('category-grp')}</h2>
 					<div className="grp">
 						<div className="input-grp">
 							<label>{translate('english')}</label>
-							<input name="categoryEN" value={formData.categoryEN || ''} onChange={handleChange} />
+							<input
+								type="text"
+								onInvalid={(e) => e.target.setCustomValidity(translate('input-only-text'))}
+								onInput={(e) => e.target.setCustomValidity('')}
+								name="categoryEN"
+								pattern="[^\d]+"
+								value={formData.categoryEN || ''}
+								onChange={handleChange}
+							/>
 						</div>
 						<div className="input-grp">
 							<label>{translate('maltese')}</label>
-							<input name="categoryMT" value={formData.categoryMT || ''} onChange={handleChange} />
+							<input
+								type="text"
+								onInvalid={(e) => e.target.setCustomValidity(translate('input-only-text'))}
+								onInput={(e) => e.target.setCustomValidity('')}
+								name="categoryMT"
+								pattern="[^\d]+"
+								value={formData.categoryMT || ''}
+								onChange={handleChange}
+							/>
 						</div>
 					</div>
 					<h2>{translate('unit&quantity-grp')}</h2>
 					<div className="grp">
 						<div className="input-grp">
-							<input name="quantity" value={formData.quantity || ''} onChange={handleChange} />
+							<input name="quantity" type="number" value={formData.quantity || ''} onChange={handleChange} />
 						</div>
 						<div className="input-grp">
 							<select name="unit" value={formData.unit || ''} onChange={handleChange}>
 								<option value="KG">KG</option>
-								<option value="Grams">Grams</option>
+								<option value="Grams">{translate('Grams')}</option>
 								<option value="L">L</option>
 								<option value="ML">ML</option>
-								<option value="Pcs">Pcs</option>
+								<option value="Pc">Pc{formData.quantity > 1 && 's'}</option>
+								<option value="Pack">{translate('Pack')}</option>
 							</select>
 						</div>
 					</div>
-					<h2>{translate('price-grp')}</h2>
+					<h2>
+						{translate('price-grp')}
+						{formData.unit}
+						{formData.quantity > 1 && 's'}
+					</h2>
 					<div className="grp">
 						<div className="input-grp">
-							<input name="price" value={formData.price || ''} onChange={handleChange} />
+							<input name="price" type="number" value={formData.price || ''} onChange={handleChange} />
 						</div>
 					</div>
 					<div className="grp">

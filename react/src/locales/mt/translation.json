@@ -60,7 +60,7 @@
 	"random": "bla'ddoċċ",
 	"by-category": "Bil Kategorija",
 	"save": "Ip-proceddi",
-	"price-grp": "Prezz",
+	"price-grp": "Prezz kull ",
 	"category-grp": "Kategorija",
 	"unit&quantity-grp": "Kwantita",
 	"name-grp": "Isem",
@@ -104,5 +104,8 @@
 	"Forgot password": "Insejt il-password",
 	"Login": "Ithol",
 	"Registration Successful": "Registrazjoni kinet suċċess!",
-	"Login Successful": "Login suċċess!"
+	"Login Successful": "Login suċċess!",
+	"Grams": "Grami",
+	"Pack": "Paketti",
+	"input-only-text": "Mhux permessi numri fl-isem!"
 }
